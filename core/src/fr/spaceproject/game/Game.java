@@ -21,7 +21,7 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	protected Sprite sprite;
+	protected Sprite sprite;  //milieu de l'ecran
 	protected Sprite sprite2;
 	protected Sprite sprite3;
 	
@@ -42,7 +42,7 @@ public class Game extends ApplicationAdapter
 	@Override
 	public void render()
 	{
-		// Mise à jour de l'état des éléments
+		// Mise ï¿½ jour de l'ï¿½tat des ï¿½lï¿½ments
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		
 		sprite.updateSpeed(lastFrameTime);
@@ -87,7 +87,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fenêtre est redimensionnée
+	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionnï¿½e
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();
