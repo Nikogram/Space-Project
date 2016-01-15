@@ -25,7 +25,7 @@ public class Sprite
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		if (size.x == 0 && size.y == 0)
-			this.size = new Vec2f(texture.getWidth(), texture.getHeight());
+			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
 		else
 			this.size = size;
 	}

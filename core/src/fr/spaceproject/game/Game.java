@@ -33,8 +33,10 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		sprite = new Sprite(new Vec2f(200, 200), new Vec2f(50, 50), "Character.png");
-		sprite2 = new Sprite(new Vec2f(0, 0), new Vec2f(50, 50), "Character.png");
+		sprite = new Sprite(new Vec2f(200, 200), new Vec2f(88, 60), "ExampleVessel.png");
+		sprite2 = new Sprite(new Vec2f(0, 0), new Vec2f(0, 0), "ExampleVessel.png");
+		
+		System.out.println(sprite.size.x);
 	}
 
 	@Override
