@@ -23,6 +23,7 @@ public class Game extends ApplicationAdapter
 	
 	protected Sprite sprite;
 	protected Sprite sprite2;
+	protected Sprite sprite3;
 	
 	
 	@Override
@@ -33,10 +34,9 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		sprite = new Sprite(new Vec2f(200, 200), new Vec2f(88, 60), "ExampleVessel.png");
+		sprite = new Sprite(new Vec2f(200, 200), new Vec2f(0, 0), "ExampleVessel.png");
 		sprite2 = new Sprite(new Vec2f(0, 0), new Vec2f(0, 0), "ExampleVessel.png");
-		
-		System.out.println(sprite.size.x);
+		sprite3 = new Sprite(new Vec2f(0, 0), new Vec2f(0, 0), "ExampleVessel.png");
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class Game extends ApplicationAdapter
 	{
 		// Mise à jour de l'état des éléments
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		sprite.updateSpeed(lastFrameTime);
 		
+		sprite.updateSpeed(lastFrameTime);
 		if (Gdx.input.isKeyPressed(Keys.LEFT))
 			sprite.angle += lastFrameTime * 100;
 		if (Gdx.input.isKeyPressed(Keys.RIGHT))
@@ -56,6 +56,9 @@ public class Game extends ApplicationAdapter
 			sprite.speed.y = -lastFrameTime * 10000;
 		else
 			sprite.speed = new Vec2f(0, 0);
+		
+		sprite2.position = sprite.getRotatedPosition(new Vec2f(sprite.size.x, 0), sprite.angle);
+		sprite2.angle = sprite.angle;
 		
 		// Affichage
 		camera.position.set(sprite.position.x, sprite.position.y, 0);
@@ -68,6 +71,7 @@ public class Game extends ApplicationAdapter
 		display.begin();
 		sprite.draw(display);
 		sprite2.draw(display);
+		sprite3.draw(display);
 		display.end();
 	}
 	

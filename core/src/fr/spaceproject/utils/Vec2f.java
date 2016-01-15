@@ -23,6 +23,11 @@ public class Vec2f
 		this.y = y;
 	}
 	
+	public float getLength()
+	{
+		return (float)Math.sqrt(x*x + y*y);
+	}
+	
 	public void set(float x, float y)
 	{
 		this.x = x;

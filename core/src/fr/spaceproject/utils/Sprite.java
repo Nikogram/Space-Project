@@ -30,6 +30,15 @@ public class Sprite
 			this.size = size;
 	}
 	
+	public Vec2f getRotatedPosition(Vec2f relativePositionToRotate, float rotationAngle)
+	{
+		Vec2f rotatedVertex = new Vec2f(relativePositionToRotate.getLength() * (float)Math.cos(rotationAngle * Math.PI / 180),
+				relativePositionToRotate.getLength() * (float)Math.sin(rotationAngle * Math.PI / 180));
+		rotatedVertex.set(rotatedVertex.x + position.x, rotatedVertex.y + position.y);
+		
+		return rotatedVertex;
+	}
+	
 	public void draw(SpriteBatch display)
 	{
 		display.draw(new TextureRegion(texture), position.x - size.x / 2, position.y - size.y / 2, size.x / 2, size.y / 2, size.x, size.y, 1.f, 1.f, angle - 90, false);
