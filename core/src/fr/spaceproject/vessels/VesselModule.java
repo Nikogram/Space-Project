@@ -1,5 +1,7 @@
 package fr.spaceproject.vessels;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
@@ -10,25 +12,17 @@ class VesselModule
 	protected int level;
 	protected float energy;
 	protected Sprite sprite;
+	protected Orientation orientation;
 	
-	public VesselModule(int type, int level)
+	
+	public VesselModule(int type, int level, Orientation orientation)
 	{
 		this.type = type;
 		this.level = level;
 		energy = getMaxEnergy();
 		sprite = new Sprite(new Vec2f(), new Vec2f(), getTextureFileName());
-	}
-	
-	public VesselModule(int type, int level, float energy)
-	{
-		this.type = type;
-		this.level = level;
-		this.energy = energy;
-	}
-	
-	public int getType()
-	{
-		return type;
+		sprite.angle = orientation.ordinal() * 90;
+		this.orientation = orientation;
 	}
 	
 	public String getTextureFileName()
@@ -41,26 +35,16 @@ class VesselModule
 			return "SimpleVesselModule.png";
 	}
 	
-	public int getLevel()
-	{
-		return level;
-	}
-	
-	public float getEnergy()
-	{
-		return energy;
-	}
-	
 	public float getMaxEnergy()
 	{
-		return 100 + 20 * level;
+		return 100 + 20 * (level - 1);
 	}
 	
-	public void update(Sprite vesselSprite, Vec2i moduleRelativePosition)
+	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
 		sprite.position = vesselSprite.getRotatedPosition(new Vec2f(20 * moduleRelativePosition.x, 20 * moduleRelativePosition.y), vesselSprite.angle);
 		sprite.speed = vesselSprite.speed;
-		sprite.angle = vesselSprite.angle;
+		sprite.angle = vesselSprite.angle + orientation.ordinal() * 90;
 	}
 	
 	public void draw(SpriteBatch display)

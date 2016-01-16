@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -21,7 +22,6 @@ public class Game extends ApplicationAdapter
 	protected Vessel playerVessel;
 	
 	
-	
 	@Override
 	public void create()
 	{
@@ -31,13 +31,8 @@ public class Game extends ApplicationAdapter
 		camera.update();
 	    
 		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
-		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(3, 4), new Vec2i(1, 1), false, 0);
-		playerVessel.setModule(new Vec2i(1, 3), 0, 1);
-		playerVessel.setModule(new Vec2i(1, 2), 0, 1);
-		playerVessel.setModule(new Vec2i(0, 1), 0, 1);
-		playerVessel.setModule(new Vec2i(2, 1), 0, 1);
-		playerVessel.setModule(new Vec2i(0, 0), 2, 1);
-		playerVessel.setModule(new Vec2i(2, 0), 2, 1);
+		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
+		playerVessel.generate(2);
 	}
 
 	@Override
@@ -46,6 +41,7 @@ public class Game extends ApplicationAdapter
 		// Mise à jour de l'état des élements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		playerVessel.update(lastFrameTime);
+		
 		
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);

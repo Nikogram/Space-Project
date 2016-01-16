@@ -1,6 +1,7 @@
 package fr.spaceproject.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ public class Sprite
 	public Vec2f speed;
 	public Vec2f acceleration;
 	Texture texture;
+	public Color color;
 	
 	public Sprite(Vec2f position, Vec2f size, String textureFileName)
 	{
@@ -23,6 +25,7 @@ public class Sprite
 		this.acceleration = new Vec2f();
 		texture = new Texture(Gdx.files.internal(textureFileName));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		color = new Color(1, 1, 1, 1);
 		
 		if (size.x == 0 && size.y == 0)
 			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
@@ -41,7 +44,10 @@ public class Sprite
 	
 	public void draw(SpriteBatch display)
 	{
+		Color c = display.getColor();
+		display.setColor(color.r, color.g, color.b, color.a);
 		display.draw(new TextureRegion(texture), position.x - size.x / 2, position.y - size.y / 2, size.x / 2, size.y / 2, size.x, size.y, 1.f, 1.f, angle - 90, false);
+		display.setColor(c.r, c.g, c.b, c.a);
 	}
 	
 	public void updateSpeed(float lastFrameTime)

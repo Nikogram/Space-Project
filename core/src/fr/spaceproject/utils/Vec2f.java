@@ -28,6 +28,13 @@ public class Vec2f
 		return (float)Math.sqrt(x*x + y*y);
 	}
 	
+	public Vec2f getRotatedVector(float angle)
+	{
+		Vec2f newVector = new Vec2f(this);
+		newVector.rotate(angle);
+		return newVector;
+	}
+	
 	public void set(float x, float y)
 	{
 		this.x = x;
@@ -43,7 +50,7 @@ public class Vec2f
 	public void normalize(float length)
 	{
 		if (getLength() != 0)
-			set(x / getLength() * 100, y / getLength() * 100);
+			set(x / getLength() * length, y / getLength() * length);
 	}
 	
 	public void rotate(float angle)

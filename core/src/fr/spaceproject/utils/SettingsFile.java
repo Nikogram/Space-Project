@@ -14,6 +14,7 @@ public class SettingsFile
 	protected FileHandle file;
 	protected Map<String, String> values;
 	
+	
 	public SettingsFile(String fileName)
 	{
 		// fileName : nom du fichier à ouvrir

@@ -1,0 +1,2 @@
+- Taille du vaisseau
+- Arrêt complet du vaisseau (frein à main ou arret quand vitesse très faible ?)
