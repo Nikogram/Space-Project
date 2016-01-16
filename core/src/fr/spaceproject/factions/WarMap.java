@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.utils.Coor;
 
 public class WarMap {
 	
@@ -13,15 +13,15 @@ public class WarMap {
 	
 	public WarMap(){
 		World =new LinkedHashMap<String,Sector>();
-		this.World.put("0 0",new Sector());
-		this.World.put("-1 -1",new Sector(1));
-		this.World.put("-1 1",new Sector(2));
-		this.World.put("1 1",new Sector(3));
-		this.World.put("1 -1",new Sector(4));
-		this.World.put("1 0",new Sector());
-		this.World.put("-1 0",new Sector());
-		this.World.put("0 -1",new Sector());
-		this.World.put("0 1",new Sector());
+		this.World.put((new Coor(0,0)).toStrings(),new Sector());
+		this.World.put((new Coor(-1,-1)).toStrings(),new Sector(1));
+		this.World.put((new Coor(-1,1)).toStrings(),new Sector(2));
+		this.World.put((new Coor(1,1)).toStrings(),new Sector(3));
+		this.World.put((new Coor(1,-1)).toStrings(),new Sector(4));
+		this.World.put((new Coor(1,0)).toStrings(),new Sector());
+		this.World.put((new Coor(-1,0)).toStrings(),new Sector());
+		this.World.put((new Coor(0,-1)).toStrings(),new Sector());
+		this.World.put((new Coor(0,1)).toStrings(),new Sector());
 	}
 	
 	public int appartCoor(String str){
@@ -29,16 +29,26 @@ public class WarMap {
 	}
 	
 	
-	/*public void Warbegin(int team){
+	public void warBegin(int team){
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
-				if (value.getValue().getAlignement()==team){
-					if (World.containsKey(value.getKey().getAdd(-1,0)) && ){
-						
-					}
-				}
+			if (value.getValue().getAlignement()==team){
+				battle(new Coor(value.getKey()),1,0,team);
+				battle(new Coor(value.getKey()),-1,0,team);
+				battle(new Coor(value.getKey()),0,-1,team);
+				battle(new Coor(value.getKey()),0,1,team);
+			}
 		}
-	}*/
+	}
+	
+	private void battle(Coor notimp,int x,int y,int team){
+		String verif =notimp.addXY(x,y);
+		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team && Math.random()<0.2){
+			if (Math.random()<0.5){
+			World.get(verif).setNewAlignement(team);
+			}
+		}
+	}
 }
 

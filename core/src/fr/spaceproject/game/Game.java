@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.WarMap;
+import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -77,10 +78,15 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M)){
 			for (int j=1;j>-2;j--){
 				for (int i=-1;i<2;i++){
-					System.out.print(Map.appartCoor(i+" "+j));
+					System.out.print(Map.appartCoor((new Coor(i,j)).toStrings()));
 				}
 				System.out.println();
 			}
+			System.out.println("----");
+			Map.warBegin(1);
+			Map.warBegin(2);
+			Map.warBegin(3);
+			Map.warBegin(4);
 		}
 	}
 	
