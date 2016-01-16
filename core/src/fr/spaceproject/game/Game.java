@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.WarMap;
+import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -24,15 +26,13 @@ public class Game extends ApplicationAdapter
 	protected Vessel playerVessel;
 	
 	protected WarMap Map;
-	
 	protected Faction green;
 	protected Faction blue;
 	protected Faction red;
 	protected Faction yellow;
 	protected Faction Neutral;
-	
 
-	
+
 	@Override
 	public void create()
 	{
@@ -42,13 +42,8 @@ public class Game extends ApplicationAdapter
 		camera.update();
 	    
 		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
-		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(3, 4), new Vec2i(1, 1), false, 0);
-		playerVessel.setModule(new Vec2i(1, 3), 0, 1);
-		playerVessel.setModule(new Vec2i(1, 2), 0, 1);
-		playerVessel.setModule(new Vec2i(0, 1), 0, 1);
-		playerVessel.setModule(new Vec2i(2, 1), 0, 1);
-		playerVessel.setModule(new Vec2i(0, 0), 2, 1);
-		playerVessel.setModule(new Vec2i(2, 0), 2, 1);
+		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
+		playerVessel.generate(2);
 		
 		Map = new WarMap();
 		
@@ -57,7 +52,6 @@ public class Game extends ApplicationAdapter
 		red = new Faction(2,1,"red");
 		yellow = new Faction(3,1,"yellow");
 		green = new Faction(4,1,"green");
-		
 	}
 
 	@Override
@@ -66,6 +60,7 @@ public class Game extends ApplicationAdapter
 		// Mise � jour de l'�tat des �lements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		playerVessel.update(lastFrameTime);
+		
 		
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
@@ -84,10 +79,15 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M)){
 			for (int j=1;j>-2;j--){
 				for (int i=-1;i<2;i++){
-					System.out.print(Map.appartCoor(i+" "+j));
+					System.out.print(Map.appartCoor((new Coor(i,j)).toStrings()));
 				}
 				System.out.println();
 			}
+			System.out.println("----");
+			Map.warBegin(1);
+			Map.warBegin(2);
+			Map.warBegin(3);
+			Map.warBegin(4);
 		}
 	}
 	
