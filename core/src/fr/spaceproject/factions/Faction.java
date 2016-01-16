@@ -4,7 +4,6 @@ public class Faction {
 	private int team;
 	private int totalTerritories;
 	private int couleur;
-	private int 
 	
 	
 	public Faction(){
