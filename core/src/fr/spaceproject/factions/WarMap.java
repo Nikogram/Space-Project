@@ -29,7 +29,7 @@ public class WarMap {
 	}
 	
 	
-	public void Warbegin(int team){
+	/*public void Warbegin(int team){
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
