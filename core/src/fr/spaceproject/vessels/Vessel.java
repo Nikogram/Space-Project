@@ -1,7 +1,7 @@
 package fr.spaceproject.vessels;
 
-import java.util.Vector;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
@@ -33,36 +33,12 @@ public class Vessel
 		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position;
 	}
 	
-	public Vec2f getSpeed()
-	{
-		Vec2i cockpitPosition = getCockpitPosition();
-		return modules[cockpitPosition.x][cockpitPosition.y].sprite.speed;
-	}
-	
-	public float getAngle()
-	{
-		Vec2i cockpitPosition = getCockpitPosition();
-		return modules[cockpitPosition.x][cockpitPosition.y].sprite.angle;
-	}
-	
-	public void setSpeed(Vec2f speed)
-	{
-		Vec2i cockpitPosition = getCockpitPosition();
-		modules[cockpitPosition.x][cockpitPosition.y].sprite.speed = speed;
-	}
-	
-	public void setAngle(float angle)
-	{
-		Vec2i cockpitPosition = getCockpitPosition();
-		modules[cockpitPosition.x][cockpitPosition.y].sprite.angle = angle;
-	}
-	
 	public void updateSpeed(float lastFrameTime)
 	{
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].sprite.updateSpeed(lastFrameTime);
+				modules[x][y].sprite.updateSpeed(lastFrameTime, false);
 		}
 	}
 	
@@ -72,10 +48,47 @@ public class Vessel
 			modules[position.x][position.y] = new VesselModule(type, level);
 	}
 	
-	public void update()
+	public void update(float lastFrameTime)
 	{
 		Vec2i cockpitPosition = getCockpitPosition();
+		Sprite sprite = modules[cockpitPosition.x][cockpitPosition.y].sprite;
 		
+		// Modification de la vitesse
+		updateSpeed(lastFrameTime);
+		
+		
+		/*if (Gdx.input.isKeyPressed(Keys.UP))
+			sprite.acceleration = sprite.speed.y < 200 ? new Vec2f(0, 100) : new Vec2f(0, 0);
+		else if (Gdx.input.isKeyPressed(Keys.DOWN))
+			sprite.acceleration = sprite.speed.y > -200 ? new Vec2f(0, -100) : new Vec2f(0, 0);
+		else
+			sprite.acceleration = new Vec2f(0, 0);*/
+		
+		sprite.acceleration.normalize(0);
+		if (!Gdx.input.isKeyPressed(Keys.Z) && !Gdx.input.isKeyPressed(Keys.S) && !Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT))
+			sprite.acceleration = new Vec2f(0, 0);
+		else
+		{
+			if (Gdx.input.isKeyPressed(Keys.Z))
+				sprite.acceleration.add(new Vec2f(0, 100), sprite.angle);
+			if (Gdx.input.isKeyPressed(Keys.S))
+				sprite.acceleration.add(new Vec2f(0, -100), sprite.angle);
+			if (Gdx.input.isKeyPressed(Keys.LEFT))
+				sprite.acceleration.add(new Vec2f(-100, 0), sprite.angle);
+			if (Gdx.input.isKeyPressed(Keys.RIGHT))
+				sprite.acceleration.add(new Vec2f(100, 0), sprite.angle);
+		}
+		
+		sprite.acceleration.normalize(100);
+		
+		if (Gdx.input.isKeyPressed(Keys.Q))
+			sprite.angle += lastFrameTime * 100;
+		if (Gdx.input.isKeyPressed(Keys.D))
+			sprite.angle -= lastFrameTime * 100;
+			
+		
+		
+		// Application de la mise à jour pour tous les modules		
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)

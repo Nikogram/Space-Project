@@ -1,20 +1,11 @@
 package fr.spaceproject.game;
 
-import java.util.Map;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-import fr.spaceproject.factions.Sector;
-import fr.spaceproject.utils.SettingsFile;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -39,7 +30,7 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(), "SimpleVesselModule.png");
+		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
 		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(3, 4), new Vec2i(1, 1), false, 0);
 		playerVessel.setModule(new Vec2i(1, 3), 0, 1);
 		playerVessel.setModule(new Vec2i(1, 2), 0, 1);
@@ -54,20 +45,7 @@ public class Game extends ApplicationAdapter
 	{
 		// Mise à jour de l'état des élements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		
-		playerVessel.updateSpeed(lastFrameTime);
-		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			playerVessel.setAngle(playerVessel.getAngle() + lastFrameTime * 100);
-		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			playerVessel.setAngle(playerVessel.getAngle() - lastFrameTime * 100);
-		if (Gdx.input.isKeyPressed(Keys.UP))
-			playerVessel.setSpeed(new Vec2f(0, lastFrameTime * 10000));
-		else if (Gdx.input.isKeyPressed(Keys.DOWN))
-			playerVessel.setSpeed(new Vec2f(0, -lastFrameTime * 10000));
-		else
-			playerVessel.setSpeed(new Vec2f(0, 0));
-		
-		playerVessel.update();
+		playerVessel.update(lastFrameTime);
 		
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
@@ -78,8 +56,8 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
-		playerVessel.draw(display);
 		obstacle.draw(display);
+		playerVessel.draw(display);
 		display.end();
 	}
 	

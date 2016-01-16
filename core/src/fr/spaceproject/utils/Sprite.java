@@ -50,6 +50,17 @@ public class Sprite
 		move(new Vec2f(speed.x * lastFrameTime, speed.y * lastFrameTime));
 	}
 	
+	public void updateSpeed(float lastFrameTime, boolean rotationIsTakenAccount)
+	{
+		if (rotationIsTakenAccount)
+			updateSpeed(lastFrameTime);
+		else
+		{
+			speed.set(speed.x + acceleration.x * lastFrameTime, speed.y + acceleration.y * lastFrameTime);
+			position.set(position.x + speed.x * lastFrameTime, position.y + speed.y * lastFrameTime);
+		}
+	}
+	
 	public void move(Vec2f movement)
 	{
 		position.set(position.x + (float)Math.cos(angle * Math.PI / 180) * movement.x - (float)Math.sin(angle * Math.PI / 180) * movement.y,
