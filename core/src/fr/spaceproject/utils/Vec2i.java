@@ -29,24 +29,11 @@ public class Vec2i
 		return (float)Math.sqrt(x*x + y*y);
 	}
 	
-	@Override
-	 public boolean equals(Object vector){
-	  Vec2i obj = (Vec2i)(vector);
-	  return x == obj.x && y == obj.y;
-	 }
-	
 	public void set(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
-	}
-	
-	public Vec2i getAdd(int nx,int ny){
-		x += nx;
-		y += ny;
-		return new Vec2i(x,y);
-	}
-	
+	}	
 	
 	public void add(Vec2f vector, float angle)
 	{
