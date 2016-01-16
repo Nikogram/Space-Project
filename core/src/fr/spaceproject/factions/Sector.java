@@ -16,6 +16,10 @@ public class Sector {
 		this.alignement = Party;
 	}
 	
+	public int getAlignement() {
+		return alignement;
+	}
+	
 	public void setWar() {
 		this.isInWar = true;
 		this.timeWarBegin = System.currentTimeMillis();
@@ -24,4 +28,5 @@ public class Sector {
 	public void setNewAlignement(int party) {
 		this.alignement = party;
 	}
+	
 }
