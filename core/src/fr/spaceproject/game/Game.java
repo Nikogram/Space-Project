@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import fr.spaceproject.utils.SettingsFile;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
+import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.vessels.Vessel;
 
 public class Game extends ApplicationAdapter
 {
@@ -21,9 +23,8 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	protected Sprite sprite;  //milieu de l'ecran
-	protected Sprite sprite2;
-	protected Sprite sprite3;
+	protected Sprite obstacle;
+	protected Vessel playerVessel;
 	
 	
 	@Override
@@ -34,34 +35,38 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		sprite = new Sprite(new Vec2f(200, 200), new Vec2f(0, 0), "ExampleVessel.png");
-		sprite2 = new Sprite(new Vec2f(0, 0), new Vec2f(0, 0), "ExampleVessel.png");
-		sprite3 = new Sprite(new Vec2f(0, 0), new Vec2f(0, 0), "ExampleVessel.png");
+		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(), "SimpleVesselModule.png");
+		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(3, 4), new Vec2i(1, 1), false, 0);
+		playerVessel.setModule(new Vec2i(1, 3), 0, 1);
+		playerVessel.setModule(new Vec2i(1, 2), 0, 1);
+		playerVessel.setModule(new Vec2i(0, 1), 0, 1);
+		playerVessel.setModule(new Vec2i(2, 1), 0, 1);
+		playerVessel.setModule(new Vec2i(0, 0), 2, 1);
+		playerVessel.setModule(new Vec2i(2, 0), 2, 1);
 	}
 
 	@Override
 	public void render()
 	{
-		// Mise ï¿½ jour de l'ï¿½tat des ï¿½lï¿½ments
+		// Mise à jour de l'état des élements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		
-		sprite.updateSpeed(lastFrameTime);
+		playerVessel.updateSpeed(lastFrameTime);
 		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			sprite.angle += lastFrameTime * 100;
+			playerVessel.setAngle(playerVessel.getAngle() + lastFrameTime * 100);
 		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			sprite.angle -= lastFrameTime * 100;
+			playerVessel.setAngle(playerVessel.getAngle() - lastFrameTime * 100);
 		if (Gdx.input.isKeyPressed(Keys.UP))
-			sprite.speed.y = lastFrameTime * 10000;
+			playerVessel.setSpeed(new Vec2f(0, lastFrameTime * 10000));
 		else if (Gdx.input.isKeyPressed(Keys.DOWN))
-			sprite.speed.y = -lastFrameTime * 10000;
+			playerVessel.setSpeed(new Vec2f(0, -lastFrameTime * 10000));
 		else
-			sprite.speed = new Vec2f(0, 0);
+			playerVessel.setSpeed(new Vec2f(0, 0));
 		
-		sprite2.position = sprite.getRotatedPosition(new Vec2f(sprite.size.x, 0), sprite.angle);
-		sprite2.angle = sprite.angle;
+		playerVessel.update();
 		
 		// Affichage
-		camera.position.set(sprite.position.x, sprite.position.y, 0);
+		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
 		
@@ -69,9 +74,8 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
-		sprite.draw(display);
-		sprite2.draw(display);
-		sprite3.draw(display);
+		playerVessel.draw(display);
+		obstacle.draw(display);
 		display.end();
 	}
 	
@@ -87,7 +91,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionnï¿½e
+	public void resize(int width, int height) // Quand la fenêtre est redimensionné
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();

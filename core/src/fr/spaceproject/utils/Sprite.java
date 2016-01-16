@@ -32,8 +32,8 @@ public class Sprite
 	
 	public Vec2f getRotatedPosition(Vec2f relativePositionToRotate, float rotationAngle)
 	{
-		Vec2f rotatedVertex = new Vec2f(relativePositionToRotate.getLength() * (float)Math.cos(rotationAngle * Math.PI / 180),
-				relativePositionToRotate.getLength() * (float)Math.sin(rotationAngle * Math.PI / 180));
+		Vec2f rotatedVertex = new Vec2f((float)(relativePositionToRotate.x * Math.cos(rotationAngle * Math.PI / 180) - relativePositionToRotate.y * Math.sin(rotationAngle * Math.PI / 180)),
+				(float)(relativePositionToRotate.x * Math.sin(rotationAngle * Math.PI / 180) + relativePositionToRotate.y * Math.cos(rotationAngle * Math.PI / 180)));
 		rotatedVertex.set(rotatedVertex.x + position.x, rotatedVertex.y + position.y);
 		
 		return rotatedVertex;
