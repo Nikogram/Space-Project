@@ -31,6 +31,8 @@ class VesselModule
 			return "CockpitVesselModule.png";
 		else if (type == 2)	// Engine
 			return "EngineVesselModule.png";
+		else if (type == 3)	// Cannon
+			return "CannonVesselModule.png";
 		else	// Simple
 			return "SimpleVesselModule.png";
 	}

@@ -24,12 +24,6 @@ public class EngineVesselModule extends VesselModule
 		flamesAreShown = false;
 	}
 	
-	@Override
-	public String getTextureFileName()
-	{
-		return "EngineVesselModule.png";
-	}
-	
 	public float getPower()
 	{
 		return 1 + 0.5f * (level - 1);
@@ -56,7 +50,6 @@ public class EngineVesselModule extends VesselModule
 				flamesAreShown = true;
 		}
 		
-		flamesSprite.position = new Vec2f(sprite.position.x, sprite.position.y - sprite.size.y / 2);
 		flamesSprite.position = sprite.getRotatedPosition(new Vec2f(0, -sprite.size.y / 2), sprite.angle - 180);
 		flamesSprite.angle = sprite.angle - 180;
 		

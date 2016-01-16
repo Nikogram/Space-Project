@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.utils.Sprite;
@@ -41,7 +40,7 @@ public class Game extends ApplicationAdapter
 		camera.update();
 	    
 		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
-		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
+		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
 		
 		Map = new WarMap();
@@ -56,7 +55,7 @@ public class Game extends ApplicationAdapter
 	@Override
 	public void render()
 	{
-		// Mise ï¿½ jour de l'ï¿½tat des ï¿½lements
+		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		playerVessel.update(lastFrameTime);
 		
@@ -97,7 +96,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionnï¿½
+	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionné
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();
