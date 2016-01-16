@@ -2,11 +2,14 @@ package fr.spaceproject.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
+import fr.spaceproject.factions.Faction;
+import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -21,7 +24,14 @@ public class Game extends ApplicationAdapter
 	protected Sprite obstacle;
 	protected Vessel playerVessel;
 	
-	
+	protected WarMap Map;
+	protected Faction green;
+	protected Faction blue;
+	protected Faction red;
+	protected Faction yellow;
+	protected Faction Neutral;
+
+
 	@Override
 	public void create()
 	{
@@ -33,12 +43,20 @@ public class Game extends ApplicationAdapter
 		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
 		playerVessel = new Vessel(new Vec2f(200, 200), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
+		
+		Map = new WarMap();
+		
+		Neutral = new Faction(0,0,"grey");
+		blue = new Faction(1,1,"blue");
+		red = new Faction(2,1,"red");
+		yellow = new Faction(3,1,"yellow");
+		green = new Faction(4,1,"green");
 	}
 
 	@Override
 	public void render()
 	{
-		// Mise à jour de l'état des élements
+		// Mise ï¿½ jour de l'ï¿½tat des ï¿½lements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		playerVessel.update(lastFrameTime);
 		
@@ -55,6 +73,16 @@ public class Game extends ApplicationAdapter
 		obstacle.draw(display);
 		playerVessel.draw(display);
 		display.end();
+		
+		
+		if (Gdx.input.isKeyPressed(Keys.M)){
+			for (int j=1;j>-2;j--){
+				for (int i=-1;i<2;i++){
+					System.out.print(Map.appartCoor(i+" "+j));
+				}
+				System.out.println();
+			}
+		}
 	}
 	
 	@Override
@@ -69,7 +97,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fenêtre est redimensionné
+	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionnï¿½
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();
