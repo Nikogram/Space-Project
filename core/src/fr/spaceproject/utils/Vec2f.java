@@ -33,4 +33,24 @@ public class Vec2f
 		this.x = x;
 		this.y = y;
 	}
+	
+	public void add(Vec2f vector, float angle)
+	{
+		x += vector.x * Math.cos(angle * Math.PI / 180) - vector.y * Math.sin(angle * Math.PI / 180);
+		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
+	}
+	
+	public void normalize(float length)
+	{
+		if (getLength() != 0)
+			set(x / getLength() * 100, y / getLength() * 100);
+	}
+	
+	public void rotate(float angle)
+	{
+		Vec2f old = new Vec2f(x, y);
+		
+		x = (float)(old.x * Math.cos(angle * Math.PI / 180) - old.y * Math.sin(angle * Math.PI / 180));
+		y = (float)(old.x * Math.sin(angle * Math.PI / 180) + old.y * Math.cos(angle * Math.PI / 180));
+	}
 }

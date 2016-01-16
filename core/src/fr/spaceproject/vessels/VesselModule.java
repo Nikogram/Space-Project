@@ -9,7 +9,7 @@ class VesselModule
 	protected int type;
 	protected int level;
 	protected float energy;
-	protected Sprite sprite;	
+	protected Sprite sprite;
 	
 	public VesselModule(int type, int level)
 	{
@@ -34,7 +34,7 @@ class VesselModule
 	public String getTextureFileName()
 	{
 		if (type == 1)	// Cockpit
-			return "SimpleVesselModule.png";
+			return "CockpitVesselModule.png";
 		else if (type == 2)	// Engine
 			return "EngineVesselModule.png";
 		else	// Simple
