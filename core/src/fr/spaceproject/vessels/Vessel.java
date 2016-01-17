@@ -35,7 +35,7 @@ public class Vessel
 		{
 			for (int y = 0; y < size.y; ++y)
 			{
-				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -1), 1, Orientation.Up);
+				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -2), 1, Orientation.Up);
 				modules[x][y].sprite.position = position;
 			}
 		}
@@ -226,7 +226,12 @@ public class Vessel
 				
 				
 				if (modules[x][y].energy < 0)
-					modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
+				{
+					if (modules[x][y].type == 2)
+						modules[x][y] = new VesselModule(-2, 1, Orientation.Up);
+					else
+						modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
+				}
 			}
 		}
 		
@@ -269,7 +274,7 @@ public class Vessel
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].type = -1;
+				modules[x][y].type = -2;
 		}
 		
 		if (configuration == 2)
@@ -283,8 +288,8 @@ public class Vessel
 			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 2), 2, 1, Orientation.Up);
 			setModule(new Vec2i(2, 3), 4, 1, Orientation.Up);
+			setModule(new Vec2i(2, 4), 2, 1, Orientation.Up);
 			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 2), 4, 1, Orientation.Right);
