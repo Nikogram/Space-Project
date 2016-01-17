@@ -48,10 +48,8 @@ public class CannonVesselModule extends VesselModule
 	}
 	
 	@Override
-	public void updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
-	{
-		super.updateCollisions(vessels, moduleVessel);
-		
+	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	{		
 		for (int i = 0; i < vessels.size(); ++i)
 		{
 			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
@@ -70,6 +68,8 @@ public class CannonVesselModule extends VesselModule
 				}
 			}
 		}
+		
+		return super.updateCollisions(vessels, moduleVessel);
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ public class VesselAI
 		float mag_v1 = (float)Math.sqrt( angle1.x * angle1.x + angle1.y * angle1.y );
 		float mag_v2 = (float)Math.sqrt( angle2.x * angle2.x + angle2.y * angle2.y );
 		
-		float cosa = dot/(mag_v1 * mag_v2);
+		float cosa = dot / (mag_v1 * mag_v2);
 		
 		return (float)Math.acos(cosa);
 	}
@@ -28,22 +28,24 @@ public class VesselAI
 		distanceVessels.normalize(1);
 		
 		
-		if (distanceBeetweenVessels > 400)
+		if (distanceBeetweenVessels > 500)
 			currentActions.put(VesselAction.MoveForward, true);
-		else
+		else if (distanceBeetweenVessels < 300)
 			currentActions.put(VesselAction.MoveBackward, true);
 		
 		
 		Vec2f sightVector = new Vec2f(-1, 0);
 		sightVector.rotate(vessel.getAngle());
 		
-		if (Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) > 90)
+		float angle = (float)Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) - 90;
+		
+		if (angle > 0.1)
 			currentActions.put(VesselAction.TurnLeft, true);
-		else
+		else if (angle < -0.1)
 			currentActions.put(VesselAction.TurnRight, true);
 		
 		
-		if (Math.abs(Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) - 90) < 10 && distanceBeetweenVessels < 600)
-			currentActions.put(VesselAction.Shoot, true);			
+		if (Math.abs(Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) - 90) < 10 && distanceBeetweenVessels < 600 && distanceBeetweenVessels > 200)
+			currentActions.put(VesselAction.Shoot, true);
 	}
 }
