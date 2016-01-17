@@ -42,6 +42,19 @@ public class Sprite
 		return rotatedVertex;
 	}
 	
+	public boolean spriteIsCollided(Sprite sprite)
+	{
+		
+		
+		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
+				new Vec2f(size.x / 2 + sprite.size.x / 2, size.y / 2 + sprite.size.y / 2).getLength())	// Test simplifié
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void draw(SpriteBatch display)
 	{
 		Color c = display.getColor();

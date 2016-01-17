@@ -21,8 +21,8 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	protected Sprite obstacle;
 	protected Vessel playerVessel;
+	protected Vessel ennemyVessel;
 	
 	protected WarMap Map;
 	protected Faction green;
@@ -40,9 +40,10 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		obstacle = new Sprite(new Vec2f(0, 0), new Vec2f(100, 100), "SimpleVesselModule.png");
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
+		ennemyVessel = new Vessel(new Vec2f(-100, -100), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
+		ennemyVessel.generate(1);
 		
 		Map = new WarMap();
 		
@@ -59,6 +60,7 @@ public class Game extends ApplicationAdapter
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		playerVessel.update(lastFrameTime);
+		ennemyVessel.update(lastFrameTime);
 		
 		
 		// Affichage
@@ -70,7 +72,7 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
-		obstacle.draw(display);
+		ennemyVessel.draw(display);
 		playerVessel.draw(display);
 		display.end();
 		

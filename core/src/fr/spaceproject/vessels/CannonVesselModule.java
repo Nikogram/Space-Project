@@ -37,6 +37,16 @@ public class CannonVesselModule extends VesselModule
 		return (float)Math.max(0.1, 0.4 - 0.02 * (level - 1));
 	}
 	
+	public float getProjectileLifeTime()
+	{
+		return 1;
+	}
+	
+	public float getProjectileSpeed()
+	{
+		return 600;
+	}
+	
 	@Override
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
@@ -53,12 +63,19 @@ public class CannonVesselModule extends VesselModule
 		if (timeAfterShoot >= getTimeBeforeShoot() && wantShoot)
 		{
 			Vec2f projectilePosition = sprite.getRotatedPosition(new Vec2f(0, 0), sprite.angle - 180);
-			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -600), sprite.angle - 180, 1));
+			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), sprite.angle - 180, getProjectileLifeTime()));
 			timeAfterShoot = 0;
 		}
 		
-		for (int i = 0; i < projectiles.size(); ++i)
+		for (int i = projectiles.size() - 1; i >= 0; --i)
+		{
 			projectiles.get(i).update(lastFrameTime);
+			if (projectiles.get(i).timeBeforeDestruction <= 0)
+			{
+				projectiles.get(i).sound.dispose();
+				projectiles.remove(i);
+			}
+		}
 	}
 	
 	@Override

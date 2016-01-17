@@ -2,6 +2,8 @@ package fr.spaceproject.vessels;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
