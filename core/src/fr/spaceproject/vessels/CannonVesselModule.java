@@ -58,12 +58,13 @@ public class CannonVesselModule extends VesselModule
 			{
 				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 				{
-					for (int p = 0; p < projectiles.size(); ++p)
+					for (int p = projectiles.size() - 1; p >= 0; --p)
 					{
-						if (vessels.get(i).modules[x][y].type >= 0 && projectiles.get(p).sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
+						if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
 						{
-							vessels.get(i).modules[x][y].energy -= 10;
-							System.out.println("Touché !");
+							vessels.get(i).modules[x][y].energy -= getPower();
+							projectiles.get(p).sound.dispose();
+							projectiles.remove(p);
 						}
 					}
 				}

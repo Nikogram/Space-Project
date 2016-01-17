@@ -45,7 +45,7 @@ public class Game extends ApplicationAdapter
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
 		ennemyVessel = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
-		ennemyVessel.generate(1);
+		ennemyVessel.generate(2);
 		
 		Map = new WarMap();
 		
@@ -75,13 +75,7 @@ public class Game extends ApplicationAdapter
 		display.setProjectionMatrix(camera.combined);
 		
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		if (playerVessel.isCollidedWithVessel(ennemyVessel))
-			Gdx.gl.glClearColor(0.5f, 0, 0, 1);
-		else
-			Gdx.gl.glClearColor(0, 0, 0, 1);
-		
-		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
 		ennemyVessel.draw(display);

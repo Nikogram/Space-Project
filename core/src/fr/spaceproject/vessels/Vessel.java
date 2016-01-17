@@ -1,5 +1,7 @@
 package fr.spaceproject.vessels;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
@@ -15,6 +17,7 @@ public class Vessel
 {
 	protected VesselModule[][] modules;
 	protected boolean isAI;
+	protected VesselAI AI;
 	protected int faction;
 	protected float timeBeforeCall;
 	protected Vector<VesselAction> actions;
@@ -36,6 +39,7 @@ public class Vessel
 		}
 		
 		this.isAI = isAI;
+		AI = new VesselAI();
 		this.faction = faction;
 		timeBeforeCall = 0;
 		actions = new Vector<VesselAction>();
@@ -51,6 +55,11 @@ public class Vessel
 	public Vec2f getPosition()
 	{
 		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position;
+	}
+	
+	public float getAngle()
+	{
+		return modules[cockpitPosition.x][cockpitPosition.y].sprite.angle;
 	}
 	
 	public boolean isCollidedWithVessel(Vessel vessel)
@@ -103,51 +112,78 @@ public class Vessel
 		
 		actions.clear();
 		
-		// Modification de la vitesse
+		Map<VesselAction, Boolean> currentActions = new LinkedHashMap<VesselAction, Boolean>();
+		currentActions.put(VesselAction.TurnLeft, false);
+		currentActions.put(VesselAction.TurnRight, false);
+		currentActions.put(VesselAction.MoveForward, false);
+		currentActions.put(VesselAction.MoveBackward, false);
+		currentActions.put(VesselAction.MoveLeft, false);
+		currentActions.put(VesselAction.MoveRight, false);
+		currentActions.put(VesselAction.Shoot, false);
+		
+		// Generation des actions
 		if (!isAI)
 		{
 			if (Gdx.input.isKeyPressed(Keys.Q))
-			{
-				sprite.angle += lastFrameTime * 100;
-				actions.add(VesselAction.TurnLeft);
-			}
+				currentActions.put(VesselAction.TurnLeft, true);
 			if (Gdx.input.isKeyPressed(Keys.D))
-			{
-				sprite.angle -= lastFrameTime * 100;
-				actions.add(VesselAction.TurnRight);
-			}
+				currentActions.put(VesselAction.TurnRight, true);
+			if (Gdx.input.isKeyPressed(Keys.Z))
+				currentActions.put(VesselAction.MoveForward, true);
+			if (Gdx.input.isKeyPressed(Keys.S))
+				currentActions.put(VesselAction.MoveBackward, true);
+			if (Gdx.input.isKeyPressed(Keys.A))
+				currentActions.put(VesselAction.MoveLeft, true);
+			if (Gdx.input.isKeyPressed(Keys.E))
+				currentActions.put(VesselAction.MoveRight, true);
+			if (Gdx.input.isKeyPressed(Keys.SPACE))
+				currentActions.put(VesselAction.Shoot, true);
+		}
+		else
+			AI.update(this, vessels.get(0), currentActions, lastFrameTime * 100);
+		
+		
+		// Modification de la vitesse
+		if (currentActions.get(VesselAction.TurnLeft))
+		{
+			sprite.angle += lastFrameTime * 100;
+			actions.add(VesselAction.TurnLeft);
+		}
+		if (currentActions.get(VesselAction.TurnRight))
+		{
+			sprite.angle -= lastFrameTime * 100;
+			actions.add(VesselAction.TurnRight);
 		}
 		
 		
 		// Modification de l'acceleration
 		sprite.acceleration.normalize(0);
 		
-		if (!isAI)
-		{
-			if (!Gdx.input.isKeyPressed(Keys.Z) && !Gdx.input.isKeyPressed(Keys.S) && !Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.E))
-				sprite.acceleration = new Vec2f(0, 0);
-			else
-			{			
-				if (Gdx.input.isKeyPressed(Keys.Z))
-				{
-					sprite.acceleration.add(new Vec2f(0, 100), sprite.angle);
-					actions.add(VesselAction.MoveForward);
-				}
-				if (Gdx.input.isKeyPressed(Keys.S))
-				{
-					sprite.acceleration.add(new Vec2f(0, -100), sprite.angle);
-					actions.add(VesselAction.MoveBackward);
-				}
-				if (Gdx.input.isKeyPressed(Keys.A))
-				{
-					sprite.acceleration.add(new Vec2f(-100, 0), sprite.angle);
-					actions.add(VesselAction.MoveLeft);
-				}
-				if (Gdx.input.isKeyPressed(Keys.E))
-				{
-					sprite.acceleration.add(new Vec2f(100, 0), sprite.angle);
-					actions.add(VesselAction.MoveRight);
-				}
+		
+		if (!currentActions.get(VesselAction.MoveForward) && !currentActions.get(VesselAction.MoveBackward) &&
+				!currentActions.get(VesselAction.MoveLeft) && !currentActions.get(VesselAction.MoveRight))
+			sprite.acceleration = new Vec2f(0, 0);
+		else
+		{			
+			if (currentActions.get(VesselAction.MoveForward))
+			{
+				sprite.acceleration.add(new Vec2f(0, 100), sprite.angle);
+				actions.add(VesselAction.MoveForward);
+			}
+			if (currentActions.get(VesselAction.MoveBackward))
+			{
+				sprite.acceleration.add(new Vec2f(0, -100), sprite.angle);
+				actions.add(VesselAction.MoveBackward);
+			}
+			if (currentActions.get(VesselAction.MoveLeft))
+			{
+				sprite.acceleration.add(new Vec2f(-100, 0), sprite.angle);
+				actions.add(VesselAction.MoveLeft);
+			}
+			if (currentActions.get(VesselAction.MoveRight))
+			{
+				sprite.acceleration.add(new Vec2f(100, 0), sprite.angle);
+				actions.add(VesselAction.MoveRight);
 			}
 		}
 		
@@ -160,7 +196,7 @@ public class Vessel
 		
 		
 		// Autres actions
-		if (!isAI && Gdx.input.isKeyPressed(Keys.SPACE))
+		if (currentActions.get(VesselAction.Shoot))
 			actions.add(VesselAction.Shoot);
 		
 		
@@ -192,6 +228,8 @@ public class Vessel
 				flamesAreShown = true;
 		}
 		
+		
+		// Gestion du son		
 		if (flamesAreShown)
 			engineSound.resume();
 		else
@@ -217,22 +255,22 @@ public class Vessel
 		
 		if (configuration == 2)
 		{
-			setModule(new Vec2i(0, 1), 3, 1, Orientation.Left);
+			setModule(new Vec2i(0, 1), 3, 5, Orientation.Left);
 			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
 			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 2), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 4), 3, 1, Orientation.Up);
+			setModule(new Vec2i(1, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
 			setModule(new Vec2i(2, 2), 2, 1, Orientation.Up);
 			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 2), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 4), 3, 1, Orientation.Up);
-			setModule(new Vec2i(4, 1), 3, 1, Orientation.Right);
+			setModule(new Vec2i(3, 4), 3, 5, Orientation.Up);
+			setModule(new Vec2i(4, 1), 3, 5, Orientation.Right);
 			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
 			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
 			
