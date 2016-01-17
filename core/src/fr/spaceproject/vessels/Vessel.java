@@ -24,6 +24,8 @@ public class Vessel
 	protected Vec2i cockpitPosition;
 	protected Vec2f cockpitPositionPixels;
 	protected Sound engineSound;
+	protected Sound collisionSound;
+	protected boolean collisionSoundIsPlayed;
 	
 	
 	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction)
@@ -50,11 +52,13 @@ public class Vessel
 		engineSound.loop();
 		engineSound.play();
 		engineSound.pause();
+		collisionSound = Gdx.audio.newSound(Gdx.files.internal("CollisionVessel.mp3"));
+		collisionSoundIsPlayed = false;
 	}
 	
-	public Vec2f getPosition()
+	public final Vec2f getPosition()
 	{
-		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position;
+		return new Vec2f(modules[cockpitPosition.x][cockpitPosition.y].sprite.position);
 	}
 	
 	public float getAngle()
@@ -100,6 +104,8 @@ public class Vessel
 				modules[position.x][position.y] = new EngineVesselModule(type, level, orientation);
 			else if (type == 3)
 				modules[position.x][position.y] = new CannonVesselModule(type, level, orientation);
+			else if (type == 4)
+				modules[position.x][position.y] = new ShieldVesselModule(type, level, orientation);
 			else
 				modules[position.x][position.y] = new VesselModule(type, level, orientation);
 		}
@@ -206,7 +212,18 @@ public class Vessel
 			for (int y = 0; y < modules[x].length; ++y)
 			{
 				modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].sprite, new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
-				modules[x][y].updateCollisions(vessels, this);
+				Vessel collidedVessel = modules[x][y].updateCollisions(vessels, this);
+				
+				if (collidedVessel != null)
+				{
+					Vec2f forceVector = new Vec2f(collidedVessel.getPosition().x - getPosition().x, collidedVessel.getPosition().y - getPosition().y);
+					forceVector.normalize(-sprite.speed.getLength() - 50);
+					sprite.speed.add(forceVector, 0);
+					
+					if (!collisionSoundIsPlayed)
+						collisionSound.play();
+				}
+				
 				
 				if (modules[x][y].energy < 0)
 					modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
@@ -234,6 +251,8 @@ public class Vessel
 			engineSound.resume();
 		else
 			engineSound.pause();
+		
+		collisionSoundIsPlayed = false;
 	}
 	
 	public void draw(SpriteBatch display)
@@ -260,14 +279,15 @@ public class Vessel
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
 			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 2), 0, 1, Orientation.Up);
+			setModule(new Vec2i(1, 2), 4, 1, Orientation.Left);
 			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
 			setModule(new Vec2i(2, 2), 2, 1, Orientation.Up);
+			setModule(new Vec2i(2, 3), 4, 1, Orientation.Up);
 			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 2), 0, 1, Orientation.Up);
+			setModule(new Vec2i(3, 2), 4, 1, Orientation.Right);
 			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(4, 1), 3, 5, Orientation.Right);

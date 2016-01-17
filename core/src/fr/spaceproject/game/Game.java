@@ -27,7 +27,11 @@ public class Game extends ApplicationAdapter
 	
 	protected Vessel playerVessel;
 	protected Vessel ennemyVessel;
+<<<<<<< HEAD
 	protected FactionMap carte;
+=======
+	protected Vessel obstacle;
+>>>>>>> ef1fa4201967cd584e7bdf80fdd35d6e987eb96d
 	
 	protected WarMap map;
 	protected Geopolitics state;
@@ -44,8 +48,9 @@ public class Game extends ApplicationAdapter
 	    
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
-		ennemyVessel = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
+		ennemyVessel = new Vessel(new Vec2f(-500, -500), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		ennemyVessel.generate(2);
+		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		
 		map = new WarMap();
 		carte =new FactionMap(playerVessel.getPosition(),new Coor(0,0),map);
@@ -62,8 +67,9 @@ public class Game extends ApplicationAdapter
 		
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		playerVessel.update(lastFrameTime, vessels);
 		ennemyVessel.update(lastFrameTime, vessels);
+		playerVessel.update(lastFrameTime, vessels);
+		
 		
 		carte.update(playerVessel.getPosition(),new Coor(0,0),map);
 		
@@ -78,7 +84,11 @@ public class Game extends ApplicationAdapter
 		display.begin();
 		ennemyVessel.draw(display);
 		playerVessel.draw(display);
+<<<<<<< HEAD
 		carte.draw(display);
+=======
+		obstacle.draw(display);
+>>>>>>> ef1fa4201967cd584e7bdf80fdd35d6e987eb96d
 		display.end();
 		
 		

@@ -33,6 +33,8 @@ class VesselModule
 			return "EngineVesselModule.png";
 		else if (type == 3)	// Cannon
 			return "CannonVesselModule.png";
+		else if (type == 4)	// Shield
+			return "ShieldVesselModule.png";
 		else	// Simple
 			return "SimpleVesselModule.png";
 	}
@@ -42,7 +44,7 @@ class VesselModule
 		return 100 + 20 * (level - 1);
 	}
 	
-	public void updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
 	{
 		for (int i = 0; i < vessels.size(); ++i)
 		{
@@ -53,10 +55,14 @@ class VesselModule
 					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
 					{
 						vessels.get(i).modules[x][y].energy -= 10;
+						vessels.get(i).collisionSoundIsPlayed = true;
+						return vessels.get(i);
 					}
 				}
 			}
 		}
+		
+		return null;
 	}
 	
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
