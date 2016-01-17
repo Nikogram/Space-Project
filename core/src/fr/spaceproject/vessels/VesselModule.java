@@ -2,6 +2,8 @@ package fr.spaceproject.vessels;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
@@ -35,6 +37,8 @@ class VesselModule
 			return "CannonVesselModule.png";
 		else if (type == 4)	// Shield
 			return "ShieldVesselModule.png";
+		else if (type == -1)	// Broken
+			return "BrokenVesselModule.png";
 		else	// Simple
 			return "SimpleVesselModule.png";
 	}
@@ -74,7 +78,7 @@ class VesselModule
 	
 	public void draw(SpriteBatch display)
 	{
-		if (type >= 0)
+		if (type >= -1)
 			sprite.draw(display);
 	}
 }

@@ -14,7 +14,7 @@ public class Sprite
 	public float angle;
 	public Vec2f speed;
 	public Vec2f acceleration;
-	Texture texture;
+	public Texture texture;
 	public Color color;
 	protected Vec2f oldPosition;
 	

@@ -27,11 +27,8 @@ public class Game extends ApplicationAdapter
 	
 	protected Vessel playerVessel;
 	protected Vessel ennemyVessel;
-<<<<<<< HEAD
 	protected FactionMap carte;
-=======
 	protected Vessel obstacle;
->>>>>>> ef1fa4201967cd584e7bdf80fdd35d6e987eb96d
 	
 	protected WarMap map;
 	protected Geopolitics state;
@@ -84,11 +81,8 @@ public class Game extends ApplicationAdapter
 		display.begin();
 		ennemyVessel.draw(display);
 		playerVessel.draw(display);
-<<<<<<< HEAD
 		carte.draw(display);
-=======
 		obstacle.draw(display);
->>>>>>> ef1fa4201967cd584e7bdf80fdd35d6e987eb96d
 		display.end();
 		
 		

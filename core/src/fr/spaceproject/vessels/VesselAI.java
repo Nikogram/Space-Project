@@ -28,10 +28,10 @@ public class VesselAI
 		distanceVessels.normalize(1);
 		
 		
-		if (distanceBeetweenVessels > 500)
+		/*if (distanceBeetweenVessels > 500)
 			currentActions.put(VesselAction.MoveForward, true);
 		else if (distanceBeetweenVessels < 300)
-			currentActions.put(VesselAction.MoveBackward, true);
+			currentActions.put(VesselAction.MoveBackward, true);*/
 		
 		
 		Vec2f sightVector = new Vec2f(-1, 0);
