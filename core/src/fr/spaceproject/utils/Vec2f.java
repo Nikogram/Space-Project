@@ -47,6 +47,14 @@ public class Vec2f
 		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
 	}
 	
+	public Vec2f add(int xd,int yd)
+	{
+		Vec2f newVector = new Vec2f(this);
+		newVector.x +=xd;
+		newVector.y +=yd;
+		return newVector;
+	}
+	
 	public void normalize(float length)
 	{
 		if (getLength() != 0)

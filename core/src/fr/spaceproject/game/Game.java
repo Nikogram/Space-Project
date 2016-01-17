@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
+import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
@@ -26,11 +27,11 @@ public class Game extends ApplicationAdapter
 	
 	protected Vessel playerVessel;
 	protected Vessel ennemyVessel;
+	protected FactionMap carte;
 	
 	protected WarMap map;
 	protected Geopolitics state;
 	
-	public int ite;
 
 
 	@Override
@@ -47,10 +48,9 @@ public class Game extends ApplicationAdapter
 		ennemyVessel.generate(2);
 		
 		map = new WarMap();
-		
+		carte =new FactionMap(playerVessel.getPosition(),new Coor(0,0),map);
 		state = new Geopolitics(5);
 		
-		int ite =0;
 	}
 
 	@Override
@@ -65,6 +65,7 @@ public class Game extends ApplicationAdapter
 		playerVessel.update(lastFrameTime, vessels);
 		ennemyVessel.update(lastFrameTime, vessels);
 		
+		carte.update(playerVessel.getPosition(),new Coor(0,0),map);
 		
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
@@ -77,21 +78,12 @@ public class Game extends ApplicationAdapter
 		display.begin();
 		ennemyVessel.draw(display);
 		playerVessel.draw(display);
+		carte.draw(display);
 		display.end();
 		
 		
-		if (Gdx.input.isKeyPressed(Keys.M)){
-			for (int j=2;j>-3;j--){
-				for (int i=-2;i<3;i++){
-					System.out.print(map.appartCoor((new Coor(i,j)).toStrings())+ " ");
-				}
-				System.out.println();
-			}
-			System.out.println("-----");
+		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
-			System.out.println("\n"+ite);
-			ite=ite+1;
-		}
 	}
 	@Override
 	public void pause()	// Quand le jeu est en pause sur Android, ou quand on quitte
