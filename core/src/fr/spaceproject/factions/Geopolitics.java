@@ -8,9 +8,10 @@ public class Geopolitics {
 	public Geopolitics(int i){
 		state=new Faction[i];
 		length=i;
-		for (int j=0;j<i;j++){
+		for (int j=1;j<i;j++){
 			state[j]=new Faction(j,1);
 		}
+			state[0]=new Faction(0,0);
 	}
 	public Faction getFaction(int i){
 		return state[i];

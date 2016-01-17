@@ -15,7 +15,7 @@ public class Coor {
 	public int getX(){
 		String[] valeur = str.split(" ");
 		return Integer.parseInt(valeur[0]);
-	}
+	}	
 	public int getY(){
 		String[] valeur = str.split(" ");
 		return Integer.parseInt(valeur[1]);

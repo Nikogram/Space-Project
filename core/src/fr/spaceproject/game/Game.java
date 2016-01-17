@@ -30,7 +30,7 @@ public class Game extends ApplicationAdapter
 	protected WarMap map;
 	protected Geopolitics state;
 	
-	public int test;
+	public int ite;
 
 
 	@Override
@@ -50,7 +50,7 @@ public class Game extends ApplicationAdapter
 		
 		state = new Geopolitics(5);
 		
-		int test =0;
+		int ite =0;
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class Game extends ApplicationAdapter
 			}
 			System.out.println("-----");
 			map.warBegin(state);
-			System.out.println("\n"+test);
-			test=test+1;
+			System.out.println("\n"+ite);
+			ite=ite+1;
 		}
 	}
 	@Override
