@@ -48,6 +48,30 @@ public class CannonVesselModule extends VesselModule
 	}
 	
 	@Override
+	public void updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	{
+		super.updateCollisions(vessels, moduleVessel);
+		
+		for (int i = 0; i < vessels.size(); ++i)
+		{
+			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
+			{
+				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+				{
+					for (int p = 0; p < projectiles.size(); ++p)
+					{
+						if (vessels.get(i).modules[x][y].type >= 0 && projectiles.get(p).sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
+						{
+							vessels.get(i).modules[x][y].energy -= 10;
+							System.out.println("Touché !");
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
 		super.update(lastFrameTime, vesselSprite, moduleRelativePosition, actions);
