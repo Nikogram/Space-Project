@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.Faction;
+import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
@@ -24,12 +25,10 @@ public class Game extends ApplicationAdapter
 	protected Vessel playerVessel;
 	protected Vessel ennemyVessel;
 	
-	protected WarMap Map;
-	protected Faction green;
-	protected Faction blue;
-	protected Faction red;
-	protected Faction yellow;
-	protected Faction Neutral;
+	protected WarMap map;
+	protected Geopolitics state;
+	
+	public int test;
 
 
 	@Override
@@ -45,13 +44,11 @@ public class Game extends ApplicationAdapter
 		ennemyVessel = new Vessel(new Vec2f(-100, -100), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		ennemyVessel.generate(1);
 		
-		Map = new WarMap();
+		map = new WarMap();
 		
-		Neutral = new Faction(0,0,"grey");
-		blue = new Faction(1,1,"blue");
-		red = new Faction(2,1,"red");
-		yellow = new Faction(3,1,"yellow");
-		green = new Faction(4,1,"green");
+		state = new Geopolitics(5);
+		
+		int test =0;
 	}
 
 	@Override
@@ -78,20 +75,18 @@ public class Game extends ApplicationAdapter
 		
 		
 		if (Gdx.input.isKeyPressed(Keys.M)){
-			for (int j=1;j>-2;j--){
-				for (int i=-1;i<2;i++){
-					System.out.print(Map.appartCoor((new Coor(i,j)).toStrings()));
+			for (int j=2;j>-3;j--){
+				for (int i=-2;i<3;i++){
+					System.out.print(map.appartCoor((new Coor(i,j)).toStrings())+ " ");
 				}
 				System.out.println();
 			}
-			System.out.println("----");
-			Map.warBegin(1);
-			Map.warBegin(2);
-			Map.warBegin(3);
-			Map.warBegin(4);
+			System.out.println("-----");
+			map.warBegin(state);
+			System.out.println("\n"+test);
+			test=test+1;
 		}
 	}
-	
 	@Override
 	public void pause()	// Quand le jeu est en pause sur Android, ou quand on quitte
 	{
@@ -104,7 +99,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionné
+	public void resize(int width, int height) // Quand la fenï¿½tre est redimensionnï¿½
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();

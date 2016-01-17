@@ -3,7 +3,6 @@ package fr.spaceproject.factions;
 public class Faction {
 	private int team;
 	private int totalTerritories;
-	private String color;
 	
 	
 	public Faction(){
@@ -11,10 +10,23 @@ public class Faction {
 		this.totalTerritories=0;
 	}
 	
-	public Faction(int teamNb,int totalNb,String color){
+	public Faction(int teamNb,int totalNb){
 		this.team=teamNb;
 		this.totalTerritories=totalNb;
-		this.color=color;
+	}
+	
+	public void setTeam(int i){
+		team=i;
+	}
+	
+	
+	
+	public int getNumber(){
+		return team;
+	}
+	
+	public int getTerritories(){
+		return totalTerritories;
 	}
 	
 	public void loseTerritorie(){

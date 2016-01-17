@@ -8,45 +8,55 @@ import java.util.Map.Entry;
 import fr.spaceproject.utils.Coor;
 
 public class WarMap {
-	
+	private int discoverSector;
 	private Map<String,Sector> World;
 	
 	public WarMap(){
 		World =new LinkedHashMap<String,Sector>();
-		this.World.put((new Coor(0,0)).toStrings(),new Sector());
-		this.World.put((new Coor(-1,-1)).toStrings(),new Sector(1));
-		this.World.put((new Coor(-1,1)).toStrings(),new Sector(2));
-		this.World.put((new Coor(1,1)).toStrings(),new Sector(3));
-		this.World.put((new Coor(1,-1)).toStrings(),new Sector(4));
-		this.World.put((new Coor(1,0)).toStrings(),new Sector());
-		this.World.put((new Coor(-1,0)).toStrings(),new Sector());
-		this.World.put((new Coor(0,-1)).toStrings(),new Sector());
-		this.World.put((new Coor(0,1)).toStrings(),new Sector());
+		for (int j=2;j>-3;j--){
+			for (int i=-2;i<3;i++){
+					this.World.put((new Coor(i,j)).toStrings(),new Sector());
+			}
+		}
+		World.get("-2 -2").setNewAlignement(1);
+		World.get("-2 2").setNewAlignement(2);
+		World.get("2 2").setNewAlignement(3);
+		World.get("2 -2").setNewAlignement(4);
+		this.discoverSector =25;
 	}
 	
 	public int appartCoor(String str){
 		return this.World.get(str).getAlignement();
 	}
 	
+	public void warBegin(Geopolitics state){
+		for (int i=1;i<state.length();i++){
+			warTurn(state.getFaction(i),state);
+		}
+	}
 	
-	public void warBegin(int team){
+	private void warTurn(Faction team,Geopolitics state){
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
-			if (value.getValue().getAlignement()==team){
-				battle(new Coor(value.getKey()),1,0,team);
-				battle(new Coor(value.getKey()),-1,0,team);
-				battle(new Coor(value.getKey()),0,-1,team);
-				battle(new Coor(value.getKey()),0,1,team);
+			if (value.getValue().getAlignement()==team.getNumber()){
+				battle(new Coor(value.getKey()),1,0,team,state);
+				battle(new Coor(value.getKey()),-1,0,team,state);
+				battle(new Coor(value.getKey()),0,-1,team,state);
+				battle(new Coor(value.getKey()),0,1,team,state);
 			}
 		}
 	}
 	
-	private void battle(Coor notimp,int x,int y,int team){
+	private void battle(Coor notimp,int x,int y,Faction team,Geopolitics state){
 		String verif =notimp.addXY(x,y);
-		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team && Math.random()<0.2){
-			if (Math.random()<0.5){
-			World.get(verif).setNewAlignement(team);
+		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),5)*0.80){
+			System.out.println(Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),5)*0.80);
+			if (Math.random()<0.2){
+				team.winTerritorie();
+				state.getFaction(World.get(verif).getAlignement()).loseTerritorie();
+				World.get(verif).setNewAlignement(team.getNumber());
+			
 			}
 		}
 	}
