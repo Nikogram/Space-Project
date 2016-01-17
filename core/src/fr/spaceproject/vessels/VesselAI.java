@@ -28,10 +28,10 @@ public class VesselAI
 		distanceVessels.normalize(1);
 		
 		
-		/*if (distanceBeetweenVessels > 500)
+		if (distanceBeetweenVessels > 500)
 			currentActions.put(VesselAction.MoveForward, true);
 		else if (distanceBeetweenVessels < 300)
-			currentActions.put(VesselAction.MoveBackward, true);*/
+			currentActions.put(VesselAction.MoveBackward, true);
 		
 		
 		Vec2f sightVector = new Vec2f(-1, 0);
@@ -39,9 +39,9 @@ public class VesselAI
 		
 		float angle = (float)Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) - 90;
 		
-		if (angle > 0.1)
+		if (angle > 1)
 			currentActions.put(VesselAction.TurnLeft, true);
-		else if (angle < -0.1)
+		else if (angle < 1)
 			currentActions.put(VesselAction.TurnRight, true);
 		
 		

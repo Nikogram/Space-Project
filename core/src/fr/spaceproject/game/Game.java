@@ -58,6 +58,8 @@ public class Game extends ApplicationAdapter
 	@Override
 	public void render()
 	{
+		System.gc();
+		
 		Vector<Vessel> vessels = new Vector<Vessel>();
 		vessels.add(playerVessel);
 		vessels.add(ennemyVessel);
@@ -101,7 +103,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fen�tre est redimensionn�
+	public void resize(int width, int height) // Quand la fenetre est redimensionne
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();

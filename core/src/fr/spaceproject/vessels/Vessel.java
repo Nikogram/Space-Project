@@ -56,7 +56,13 @@ public class Vessel
 		collisionSoundIsPlayed = false;
 	}
 	
-	public final Vec2f getPosition()
+	public void finalize()
+	{
+		engineSound.dispose();
+		collisionSound.dispose();
+	}
+	
+	public Vec2f getPosition()
 	{
 		return new Vec2f(modules[cockpitPosition.x][cockpitPosition.y].sprite.position);
 	}
@@ -105,6 +111,8 @@ public class Vessel
 			else if (type == 3)
 				modules[position.x][position.y] = new CannonVesselModule(type, level, orientation);
 			else if (type == 4)
+				modules[position.x][position.y] = new LaserVesselModule(type, level, orientation);
+			else if (type == 5)
 				modules[position.x][position.y] = new ShieldVesselModule(type, level, orientation);
 			else
 				modules[position.x][position.y] = new VesselModule(type, level, orientation);
@@ -284,15 +292,15 @@ public class Vessel
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
 			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 2), 4, 1, Orientation.Left);
+			setModule(new Vec2i(1, 2), 5, 1, Orientation.Left);
 			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 3), 4, 1, Orientation.Up);
+			setModule(new Vec2i(2, 3), 5, 1, Orientation.Up);
 			setModule(new Vec2i(2, 4), 2, 1, Orientation.Up);
 			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 2), 4, 1, Orientation.Right);
+			setModule(new Vec2i(3, 2), 5, 1, Orientation.Right);
 			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 4), 3, 5, Orientation.Up);
 			setModule(new Vec2i(4, 1), 3, 5, Orientation.Right);

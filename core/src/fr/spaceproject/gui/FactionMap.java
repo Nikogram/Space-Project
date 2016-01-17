@@ -10,21 +10,29 @@ import fr.spaceproject.utils.Vec2f;
 
 public class FactionMap {
 	private Sprite[][] carte;
+	private int[][] appart;
 	
 	public FactionMap(Vec2f placePlayer,Coor coorPlayer,WarMap map){
 		carte = new Sprite[5][5];
+		appart = new int[5][5];
 		for (int j=4;j>-1;j--){
 			for (int i=0;i<5;i++){
+				appart[i][j] = map.appartCoor(coorPlayer.addXY(i-2,j-2));
 				carte[i][j]=new Sprite(placePlayer.add((i-3)*20,(j-3)*20),new Vec2f(0,0),translate(coorPlayer.addXY(i-2,j-2),map));
 			}
 		}
 	}
 	
 	public void update(Vec2f placePlayer,Coor coorPlayer,WarMap map){
-		carte = new Sprite[5][5];
 		for (int j=4;j>-1;j--){
-			for (int i=0;i<5;i++){
-				this.carte[i][j]=new Sprite(placePlayer.add((i+25)*21,(j+10)*21),new Vec2f(0,0),translate(coorPlayer.addXY(i-2,j-2),map));
+			for (int i=0;i<5;i++)
+			{
+				if (appart[i][j] != map.appartCoor(coorPlayer.addXY(i-2,j-2)))
+				{
+					appart[i][j] = map.appartCoor(coorPlayer.addXY(i-2,j-2));
+					this.carte[i][j].setTexture(translate(coorPlayer.addXY(i-2,j-2),map));
+				}
+				this.carte[i][j].position = placePlayer.add((i+25)*21,(j+10)*21);
 			}
 		}
 	}
