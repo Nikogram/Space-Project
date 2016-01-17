@@ -16,6 +16,7 @@ public class Sprite
 	public Vec2f acceleration;
 	Texture texture;
 	public Color color;
+	protected Vec2f oldPosition;
 	
 	public Sprite(Vec2f position, Vec2f size, String textureFileName)
 	{
@@ -26,6 +27,7 @@ public class Sprite
 		texture = new Texture(Gdx.files.internal(textureFileName));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		color = new Color(1, 1, 1, 1);
+		oldPosition = position;
 		
 		if (size.x == 0 && size.y == 0)
 			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
@@ -56,6 +58,20 @@ public class Sprite
 			{
 				if (isCollidedWithSegment(spriteVertices[i], spriteVertices[i + 1 > 3 ? 0 : i + 1], intersectionPoint))
 					return true;
+			}
+			
+			if (sprite.position.x != sprite.oldPosition.x || sprite.position.y != sprite.oldPosition.y)
+			{
+				Vec2f spriteOldVertices[] = {new Vec2f(sprite.oldPosition.x + -sprite.size.x / 2, sprite.oldPosition.y + sprite.size.y / 2),
+						new Vec2f(sprite.oldPosition.x + sprite.size.x / 2, sprite.oldPosition.y + sprite.size.y / 2),
+						new Vec2f(sprite.oldPosition.x + sprite.size.x / 2, sprite.oldPosition.y + -sprite.size.y / 2),
+						new Vec2f(sprite.oldPosition.x + -sprite.size.x / 2, sprite.oldPosition.y + -sprite.size.y / 2)};
+				
+				for (int i = 0; i < 4; ++i)
+				{
+					if (isCollidedWithSegment(spriteVertices[i], spriteOldVertices[i], intersectionPoint))
+						return true;
+				}
 			}
 		}
 		
@@ -135,12 +151,15 @@ public class Sprite
 	
 	public void updateSpeed(float lastFrameTime)
 	{
+		oldPosition = new Vec2f(position);
 		speed.set(speed.x + acceleration.x * lastFrameTime, speed.y + acceleration.y * lastFrameTime);
 		move(new Vec2f(speed.x * lastFrameTime, speed.y * lastFrameTime));
 	}
 	
 	public void updateSpeed(float lastFrameTime, boolean rotationIsTakenAccount)
 	{
+		oldPosition = new Vec2f(position);
+		
 		if (rotationIsTakenAccount)
 			updateSpeed(lastFrameTime);
 		else
