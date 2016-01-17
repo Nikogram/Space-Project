@@ -53,6 +53,22 @@ public class Vessel
 		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position;
 	}
 	
+	public boolean isCollidedWithVessel(Vessel vessel)
+	{
+		for (int x = 0; x < modules.length; ++x)
+		for (int y = 0; y < modules[x].length; ++y)
+		{
+			for (int i = 0; i < vessel.modules.length; ++i)
+			for (int j = 0; j < vessel.modules[i].length; ++j)
+			{
+				if (modules[x][y].type >= 0 && vessel.modules[i][j].type >= 0 && modules[x][y].sprite.isCollidedWithSprite(vessel.modules[i][j].sprite, new Vec2f()))
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public void updateSpeed(float lastFrameTime)
 	{
 		for (int x = 0; x < modules.length; ++x)
@@ -80,7 +96,7 @@ public class Vessel
 		}
 	}
 	
-	public void update(float lastFrameTime)
+	public void update(float lastFrameTime, Vector<Vessel> vessels)
 	{
 		Sprite sprite = modules[cockpitPosition.x][cockpitPosition.y].sprite;
 		cockpitPositionPixels = sprite.position;
@@ -152,7 +168,13 @@ public class Vessel
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
+			{
 				modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].sprite, new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
+				modules[x][y].updateCollisions(vessels, this);
+				
+				if (modules[x][y].energy < 0)
+					modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
+			}
 		}
 		
 		
@@ -214,6 +236,11 @@ public class Vessel
 			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
 			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
 			
+		}
+		else if (configuration == 3)
+		{
+			setModule(new Vec2i(2, 0), 0, 1, Orientation.Up);
+			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
 		}
 		else
 		{

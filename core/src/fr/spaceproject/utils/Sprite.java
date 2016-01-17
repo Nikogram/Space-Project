@@ -42,17 +42,87 @@ public class Sprite
 		return rotatedVertex;
 	}
 	
-	public boolean spriteIsCollided(Sprite sprite)
+	public boolean isCollidedWithSprite(Sprite sprite, Vec2f intersectionPoint)
 	{
-		
-		
 		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
 				new Vec2f(size.x / 2 + sprite.size.x / 2, size.y / 2 + sprite.size.y / 2).getLength())	// Test simplifié
 		{
-			return true;
+			Vec2f spriteVertices[] = {new Vec2f(sprite.position.x + -sprite.size.x / 2, sprite.position.y + sprite.size.y / 2),
+					new Vec2f(sprite.position.x + sprite.size.x / 2, sprite.position.y + sprite.size.y / 2),
+					new Vec2f(sprite.position.x + sprite.size.x / 2, sprite.position.y + -sprite.size.y / 2),
+					new Vec2f(sprite.position.x + -sprite.size.x / 2, sprite.position.y + -sprite.size.y / 2)};
+			
+			for (int i = 0; i < 4; ++i)
+			{
+				if (isCollidedWithSegment(spriteVertices[i], spriteVertices[i + 1 > 3 ? 0 : i + 1], intersectionPoint))
+					return true;
+			}
 		}
 		
 		return false;
+	}
+	
+	public boolean isCollidedWithSegment(Vec2f A, Vec2f B, Vec2f intersectionPoint)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			if (borderIsCollidedWithSegment(A, B, i, intersectionPoint))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean borderIsCollidedWithSegment(Vec2f A, Vec2f B, int borderId, Vec2f intersectionPoint)
+	{
+		// A et B : les deux points du premier segment
+		// C et D : les deux points d'un des segments du sprite
+		Vec2f C;
+		Vec2f D;
+		
+		if (borderId == 0)
+		{
+			C = getRotatedPosition(new Vec2f(-size.x / 2, size.y / 2), angle);
+			D = getRotatedPosition(new Vec2f(size.x / 2, size.y / 2), angle);
+		}
+		else if (borderId == 1)
+		{
+			C = getRotatedPosition(new Vec2f(size.x / 2, size.y / 2), angle);
+			D = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), angle);
+		}
+		else if (borderId == 2)
+		{
+			C = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), angle);
+			D = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), angle);
+		}
+		else if (borderId == 3)
+		{
+			C = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), angle);
+			D = getRotatedPosition(new Vec2f(-size.x / 2, size.y / 2), angle);
+		}
+		else
+			return false;
+		
+		
+		// Soit P le point d'intersection
+		// On a P = A + k*AB et P = C + m*CD, donc A + k*AB = C + m*CD
+		// Après décomposition on a k et m
+		
+		Vec2f AB = new Vec2f(B.x - A.x, B.y - A.y);
+		Vec2f CD = new Vec2f(D.x - C.x, D.y - C.y);
+		
+		float denominator = AB.x * CD.y - AB.y * CD.x;
+		if (denominator == 0)
+			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId, intersectionPoint);	// on recommence avec un petit décalage pour ne plus avoir de segments paralleles
+		
+		float k = -(A.x * CD.y - C.x * CD.y - CD.x * A.y + CD.x * C.y) / denominator;
+		float m = -(-AB.x * A.y + AB.x * C.y + AB.y * A.x - AB.y * C.x) / denominator;
+
+		if (k <= 0 || k >= 1 || m <= 0 || m >= 1)
+			return false;
+
+		intersectionPoint = new Vec2f(A.x + k * AB.x, A.y + k * AB.y);
+		return true;
 	}
 	
 	public void draw(SpriteBatch display)

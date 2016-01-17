@@ -44,6 +44,23 @@ class VesselModule
 		return 100 + 20 * (level - 1);
 	}
 	
+	public void updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	{
+		for (int i = 0; i < vessels.size(); ++i)
+		{
+			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
+			{
+				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+				{
+					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
+					{
+						vessels.get(i).modules[x][y].energy -= 10;
+					}
+				}
+			}
+		}
+	}
+	
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
 		sprite.position = vesselSprite.getRotatedPosition(new Vec2f(20 * moduleRelativePosition.x, 20 * moduleRelativePosition.y), vesselSprite.angle);
