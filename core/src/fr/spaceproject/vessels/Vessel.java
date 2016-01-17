@@ -287,7 +287,7 @@ public class Vessel
 		
 		if (configuration == 2)
 		{
-			setModule(new Vec2i(0, 1), 3, 5, Orientation.Left);
+			setModule(new Vec2i(0, 1), 4, 5, Orientation.Left);
 			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
 			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
@@ -303,7 +303,7 @@ public class Vessel
 			setModule(new Vec2i(3, 2), 5, 1, Orientation.Right);
 			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 4), 3, 5, Orientation.Up);
-			setModule(new Vec2i(4, 1), 3, 5, Orientation.Right);
+			setModule(new Vec2i(4, 1), 4, 5, Orientation.Right);
 			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
 			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
 			
