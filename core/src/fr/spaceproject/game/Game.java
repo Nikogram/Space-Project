@@ -13,6 +13,7 @@ import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.FactionMap;
+import fr.spaceproject.gui.MiniMap;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
@@ -28,7 +29,8 @@ public class Game extends ApplicationAdapter
 	protected float lastFrameTime;
 	
 	
-	protected FactionMap carte; //affichage de la minimap
+	protected FactionMap carte; //affichage de la minicarte
+	private MiniMap miniMap;
 	protected Vessel obstacle;
 	private Vessel playerVessel;
 	
@@ -45,6 +47,9 @@ public class Game extends ApplicationAdapter
 		display = new SpriteBatch();
 		
 		textureManager = new TextureManager();
+		textureManager.addTexture("MiniMap", "MiniMap.png");
+		textureManager.addTexture("MyVesselMiniMap", "MyVesselMiniMap.png");
+		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("CannonVesselModule", "CannonVesselModule.png");
 		textureManager.addTexture("CockpitVesselModule", "CockpitVesselModule.png");
@@ -71,6 +76,7 @@ public class Game extends ApplicationAdapter
 		map = new WarMap();
 		zone = new SectorMap(1500,new Coor(0,0),4, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
+		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
 		state = new Geopolitics(5);
 		
 		
@@ -91,6 +97,7 @@ public class Game extends ApplicationAdapter
 		
 		//Mise a jour de l'HUD
 		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
+		miniMap.update(playerVessel.getPosition(), map);
 		//Mise a jour des coordonnees
 		zone.updateExit(playerVessel,map);
 		// Affichage
@@ -105,6 +112,7 @@ public class Game extends ApplicationAdapter
 		zone.draw(display);
 		playerVessel.draw(display);
 		carte.draw(display);
+		miniMap.draw(display);
 		obstacle.draw(display);
 		display.end();
 		

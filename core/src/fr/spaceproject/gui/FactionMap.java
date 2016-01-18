@@ -21,7 +21,7 @@ public class FactionMap {
 		for (int j=4;j>-1;j--){
 			for (int i=0;i<5;i++){
 				appart[i][j] = map.appartCoor(coorPlayer.addXY(i-2,j-2));
-				carte[i][j]=new Sprite(placePlayer.getAdd((i-3)*20,(j-3)*20),new Vec2f(0,0),textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
+				carte[i][j]=new Sprite(placePlayer.getAdd((i+25)*21,(j+10)*21),new Vec2f(0,0),textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
 			}
 		}
 		//positionPlayer=new Sprite(placePlayer.add(20,20),new Vec2f(0,0),"player.png");
