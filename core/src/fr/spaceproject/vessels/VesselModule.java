@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
 
-class VesselModule
+public class VesselModule
 {
 	private int type;
 	private int level;

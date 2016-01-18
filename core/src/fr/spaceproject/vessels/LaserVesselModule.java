@@ -90,12 +90,11 @@ public class LaserVesselModule extends VesselModule
 		{
 			timeAfterShoot = 0;
 			laserSound.play();
+			laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
+			laserSprite.setAngle(getSprite().getAngle() - 180);
 		}
 		
-		laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
-		laserSprite.setAngle(getSprite().getAngle() - 180);
-		
-		float time = 0.1f;
+		float time = 0.05f;
 		if (timeAfterShoot > time * 2)
 			laserSprite.setAlpha(0);
 		else if (timeAfterShoot < time)
