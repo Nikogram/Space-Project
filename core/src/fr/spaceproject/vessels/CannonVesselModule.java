@@ -29,12 +29,12 @@ public class CannonVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 10 + 10f * (level - 1);
+		return 10 + 10f * (getLevel() - 1);
 	}
 	
 	public float getTimeBeforeShoot()
 	{
-		return (float)Math.max(0.1, 0.4 - 0.02 * (level - 1));
+		return (float)Math.max(0.1, 0.4 - 0.02 * (getLevel() - 1));
 	}
 	
 	public float getProjectileLifeTime()
@@ -57,9 +57,9 @@ public class CannonVesselModule extends VesselModule
 			{
 				for (int p = projectiles.size() - 1; p >= 0; --p)
 				{
-					if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
+					if (vessels.get(i).modules[x][y].getType() >= 0 && vessels.get(i).modules[x][y].getSprite().isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
 					{
-						vessels.get(i).modules[x][y].energy -= getPower();
+						vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower());
 						projectiles.remove(p);
 					}
 				}
@@ -84,8 +84,8 @@ public class CannonVesselModule extends VesselModule
 
 		if (timeAfterShoot >= getTimeBeforeShoot() && wantShoot)
 		{
-			Vec2f projectilePosition = sprite.getRotatedPosition(new Vec2f(0, 0), sprite.angle - 180);
-			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), sprite.angle - 180, getProjectileLifeTime()));
+			Vec2f projectilePosition = getSprite().getRotatedPosition(new Vec2f(0, 0), getSprite().getAngle() - 180);
+			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), getSprite().getAngle() - 180, getProjectileLifeTime()));
 			timeAfterShoot = 0;
 		}
 		

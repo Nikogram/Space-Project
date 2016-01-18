@@ -28,7 +28,7 @@ public class EngineVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 1 + 0.5f * (level - 1);
+		return 1 + 0.5f * (getLevel() - 1);
 	}
 	
 	@Override
@@ -42,18 +42,18 @@ public class EngineVesselModule extends VesselModule
 		
 		for (int i = 0; i < actions.size(); ++i)
 		{
-			if (actions.get(i).equals(VesselAction.MoveForward) && orientation.equals(Orientation.Down))
+			if (actions.get(i).equals(VesselAction.MoveForward) && getOrientation().equals(Orientation.Down))
 				flamesAreShown = true;
-			else if (actions.get(i).equals(VesselAction.MoveBackward) && orientation.equals(Orientation.Up))
+			else if (actions.get(i).equals(VesselAction.MoveBackward) && getOrientation().equals(Orientation.Up))
 				flamesAreShown = true;
-			else if (actions.get(i).equals(VesselAction.MoveLeft) && orientation.equals(Orientation.Right))
+			else if (actions.get(i).equals(VesselAction.MoveLeft) && getOrientation().equals(Orientation.Right))
 				flamesAreShown = true;
-			else if (actions.get(i).equals(VesselAction.MoveRight) && orientation.equals(Orientation.Left))
+			else if (actions.get(i).equals(VesselAction.MoveRight) && getOrientation().equals(Orientation.Left))
 				flamesAreShown = true;
 		}
 		
-		flamesSprite.position = sprite.getRotatedPosition(new Vec2f(0, -sprite.size.y / 2), sprite.angle - 180);
-		flamesSprite.angle = sprite.angle - 180;
+		flamesSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -getSprite().getSize().y / 2), getSprite().getAngle() - 180));
+		flamesSprite.setAngle(getSprite().getAngle() - 180);
 		
 		if (flamesAreShown)
 			flamesIntensity += lastFrameTime * 7;
@@ -68,11 +68,11 @@ public class EngineVesselModule extends VesselModule
 		float flamesIntensityOffset = (float)Math.abs(Math.sin(100 * time));
 		
 		if (flamesIntensity * flamesIntensityOffset <= 0)
-			flamesSprite.color.a = 0;
+			flamesSprite.setAlpha(0);
 		else if (flamesIntensity * flamesIntensityOffset >= 1)
-			flamesSprite.color.a = 1;
+			flamesSprite.setAlpha(1);
 		else
-			flamesSprite.color.a = flamesIntensity * flamesIntensityOffset;
+			flamesSprite.setAlpha(flamesIntensity * flamesIntensityOffset);
 	}
 	
 	@Override

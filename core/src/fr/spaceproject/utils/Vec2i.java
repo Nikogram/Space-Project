@@ -47,10 +47,11 @@ public class Vec2i
 		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
 	}
 	
-	public void normalize(float length)
+	public Vec2i normalize(float length)
 	{
 		if (getLength() != 0)
 			set((int)(x / getLength() * 100), (int)(y / getLength() * 100));
+		return this;
 	}
 	
 	public void rotate(float angle)

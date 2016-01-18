@@ -10,11 +10,11 @@ import fr.spaceproject.utils.*;
 
 class VesselModule
 {
-	protected int type;
-	protected int level;
-	protected float energy;
-	protected Sprite sprite;
-	protected Orientation orientation;
+	private int type;
+	private int level;
+	private float energy;
+	private Sprite sprite;
+	private Orientation orientation;
 	
 	
 	public VesselModule(int type, int level, Orientation orientation)
@@ -23,7 +23,7 @@ class VesselModule
 		this.level = level;
 		energy = getMaxEnergy();
 		sprite = new Sprite(new Vec2f(), new Vec2f(), getTextureFileName());
-		sprite.angle = orientation.ordinal() * 90;
+		sprite.setAngle(orientation.ordinal() * 90);
 		this.orientation = orientation;
 	}
 	
@@ -43,6 +43,91 @@ class VesselModule
 			return "BrokenVesselModule.png";
 		else	// Simple
 			return "SimpleVesselModule.png";
+	}
+	
+	public int getType()
+	{
+		return type;
+	}
+	
+	public void setType(int type)
+	{
+		this.type = type;
+	}
+	
+	public int getLevel()
+	{
+		return level;
+	}
+	
+	public float getEnergy()
+	{
+		return energy;
+	}
+	
+	public void setEnergy(float energy)
+	{
+		this.energy = energy;
+	}
+	
+	public Sprite getSprite()
+	{
+		return sprite.clone(false);
+	}
+	
+	public Vec2f getSpritePosition()
+	{
+		return sprite.getPosition();
+	}
+	
+	public void setSpritePosition(Vec2f position)
+	{
+		sprite.setPosition(position);
+	}
+	
+	public void moveSprite(Vec2f movement)
+	{
+		sprite.move(movement);
+	}
+	
+	public float getSpriteAngle()
+	{
+		return sprite.getAngle();
+	}
+	
+	public void setSpriteAngle(float angle)
+	{
+		sprite.setAngle(angle);
+	}
+	
+	public Vec2f getSpriteSpeed()
+	{
+		return sprite.getSpeed();
+	}
+	
+	public void setSpriteSpeed(Vec2f speed)
+	{
+		sprite.setSpeed(speed);
+	}
+	
+	public Vec2f getSpriteAcceleration()
+	{
+		return sprite.getAcceleration();
+	}
+	
+	public void setSpriteAcceleration(Vec2f acceleration)
+	{
+		sprite.setAcceleration(acceleration);
+	}
+	
+	public void updateSpriteSpeed(float lastFrameTime, boolean angleIsTakenAccount)
+	{
+		sprite.updateSpeed(lastFrameTime, angleIsTakenAccount);
+	}
+	
+	public Orientation getOrientation()
+	{
+		return Orientation.valueOf(orientation.toString());
 	}
 	
 	public float getMaxEnergy()
@@ -73,9 +158,9 @@ class VesselModule
 	
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
-		sprite.position = vesselSprite.getRotatedPosition(new Vec2f(20 * moduleRelativePosition.x, 20 * moduleRelativePosition.y), vesselSprite.angle);
-		sprite.speed = vesselSprite.speed;
-		sprite.angle = vesselSprite.angle + orientation.ordinal() * 90;
+		sprite.setPosition(vesselSprite.getRotatedPosition(new Vec2f(20 * moduleRelativePosition.x, 20 * moduleRelativePosition.y), vesselSprite.getAngle()));
+		sprite.setSpeed(vesselSprite.getSpeed());
+		sprite.setAngle(vesselSprite.getAngle() + orientation.ordinal() * 90);
 	}
 	
 	public void draw(SpriteBatch display)

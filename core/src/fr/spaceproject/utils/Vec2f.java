@@ -53,7 +53,7 @@ public class Vec2f
 		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
 	}
 	
-	public Vec2f add(int xd,int yd)
+	public Vec2f getAdd(int xd,int yd)
 	{
 		Vec2f newVector = new Vec2f(this);
 		newVector.x +=xd;
@@ -61,10 +61,19 @@ public class Vec2f
 		return newVector;
 	}
 	
-	public void normalize(float length)
+	public Vec2f getAdd(Vec2f movement)
+	{
+		Vec2f newVector = new Vec2f(this);
+		newVector.x +=movement.x;
+		newVector.y +=movement.y;
+		return newVector;
+	}
+	
+	public Vec2f normalize(float length)
 	{
 		if (getLength() != 0)
 			set(x / getLength() * length, y / getLength() * length);
+		return this;
 	}
 	
 	public void rotate(float angle)

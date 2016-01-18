@@ -36,7 +36,7 @@ public class Vessel
 			for (int y = 0; y < size.y; ++y)
 			{
 				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -2), 1, Orientation.Up);
-				modules[x][y].sprite.position = position;
+				modules[x][y].setSpritePosition(position);
 			}
 		}
 		
@@ -46,7 +46,7 @@ public class Vessel
 		timeBeforeCall = 0;
 		actions = new Vector<VesselAction>();
 		this.cockpitPosition = cockpitPosition;
-		cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].sprite.position;
+		cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
 		
 		engineSound = Gdx.audio.newSound(Gdx.files.internal("EngineVesselModule.wav"));
 		engineSound.loop();
@@ -64,17 +64,17 @@ public class Vessel
 	
 	public Vec2f getPosition()
 	{
-		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position.clone();
+		return modules[cockpitPosition.x][cockpitPosition.y].getSpritePosition();
 	}
 	
 	public void setPosition(Vec2f position)
 	{
-		modules[cockpitPosition.x][cockpitPosition.y].sprite.position = position.clone();
+		modules[cockpitPosition.x][cockpitPosition.y].setSpritePosition(position);
 	}
 	
 	public float getAngle()
 	{
-		return modules[cockpitPosition.x][cockpitPosition.y].sprite.angle;
+		return modules[cockpitPosition.x][cockpitPosition.y].getSpriteAngle();
 	}
 	
 	public boolean isCollidedWithVessel(Vessel vessel)
@@ -85,7 +85,7 @@ public class Vessel
 			for (int i = 0; i < vessel.modules.length; ++i)
 			for (int j = 0; j < vessel.modules[i].length; ++j)
 			{
-				if (modules[x][y].type >= 0 && vessel.modules[i][j].type >= 0 && modules[x][y].sprite.isCollidedWithSprite(vessel.modules[i][j].sprite, new Vec2f()))
+				if (modules[x][y].getType() >= 0 && vessel.modules[i][j].getType() >= 0 && modules[x][y].getSprite().isCollidedWithSprite(vessel.modules[i][j].getSprite(), new Vec2f()))
 					return true;
 			}
 		}
@@ -98,7 +98,7 @@ public class Vessel
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].sprite.updateSpeed(lastFrameTime, false);
+				modules[x][y].updateSpriteSpeed(lastFrameTime, false);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class Vessel
 			if (type == 1)
 			{
 				modules[position.x][position.y] = new VesselModule(type, level, orientation);
-				modules[position.x][position.y].sprite.position = cockpitPositionPixels;
+				modules[position.x][position.y].setSpritePosition(cockpitPositionPixels);
 			}
 			else if (type == 2)
 				modules[position.x][position.y] = new EngineVesselModule(type, level, orientation);
@@ -126,8 +126,8 @@ public class Vessel
 	
 	public void update(float lastFrameTime, Vector<Vessel> vessels)
 	{
-		Sprite sprite = modules[cockpitPosition.x][cockpitPosition.y].sprite;
-		cockpitPositionPixels = sprite.position;
+		VesselModule cockpit = modules[cockpitPosition.x][cockpitPosition.y];
+		cockpitPositionPixels = cockpit.getSpritePosition();
 		
 		actions.clear();
 		
@@ -165,52 +165,53 @@ public class Vessel
 		// Modification de la vitesse
 		if (currentActions.get(VesselAction.TurnLeft))
 		{
-			sprite.angle += lastFrameTime * 100;
+			cockpit.setSpriteAngle(cockpit.getSpriteAngle() + lastFrameTime * 100);
 			actions.add(VesselAction.TurnLeft);
 		}
 		if (currentActions.get(VesselAction.TurnRight))
 		{
-			sprite.angle -= lastFrameTime * 100;
+			cockpit.setSpriteAngle(cockpit.getSpriteAngle() - lastFrameTime * 100);
 			actions.add(VesselAction.TurnRight);
 		}
 		
 		
 		// Modification de l'acceleration
-		sprite.acceleration.normalize(0);
-		
+		Vec2f newAcceleration = new Vec2f(0, 0);
 		
 		if (!currentActions.get(VesselAction.MoveForward) && !currentActions.get(VesselAction.MoveBackward) &&
 				!currentActions.get(VesselAction.MoveLeft) && !currentActions.get(VesselAction.MoveRight))
-			sprite.acceleration = new Vec2f(0, 0);
+			cockpit.setSpriteAcceleration(new Vec2f(0, 0));
 		else
 		{			
 			if (currentActions.get(VesselAction.MoveForward))
 			{
-				sprite.acceleration.add(new Vec2f(0, 100), sprite.angle);
+				newAcceleration.add(new Vec2f(0, 100), cockpit.getSpriteAngle());
 				actions.add(VesselAction.MoveForward);
 			}
 			if (currentActions.get(VesselAction.MoveBackward))
 			{
-				sprite.acceleration.add(new Vec2f(0, -100), sprite.angle);
+				newAcceleration.add(new Vec2f(0, -100), cockpit.getSpriteAngle());
 				actions.add(VesselAction.MoveBackward);
 			}
 			if (currentActions.get(VesselAction.MoveLeft))
 			{
-				sprite.acceleration.add(new Vec2f(-100, 0), sprite.angle);
+				newAcceleration.add(new Vec2f(-100, 0), cockpit.getSpriteAngle());
 				actions.add(VesselAction.MoveLeft);
 			}
 			if (currentActions.get(VesselAction.MoveRight))
 			{
-				sprite.acceleration.add(new Vec2f(100, 0), sprite.angle);
+				newAcceleration.add(new Vec2f(100, 0), cockpit.getSpriteAngle());
 				actions.add(VesselAction.MoveRight);
 			}
 		}
 		
-		if (sprite.speed.getLength() > 200)
-			sprite.speed.normalize(200);
+		if (cockpit.getSpriteSpeed().getLength() > 200)
+			cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(200));
 		
-		if (sprite.acceleration.getLength() > 100)
-			sprite.acceleration.normalize(100);
+		
+		if (newAcceleration.getLength() > 100)
+			newAcceleration.normalize(100);
+		cockpit.setSpriteAcceleration(newAcceleration);
 		updateSpeed(lastFrameTime);
 		
 		
@@ -224,23 +225,23 @@ public class Vessel
 		{
 			for (int y = 0; y < modules[x].length; ++y)
 			{
-				modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].sprite, new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
+				modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].getSprite(), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
 				Vessel collidedVessel = modules[x][y].updateCollisions(vessels, this);
 				
 				if (collidedVessel != null)
 				{
 					Vec2f forceVector = new Vec2f(collidedVessel.getPosition().x - getPosition().x, collidedVessel.getPosition().y - getPosition().y);
-					forceVector.normalize(-sprite.speed.getLength() - 50);
-					sprite.speed.add(forceVector, 0);
+					forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
+					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector));
 					
 					if (!collisionSoundIsPlayed)
 						collisionSound.play();
 				}
 				
 				
-				if (modules[x][y].energy < 0)
+				if (modules[x][y].getEnergy() < 0)
 				{
-					if (modules[x][y].type == 2)
+					if (modules[x][y].getType() == 2)
 						modules[x][y] = new VesselModule(-2, 1, Orientation.Up);
 					else
 						modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
@@ -287,7 +288,7 @@ public class Vessel
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].type = -2;
+				modules[x][y].setType(-2);
 		}
 		
 		if (configuration == 2)

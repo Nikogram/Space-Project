@@ -21,7 +21,7 @@ public class LaserVesselModule extends VesselModule
 	{
 		super(type, level, orientation);
 		laserSprite = new Sprite(new Vec2f(), new Vec2f(500, 6), "ProjectileLaserVesselModule.png");
-		laserSprite.color.a = 0;
+		laserSprite.setAlpha(0);
 		timeAfterShoot = getTimeBeforeShoot();
 		laserSound = Gdx.audio.newSound(Gdx.files.internal("LaserVesselModule.mp3"));
 	}
@@ -39,12 +39,12 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 1 + 1f * (level - 1);
+		return 1 + 1f * (getLevel() - 1);
 	}
 	
 	public float getTimeBeforeShoot()
 	{
-		return (float)Math.max(1, 0.4 - 0.02 * (level - 1));
+		return (float)Math.max(1, 0.4 - 0.02 * (getLevel() - 1));
 	}
 	
 	@Override
@@ -57,8 +57,8 @@ public class LaserVesselModule extends VesselModule
 				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 				{
 					//if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(laserSprite, new Vec2f()))
-					if (vessels.get(i).modules[x][y].type >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
-						vessels.get(i).modules[x][y].energy -= getPower() * laserSprite.color.a;
+					if (vessels.get(i).modules[x][y].getType() >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(), new Vec2f()))
+						vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower() * laserSprite.getColor().a);
 				}
 			}
 		}
@@ -85,16 +85,16 @@ public class LaserVesselModule extends VesselModule
 			laserSound.play();
 		}
 		
-		laserSprite.position = sprite.getRotatedPosition(new Vec2f(0, -laserSprite.size.x / 2 - sprite.size.x / 2), sprite.angle - 180);
-		laserSprite.angle = sprite.angle - 180;
+		laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
+		laserSprite.setAngle(getSprite().getAngle() - 180);
 		
 		float time = 0.1f;
 		if (timeAfterShoot > time * 2)
-			laserSprite.color.a = 0;
+			laserSprite.setAlpha(0);
 		else if (timeAfterShoot < time)
-			laserSprite.color.a = (1 / time) * timeAfterShoot;
+			laserSprite.setAlpha((1 / time) * timeAfterShoot);
 		else
-			laserSprite.color.a = 1 - (1 / time) * (timeAfterShoot - time);
+			laserSprite.setAlpha(1 - (1 / time) * (timeAfterShoot - time));
 	}
 	
 	@Override

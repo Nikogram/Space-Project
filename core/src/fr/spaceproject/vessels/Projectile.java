@@ -16,8 +16,8 @@ public class Projectile
 	public Projectile(Vec2f position, Vec2f speed, float angle, float lifeTime)
 	{
 		sprite = new Sprite(position, new Vec2f(), "ProjectileCannonVesselModule.png");
-		sprite.angle = angle;
-		sprite.speed = speed;
+		sprite.setAngle(angle);
+		sprite.setSpeed(speed);
 		timeBeforeDestruction = lifeTime;
 		sound = Gdx.audio.newSound(Gdx.files.internal("ProjectileCannonVesselModule.wav"));
 		sound.play();
