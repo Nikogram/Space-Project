@@ -46,7 +46,13 @@ public class Vec2i
 		x += vector.x * Math.cos(angle * Math.PI / 180) - vector.y * Math.sin(angle * Math.PI / 180);
 		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
 	}
-	
+	public Vec2i getAdd(int xd,int yd)
+	{
+		Vec2i newVector = new Vec2i(this);
+		newVector.x +=xd;
+		newVector.y +=yd;
+		return newVector;
+	}
 	public Vec2i normalize(float length)
 	{
 		if (getLength() != 0)
