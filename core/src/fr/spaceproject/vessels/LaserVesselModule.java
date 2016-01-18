@@ -21,7 +21,7 @@ public class LaserVesselModule extends VesselModule
 	public LaserVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(type, level, orientation, textureManager);
-		laserSprite = new Sprite(new Vec2f(), new Vec2f(500, 6), textureManager.getTexture("ProjectileLaserVesselModule"));
+		laserSprite = new Sprite(new Vec2f(), new Vec2f(getLength(), 6), textureManager.getTexture("ProjectileLaserVesselModule"));
 		laserSprite.setAlpha(0);
 		timeAfterShoot = getTimeBeforeShoot();
 		laserSound = Gdx.audio.newSound(Gdx.files.internal("LaserVesselModule.mp3"));
@@ -34,7 +34,12 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 1 + 1f * (getLevel() - 1);
+		return 100 + 100f * (getLevel() - 1);
+	}
+	
+	public float getLength()
+	{
+		return 500;
 	}
 	
 	public float getTimeBeforeShoot()
@@ -45,15 +50,22 @@ public class LaserVesselModule extends VesselModule
 	@Override
 	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
 	{		
-		for (int i = 0; i < vessels.size(); ++i)
+		for (int i = 0; i < vessels.size() && laserSprite.getColor().a > 0; ++i)
 		{
-			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
+			if (vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < 500)
 			{
-				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+				Sprite sprite = new Sprite(vessels.get(i).getCenter(),
+						new Vec2f(vessels.get(i).getSize().x * 20, vessels.get(i).getSize().y * 20), getTexture());
+				sprite.setAngle(vessels.get(i).getAngle());
+				
+				if (sprite.isCollidedWithSprite(laserSprite, new Vec2f()))
+				for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
 				{
-					//if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(laserSprite, new Vec2f()))
-					if (vessels.get(i).modules[x][y].getType() >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(), new Vec2f()))
-						vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower() * laserSprite.getColor().a);
+					for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+					{
+						if (vessels.get(i).modules[x][y].getType() >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(false), new Vec2f()))
+							vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower() * laserSprite.getColor().a);
+					}
 				}
 			}
 		}

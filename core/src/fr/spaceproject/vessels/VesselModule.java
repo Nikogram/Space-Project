@@ -13,7 +13,7 @@ class VesselModule
 	private int type;
 	private int level;
 	private float energy;
-	private Sprite sprite;
+	final private Sprite sprite;
 	private Orientation orientation;
 	private TextureManager textureManager;
 	
@@ -82,6 +82,13 @@ class VesselModule
 		return sprite.clone();
 	}
 	
+	public Sprite getSprite(boolean copy)
+	{
+		if (copy)
+			return sprite;
+		return sprite;
+	}
+	
 	public Vec2f getSpritePosition()
 	{
 		return sprite.getPosition();
@@ -146,6 +153,7 @@ class VesselModule
 	{
 		for (int i = 0; i < vessels.size(); ++i)
 		{
+			if (sprite.getPosition().getDistance(vessels.get(i).getCenter()) < 100)
 			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
 			{
 				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)

@@ -31,8 +31,8 @@ public class SectorMap {
 	private void createArrayVessel(int i){
 		ennemyVessel = new Vessel[i];
 		for (int l=0;l<i;l++){
-			ennemyVessel[l] = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
-			ennemyVessel[l].generate(2);	
+			ennemyVessel[l] = new Vessel(new Vec2f((float)(Math.random() * 10000 - 5000), (float)(Math.random() * 10000 - 5000)), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
+			ennemyVessel[l].generate(3);	
 		}
 	}
 	

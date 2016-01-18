@@ -9,12 +9,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.factions.Faction;
 import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.utils.Coor;
-import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -69,11 +67,9 @@ public class Game extends ApplicationAdapter
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
 		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),4, textureManager);
+		zone = new SectorMap(15000,new Coor(0,0),50, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
 		state = new Geopolitics(5);
-		
-		
 	}
 
 	@Override
@@ -113,6 +109,7 @@ public class Game extends ApplicationAdapter
 		
 		System.out.println(1 / lastFrameTime);
 	}
+	
 	@Override
 	public void pause()	// Quand le jeu est en pause sur Android, ou quand on quitte
 	{

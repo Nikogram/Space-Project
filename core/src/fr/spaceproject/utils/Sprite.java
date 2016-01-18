@@ -134,11 +134,12 @@ public class Sprite
 	
 	public Vec2f getRotatedPosition(Vec2f relativePositionToRotate, float rotationAngle)
 	{
-		Vec2f rotatedVertex = new Vec2f((float)(relativePositionToRotate.x * Math.cos(rotationAngle * Math.PI / 180) - relativePositionToRotate.y * Math.sin(rotationAngle * Math.PI / 180)),
-				(float)(relativePositionToRotate.x * Math.sin(rotationAngle * Math.PI / 180) + relativePositionToRotate.y * Math.cos(rotationAngle * Math.PI / 180)));
-		rotatedVertex.set(rotatedVertex.x + position.x, rotatedVertex.y + position.y);
+		double angle = Math.toRadians(rotationAngle);
+		double cosa = Math.cos(angle);
+		double sina = Math.sin(angle);
 		
-		return rotatedVertex;
+		return new Vec2f(position.x + (float)(relativePositionToRotate.x * cosa - relativePositionToRotate.y * sina),
+				position.y + (float)(relativePositionToRotate.x * sina + relativePositionToRotate.y * cosa));	
 	}
 	
 	public boolean isCollidedWithSprite(Sprite sprite, Vec2f intersectionPoint)

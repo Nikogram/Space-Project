@@ -53,12 +53,17 @@ public class Vec2f
 		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
 	}
 	
-	public Vec2f getAdd(int xd,int yd)
+	public Vec2f getAdd(float xd,float yd)
 	{
 		Vec2f newVector = new Vec2f(this);
 		newVector.x +=xd;
 		newVector.y +=yd;
 		return newVector;
+	}
+	
+	public float getDistance(Vec2f vector)
+	{
+		return getAdd(-vector.x,-vector.y).getLength();
 	}
 	
 	public Vec2f getAdd(Vec2f movement)
