@@ -46,7 +46,7 @@ public class Game extends ApplicationAdapter
 	    
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0);
 		playerVessel.generate(2);
-		ennemyVessel = new Vessel(new Vec2f(-500, -500), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
+		ennemyVessel = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		ennemyVessel.generate(2);
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		

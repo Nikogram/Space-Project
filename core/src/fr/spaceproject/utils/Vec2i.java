@@ -24,6 +24,12 @@ public class Vec2i
 		this.y = y;
 	}
 	
+	@Override
+	public Vec2i clone()
+	{
+		return new Vec2i(this);
+	}
+	
 	public float getLength()
 	{
 		return (float)Math.sqrt(x*x + y*y);

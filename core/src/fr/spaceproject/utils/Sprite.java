@@ -14,25 +14,40 @@ public class Sprite
 	public float angle;
 	public Vec2f speed;
 	public Vec2f acceleration;
+	public String textureFileName;
 	public Texture texture;
 	public Color color;
 	protected Vec2f oldPosition;
 	
 	public Sprite(Vec2f position, Vec2f size, String textureFileName)
 	{
-		this.position = position;
+		this.position = position.clone();
 		this.angle = 0;
 		this.speed = new Vec2f();
 		this.acceleration = new Vec2f();
+		this.textureFileName = textureFileName;
 		texture = new Texture(Gdx.files.internal(textureFileName));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		color = new Color(1, 1, 1, 1);
-		oldPosition = position;
+		oldPosition = this.position;
 		
 		if (size.x == 0 && size.y == 0)
 			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
 		else
-			this.size = size;
+			this.size = new Vec2f(size.x, size.y);
+	}
+	
+	@Override
+	public Sprite clone()
+	{
+		Sprite sprite = new Sprite(position, size, textureFileName);
+		sprite.angle = angle;
+		sprite.speed = speed.clone();
+		sprite.acceleration = acceleration.clone();
+		sprite.color = new Color(color);
+		sprite.oldPosition = oldPosition.clone();
+		
+		return sprite;
 	}
 	
 	public void finalize()
@@ -52,12 +67,15 @@ public class Sprite
 	public boolean isCollidedWithSprite(Sprite sprite, Vec2f intersectionPoint)
 	{
 		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
-				new Vec2f(size.x / 2 + sprite.size.x / 2, size.y / 2 + sprite.size.y / 2).getLength())	// Test simplifié
+				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifié
 		{
-			Vec2f spriteVertices[] = {new Vec2f(sprite.position.x + -sprite.size.x / 2, sprite.position.y + sprite.size.y / 2),
-					new Vec2f(sprite.position.x + sprite.size.x / 2, sprite.position.y + sprite.size.y / 2),
-					new Vec2f(sprite.position.x + sprite.size.x / 2, sprite.position.y + -sprite.size.y / 2),
-					new Vec2f(sprite.position.x + -sprite.size.x / 2, sprite.position.y + -sprite.size.y / 2)};
+			Vec2f spriteVertices[] = {new Vec2f(-sprite.size.x / 2, -sprite.size.y / 2),
+					new Vec2f(sprite.size.x / 2, -sprite.size.y / 2),
+					new Vec2f(sprite.size.x / 2, +sprite.size.y / 2),
+					new Vec2f(-sprite.size.x / 2, +sprite.size.y / 2)};
+			
+			for (int i = 0; i < 4; ++i)
+				spriteVertices[i] = sprite.getRotatedPosition(spriteVertices[i], sprite.angle - 90);
 			
 			for (int i = 0; i < 4; ++i)
 			{
@@ -67,10 +85,18 @@ public class Sprite
 			
 			if (sprite.position.x != sprite.oldPosition.x || sprite.position.y != sprite.oldPosition.y)
 			{
-				Vec2f spriteOldVertices[] = {new Vec2f(sprite.oldPosition.x + -sprite.size.x / 2, sprite.oldPosition.y + sprite.size.y / 2),
-						new Vec2f(sprite.oldPosition.x + sprite.size.x / 2, sprite.oldPosition.y + sprite.size.y / 2),
-						new Vec2f(sprite.oldPosition.x + sprite.size.x / 2, sprite.oldPosition.y + -sprite.size.y / 2),
-						new Vec2f(sprite.oldPosition.x + -sprite.size.x / 2, sprite.oldPosition.y + -sprite.size.y / 2)};
+				Vec2f spritePosition = new Vec2f(sprite.position);
+				sprite.position = new Vec2f(sprite.oldPosition);
+				
+				Vec2f spriteOldVertices[] = {new Vec2f(-sprite.size.x / 2, sprite.size.y / 2),
+						new Vec2f(sprite.size.x / 2, sprite.size.y / 2),
+						new Vec2f(sprite.size.x / 2, -sprite.size.y / 2),
+						new Vec2f(-sprite.size.x / 2, -sprite.size.y / 2)};
+				
+				for (int i = 0; i < 4; ++i)
+					spriteOldVertices[i] = sprite.getRotatedPosition(spriteOldVertices[i], sprite.angle);
+				
+				sprite.position = new Vec2f(spritePosition);
 				
 				for (int i = 0; i < 4; ++i)
 				{
@@ -103,23 +129,23 @@ public class Sprite
 		
 		if (borderId == 0)
 		{
-			C = getRotatedPosition(new Vec2f(-size.x / 2, size.y / 2), angle);
-			D = getRotatedPosition(new Vec2f(size.x / 2, size.y / 2), angle);
+			C = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), (angle - 90));
+			D = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), (angle - 90));
 		}
 		else if (borderId == 1)
 		{
-			C = getRotatedPosition(new Vec2f(size.x / 2, size.y / 2), angle);
-			D = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), angle);
+			C = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), (angle - 90));
+			D = getRotatedPosition(new Vec2f(size.x / 2, +size.y / 2), (angle - 90));
 		}
 		else if (borderId == 2)
 		{
-			C = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), angle);
-			D = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), angle);
+			C = getRotatedPosition(new Vec2f(size.x / 2, +size.y / 2), (angle - 90));
+			D = getRotatedPosition(new Vec2f(-size.x / 2, +size.y / 2), (angle - 90));
 		}
 		else if (borderId == 3)
 		{
-			C = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), angle);
-			D = getRotatedPosition(new Vec2f(-size.x / 2, size.y / 2), angle);
+			C = getRotatedPosition(new Vec2f(-size.x / 2, +size.y / 2), (angle - 90));
+			D = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), (angle - 90));
 		}
 		else
 			return false;
