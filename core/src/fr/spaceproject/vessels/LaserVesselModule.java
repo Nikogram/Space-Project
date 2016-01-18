@@ -9,12 +9,12 @@ import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 
-public class CannonVesselModule extends VesselModule
+public class LaserVesselModule extends VesselModule
 {
 	protected Vector<Projectile> projectiles;
 	protected float timeAfterShoot;
 	
-	public CannonVesselModule(int type, int level, Orientation orientation)
+	public LaserVesselModule(int type, int level, Orientation orientation)
 	{
 		super(type, level, orientation);
 		projectiles = new Vector<Projectile>();
@@ -53,14 +53,17 @@ public class CannonVesselModule extends VesselModule
 		for (int i = 0; i < vessels.size(); ++i)
 		{
 			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
-			for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 			{
-				for (int p = projectiles.size() - 1; p >= 0; --p)
+				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 				{
-					if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
+					for (int p = projectiles.size() - 1; p >= 0; --p)
 					{
-						vessels.get(i).modules[x][y].energy -= getPower();
-						projectiles.remove(p);
+						if (vessels.get(i).modules[x][y].type >= 0 && vessels.get(i).modules[x][y].sprite.isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
+						{
+							vessels.get(i).modules[x][y].energy -= getPower();
+							projectiles.get(p).sound.dispose();
+							projectiles.remove(p);
+						}
 					}
 				}
 			}
@@ -93,7 +96,10 @@ public class CannonVesselModule extends VesselModule
 		{
 			projectiles.get(i).update(lastFrameTime);
 			if (projectiles.get(i).timeBeforeDestruction <= 0)
+			{
+				projectiles.get(i).sound.dispose();
 				projectiles.remove(i);
+			}
 		}
 	}
 	

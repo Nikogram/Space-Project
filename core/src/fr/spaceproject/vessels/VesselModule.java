@@ -36,6 +36,8 @@ class VesselModule
 		else if (type == 3)	// Cannon
 			return "CannonVesselModule.png";
 		else if (type == 4)	// Shield
+			return "CannonVesselModule.png";
+		else if (type == 5)	// Shield
 			return "ShieldVesselModule.png";
 		else if (type == -1)	// Broken
 			return "BrokenVesselModule.png";

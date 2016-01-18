@@ -26,7 +26,12 @@ public class WarMap {
 	}
 	
 	public int appartCoor(String str){
+		if (World.containsKey(str))
 		return this.World.get(str).getAlignement();
+		else{
+			this.World.put(str,new Sector());
+			return 0;
+		}
 	}
 	
 	public void warBegin(Geopolitics state){

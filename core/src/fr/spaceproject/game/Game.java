@@ -32,6 +32,7 @@ public class Game extends ApplicationAdapter
 	
 	protected WarMap map;
 	protected Geopolitics state;
+	private SectorMap zone;
 	
 
 
@@ -50,14 +51,18 @@ public class Game extends ApplicationAdapter
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		
 		map = new WarMap();
-		carte =new FactionMap(playerVessel.getPosition(),new Coor(0,0),map);
+		zone = new SectorMap(2100,new Coor(0,0));
+		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map);
 		state = new Geopolitics(5);
+		
 		
 	}
 
 	@Override
 	public void render()
 	{
+		System.gc();
+		
 		Vector<Vessel> vessels = new Vector<Vessel>();
 		vessels.add(playerVessel);
 		vessels.add(ennemyVessel);
@@ -67,9 +72,11 @@ public class Game extends ApplicationAdapter
 		ennemyVessel.update(lastFrameTime, vessels);
 		playerVessel.update(lastFrameTime, vessels);
 		
-		
-		carte.update(playerVessel.getPosition(),new Coor(0,0),map);
-		
+		//Mise a jour de l'HUD
+		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
+		System.out.println(zone.getCoor().toStrings());
+		//Mise a jour des coordonnees
+		zone.update(playerVessel.getPosition());
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
 		camera.update();
@@ -101,7 +108,7 @@ public class Game extends ApplicationAdapter
 	}
 	
 	@Override
-	public void resize(int width, int height) // Quand la fen�tre est redimensionn�
+	public void resize(int width, int height) // Quand la fenetre est redimensionne
 	{
 		camera.viewportWidth = Gdx.graphics.getWidth();
 		camera.viewportHeight = Gdx.graphics.getHeight();

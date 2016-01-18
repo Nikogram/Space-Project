@@ -23,6 +23,11 @@ public class Projectile
 		sound.play();
 	}
 	
+	public void finalize()
+    {
+		sound.dispose();
+    }
+	
 	public void update(float lastFrameTime)
 	{
 		timeBeforeDestruction -= lastFrameTime;

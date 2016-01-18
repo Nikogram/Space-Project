@@ -35,6 +35,11 @@ public class Sprite
 			this.size = size;
 	}
 	
+	public void finalize()
+    {
+		texture.dispose();
+    }
+	
 	public Vec2f getRotatedPosition(Vec2f relativePositionToRotate, float rotationAngle)
 	{
 		Vec2f rotatedVertex = new Vec2f((float)(relativePositionToRotate.x * Math.cos(rotationAngle * Math.PI / 180) - relativePositionToRotate.y * Math.sin(rotationAngle * Math.PI / 180)),
@@ -139,6 +144,13 @@ public class Sprite
 
 		intersectionPoint = new Vec2f(A.x + k * AB.x, A.y + k * AB.y);
 		return true;
+	}
+	
+	public void setTexture(String textureFileName)
+	{
+		texture.dispose();
+		texture = new Texture(Gdx.files.internal(textureFileName));
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	}
 	
 	public void draw(SpriteBatch display)

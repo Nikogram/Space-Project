@@ -39,9 +39,9 @@ public class VesselAI
 		
 		float angle = (float)Math.toDegrees(getAnglesDifference(distanceVessels, sightVector)) - 90;
 		
-		if (angle > 0.1)
+		if (angle > 1)
 			currentActions.put(VesselAction.TurnLeft, true);
-		else if (angle < -0.1)
+		else if (angle < 1)
 			currentActions.put(VesselAction.TurnRight, true);
 		
 		
