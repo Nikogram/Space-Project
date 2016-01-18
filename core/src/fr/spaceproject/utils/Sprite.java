@@ -14,16 +14,18 @@ public class Sprite
 	public float angle;
 	public Vec2f speed;
 	public Vec2f acceleration;
+	public String textureFileName;
 	public Texture texture;
 	public Color color;
 	protected Vec2f oldPosition;
 	
 	public Sprite(Vec2f position, Vec2f size, String textureFileName)
 	{
-		this.position = new Vec2f(position.x, position.y);
+		this.position = position.clone();
 		this.angle = 0;
 		this.speed = new Vec2f();
 		this.acceleration = new Vec2f();
+		this.textureFileName = textureFileName;
 		texture = new Texture(Gdx.files.internal(textureFileName));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		color = new Color(1, 1, 1, 1);
@@ -33,6 +35,19 @@ public class Sprite
 			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
 		else
 			this.size = new Vec2f(size.x, size.y);
+	}
+	
+	@Override
+	public Sprite clone()
+	{
+		Sprite sprite = new Sprite(position, size, textureFileName);
+		sprite.angle = angle;
+		sprite.speed = speed.clone();
+		sprite.acceleration = acceleration.clone();
+		sprite.color = new Color(color);
+		sprite.oldPosition = oldPosition.clone();
+		
+		return sprite;
 	}
 	
 	public void finalize()

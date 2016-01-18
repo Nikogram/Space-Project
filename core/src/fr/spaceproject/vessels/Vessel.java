@@ -64,7 +64,12 @@ public class Vessel
 	
 	public Vec2f getPosition()
 	{
-		return new Vec2f(modules[cockpitPosition.x][cockpitPosition.y].sprite.position);
+		return modules[cockpitPosition.x][cockpitPosition.y].sprite.position.clone();
+	}
+	
+	public void setPosition(Vec2f position)
+	{
+		modules[cockpitPosition.x][cockpitPosition.y].sprite.position = position.clone();
 	}
 	
 	public float getAngle()
