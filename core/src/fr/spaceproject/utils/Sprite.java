@@ -14,23 +14,17 @@ public class Sprite
 	private float angle;
 	private Vec2f speed;
 	private Vec2f acceleration;
-	private String textureFileName;
 	private Texture texture;
 	private Color color;
 	private Vec2f oldPosition;
 	
-	public Sprite(Vec2f position, Vec2f size, String textureFileName)
+	public Sprite(Vec2f position, Vec2f size, Texture texture)
 	{
 		this.position = position.clone();
 		this.angle = 0;
 		this.speed = new Vec2f();
 		this.acceleration = new Vec2f();
-		this.textureFileName = new String(textureFileName);
-		if (!textureFileName.equals(""))
-		{
-			texture = new Texture(Gdx.files.internal(textureFileName));
-			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		}
+		this.texture = texture;
 		color = new Color(1, 1, 1, 1);
 		oldPosition = this.position;
 		
@@ -43,22 +37,7 @@ public class Sprite
 	@Override
 	public Sprite clone()
 	{
-		Sprite sprite = new Sprite(position, size, textureFileName);
-		sprite.angle = angle;
-		sprite.speed = speed.clone();
-		sprite.acceleration = acceleration.clone();
-		sprite.color = new Color(color);
-		sprite.oldPosition = oldPosition.clone();
-		
-		return sprite;
-	}
-	
-	public Sprite clone(boolean withTexture)
-	{
-		if (withTexture)
-			return clone();
-		
-		Sprite sprite = new Sprite(position, size, "");
+		Sprite sprite = new Sprite(position, size, texture);
 		sprite.angle = angle;
 		sprite.speed = speed.clone();
 		sprite.acceleration = acceleration.clone();
@@ -123,11 +102,9 @@ public class Sprite
 		this.acceleration = acceleration.clone();
 	}
 	
-	public void setTexture(String textureFileName)
+	public void setTexture(Texture texture)
 	{
-		texture.dispose();
-		texture = new Texture(Gdx.files.internal(textureFileName));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		this.texture = texture;
 	}
 	
 	public Color getColor()

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 
@@ -19,10 +20,10 @@ public class EngineVesselModule extends VesselModule
 	protected float time;
 	
 	
-	public EngineVesselModule(int type, int level, Orientation orientation)
+	public EngineVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(type, level, orientation);
-		flamesSprite = new Sprite(new Vec2f(), new Vec2f(), "FlamesEngineVesselModule.png");
+		super(type, level, orientation, textureManager);
+		flamesSprite = new Sprite(new Vec2f(), new Vec2f(), textureManager.getTexture("FlamesEngineVesselModule"));
 		flamesAreShown = false;
 	}
 	

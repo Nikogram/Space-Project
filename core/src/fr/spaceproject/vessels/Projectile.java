@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Sprite;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 
 public class Projectile
@@ -13,9 +14,9 @@ public class Projectile
 	protected float timeBeforeDestruction;
 	protected Sound sound;
 	
-	public Projectile(Vec2f position, Vec2f speed, float angle, float lifeTime)
+	public Projectile(Vec2f position, Vec2f speed, float angle, float lifeTime, TextureManager textureManager)
 	{
-		sprite = new Sprite(position, new Vec2f(), "ProjectileCannonVesselModule.png");
+		sprite = new Sprite(position, new Vec2f(), textureManager.getTexture("ProjectileCannonVesselModule"));
 		sprite.setAngle(angle);
 		sprite.setSpeed(speed);
 		timeBeforeDestruction = lifeTime;

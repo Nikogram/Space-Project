@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 
@@ -17,10 +18,10 @@ public class LaserVesselModule extends VesselModule
 	protected float timeAfterShoot;
 	protected Sound laserSound;
 	
-	public LaserVesselModule(int type, int level, Orientation orientation)
+	public LaserVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(type, level, orientation);
-		laserSprite = new Sprite(new Vec2f(), new Vec2f(500, 6), "ProjectileLaserVesselModule.png");
+		super(type, level, orientation, textureManager);
+		laserSprite = new Sprite(new Vec2f(), new Vec2f(500, 6), textureManager.getTexture("ProjectileLaserVesselModule"));
 		laserSprite.setAlpha(0);
 		timeAfterShoot = getTimeBeforeShoot();
 		laserSound = Gdx.audio.newSound(Gdx.files.internal("LaserVesselModule.mp3"));
@@ -29,12 +30,6 @@ public class LaserVesselModule extends VesselModule
 	public void finalize()
 	{
 		laserSound.dispose();
-	}
-	
-	@Override
-	public String getTextureFileName()
-	{
-		return "CannonVesselModule.png";
 	}
 	
 	public float getPower()

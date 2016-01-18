@@ -8,14 +8,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 
 public class ShieldVesselModule extends VesselModule
 {
-	public ShieldVesselModule(int type, int level, Orientation orientation)
+	public ShieldVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(type, level, orientation);
+		super(type, level, orientation, textureManager);
 		setEnergy(getMaxEnergy());
 	}
 	

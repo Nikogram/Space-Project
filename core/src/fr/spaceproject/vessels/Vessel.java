@@ -26,16 +26,17 @@ public class Vessel
 	protected Sound engineSound;
 	protected Sound collisionSound;
 	protected boolean collisionSoundIsPlayed;
+	protected TextureManager textureManager;
 	
 	
-	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction)
+	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
 	{
 		modules = new VesselModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
 		{
 			for (int y = 0; y < size.y; ++y)
 			{
-				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -2), 1, Orientation.Up);
+				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -2), 1, Orientation.Up, textureManager);
 				modules[x][y].setSpritePosition(position);
 			}
 		}
@@ -47,6 +48,7 @@ public class Vessel
 		actions = new Vector<VesselAction>();
 		this.cockpitPosition = cockpitPosition;
 		cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
+		this.textureManager = textureManager;
 		
 		engineSound = Gdx.audio.newSound(Gdx.files.internal("EngineVesselModule.wav"));
 		engineSound.loop();
@@ -108,19 +110,19 @@ public class Vessel
 		{
 			if (type == 1)
 			{
-				modules[position.x][position.y] = new VesselModule(type, level, orientation);
+				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
 				modules[position.x][position.y].setSpritePosition(cockpitPositionPixels);
 			}
 			else if (type == 2)
-				modules[position.x][position.y] = new EngineVesselModule(type, level, orientation);
+				modules[position.x][position.y] = new EngineVesselModule(type, level, orientation, textureManager);
 			else if (type == 3)
-				modules[position.x][position.y] = new CannonVesselModule(type, level, orientation);
+				modules[position.x][position.y] = new CannonVesselModule(type, level, orientation, textureManager);
 			else if (type == 4)
-				modules[position.x][position.y] = new LaserVesselModule(type, level, orientation);
+				modules[position.x][position.y] = new LaserVesselModule(type, level, orientation, textureManager);
 			else if (type == 5)
-				modules[position.x][position.y] = new ShieldVesselModule(type, level, orientation);
+				modules[position.x][position.y] = new ShieldVesselModule(type, level, orientation, textureManager);
 			else
-				modules[position.x][position.y] = new VesselModule(type, level, orientation);
+				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
 		}
 	}
 	
@@ -242,9 +244,9 @@ public class Vessel
 				if (modules[x][y].getEnergy() < 0)
 				{
 					if (modules[x][y].getType() == 2)
-						modules[x][y] = new VesselModule(-2, 1, Orientation.Up);
+						modules[x][y] = new VesselModule(-2, 1, Orientation.Up, textureManager);
 					else
-						modules[x][y] = new VesselModule(-1, 1, Orientation.Up);
+						modules[x][y] = new VesselModule(-1, 1, Orientation.Up, textureManager);
 				}
 			}
 		}

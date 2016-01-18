@@ -15,34 +15,41 @@ class VesselModule
 	private float energy;
 	private Sprite sprite;
 	private Orientation orientation;
+	private TextureManager textureManager;
 	
 	
-	public VesselModule(int type, int level, Orientation orientation)
+	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
+		this.textureManager = textureManager;
 		this.type = type;
 		this.level = level;
 		energy = getMaxEnergy();
-		sprite = new Sprite(new Vec2f(), new Vec2f(), getTextureFileName());
+		sprite = new Sprite(new Vec2f(), new Vec2f(), getTexture());
 		sprite.setAngle(orientation.ordinal() * 90);
 		this.orientation = orientation;
 	}
 	
-	public String getTextureFileName()
+	public Texture getTexture()
 	{
 		if (type == 1)	// Cockpit
-			return "CockpitVesselModule.png";
+			return textureManager.getTexture("CockpitVesselModule");
 		else if (type == 2)	// Engine
-			return "EngineVesselModule.png";
+			return textureManager.getTexture("EngineVesselModule");
 		else if (type == 3)	// Cannon
-			return "CannonVesselModule.png";
+			return textureManager.getTexture("CannonVesselModule");
 		else if (type == 4)	// Shield
-			return "CannonVesselModule.png";
+			return textureManager.getTexture("CannonVesselModule");
 		else if (type == 5)	// Shield
-			return "ShieldVesselModule.png";
+			return textureManager.getTexture("ShieldVesselModule");
 		else if (type == -1)	// Broken
-			return "BrokenVesselModule.png";
+			return textureManager.getTexture("BrokenVesselModule");
 		else	// Simple
-			return "SimpleVesselModule.png";
+			return textureManager.getTexture("SimpleVesselModule");
+	}
+	
+	public TextureManager getTextureManager()
+	{
+		return textureManager;
 	}
 	
 	public int getType()
@@ -72,7 +79,7 @@ class VesselModule
 	
 	public Sprite getSprite()
 	{
-		return sprite.clone(false);
+		return sprite.clone();
 	}
 	
 	public Vec2f getSpritePosition()

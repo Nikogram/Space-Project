@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Coor;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
@@ -14,9 +15,11 @@ public class SectorMap {
 	private int nbEnnemyVessel;
 	private Coor posPlay;
 	private Vessel[] ennemyVessel;
+	private TextureManager textureManager;
 	
 	
-	public SectorMap(int i,Coor pos,int newnbEnnemyVessel){
+	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager){
+		this.textureManager = textureManager;
 		taille=i;
 		posPlay=pos;
 		nbEnnemyVessel=newnbEnnemyVessel;
@@ -26,7 +29,7 @@ public class SectorMap {
 	
 	private void createArrayVessel(int i){
 		for (int l=0;l<i;l++){
-			ennemyVessel[l] = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
+			ennemyVessel[l] = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
 			ennemyVessel[l].generate(2);	
 		}
 	}

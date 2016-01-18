@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
+import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 
@@ -14,17 +15,11 @@ public class CannonVesselModule extends VesselModule
 	protected Vector<Projectile> projectiles;
 	protected float timeAfterShoot;
 	
-	public CannonVesselModule(int type, int level, Orientation orientation)
+	public CannonVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(type, level, orientation);
+		super(type, level, orientation, textureManager);
 		projectiles = new Vector<Projectile>();
 		timeAfterShoot = 0;
-	}
-	
-	@Override
-	public String getTextureFileName()
-	{
-		return "CannonVesselModule.png";
 	}
 	
 	public float getPower()
@@ -85,7 +80,7 @@ public class CannonVesselModule extends VesselModule
 		if (timeAfterShoot >= getTimeBeforeShoot() && wantShoot)
 		{
 			Vec2f projectilePosition = getSprite().getRotatedPosition(new Vec2f(0, 0), getSprite().getAngle() - 180);
-			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), getSprite().getAngle() - 180, getProjectileLifeTime()));
+			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), getSprite().getAngle() - 180, getProjectileLifeTime(), getTextureManager()));
 			timeAfterShoot = 0;
 		}
 		
