@@ -92,7 +92,7 @@ public class Game extends ApplicationAdapter
 		//Mise a jour de l'HUD
 		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
 		//Mise a jour des coordonnees
-		zone.updateExit(playerVessel);
+		zone.updateExit(playerVessel,map);
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
 		camera.update();
