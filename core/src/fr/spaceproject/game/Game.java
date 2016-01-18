@@ -49,6 +49,7 @@ public class Game extends ApplicationAdapter
 		textureManager = new TextureManager();
 		textureManager.addTexture("MiniMap", "MiniMap.png");
 		textureManager.addTexture("MyVesselMiniMap", "MyVesselMiniMap.png");
+		textureManager.addTexture("EnnemiMiniMap", "EnnemiMiniMap.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("CannonVesselModule", "CannonVesselModule.png");
@@ -97,7 +98,7 @@ public class Game extends ApplicationAdapter
 		
 		//Mise a jour de l'HUD
 		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
-		miniMap.update(playerVessel.getPosition(), map);
+		miniMap.update(playerVessel.getPosition(), zone,vessels);
 		//Mise a jour des coordonnees
 		zone.updateExit(playerVessel,map);
 		// Affichage
