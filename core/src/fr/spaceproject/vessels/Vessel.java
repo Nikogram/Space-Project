@@ -325,15 +325,15 @@ public class Vessel
 		}
 		else if (configuration == 3)
 		{
-			setModule(new Vec2i(0, 0), 1, 1, Orientation.Down);
-			setModule(new Vec2i(0, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(0, 2), 1, 1, Orientation.Up);
-			setModule(new Vec2i(1, 0), 1, 1, Orientation.Up);
+			setModule(new Vec2i(0, 0), 2, 1, Orientation.Down);
+			setModule(new Vec2i(0, 1), 5, 1, Orientation.Left);
+			setModule(new Vec2i(0, 2), 3, 1, Orientation.Up);
+			setModule(new Vec2i(1, 0), 5, 1, Orientation.Down);
 			setModule(new Vec2i(1, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(1, 2), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 0), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 2), 1, 1, Orientation.Up);
+			setModule(new Vec2i(1, 2), 5, 1, Orientation.Up);
+			setModule(new Vec2i(2, 0), 2, 1, Orientation.Down);
+			setModule(new Vec2i(2, 1), 5, 1, Orientation.Right);
+			setModule(new Vec2i(2, 2), 4, 1, Orientation.Up);
 		}
 		else
 		{

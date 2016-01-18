@@ -32,7 +32,7 @@ public class SectorMap {
 		ennemyVessel = new Vessel[i];
 		nbEnnemyVessel=i;
 		for (int l=0;l<i;l++){
-			ennemyVessel[l] = new Vessel(new Vec2f((float)(Math.random() * 10000 - 5000), (float)(Math.random() * 10000 - 5000)), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
+			ennemyVessel[l] = new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager);
 			ennemyVessel[l].generate(3);	
 		}
 	}

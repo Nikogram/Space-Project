@@ -34,12 +34,12 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 100 + 100f * (getLevel() - 1);
+		return 1 + 1f * (getLevel() - 1);
 	}
 	
 	public float getLength()
 	{
-		return 500;
+		return 10000;
 	}
 	
 	public float getTimeBeforeShoot()
@@ -52,7 +52,7 @@ public class LaserVesselModule extends VesselModule
 	{		
 		for (int i = 0; i < vessels.size() && laserSprite.getColor().a > 0; ++i)
 		{
-			if (vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < 500)
+			if (vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < getLength())
 			{
 				Sprite sprite = new Sprite(vessels.get(i).getCenter(),
 						new Vec2f(vessels.get(i).getSize().x * 20, vessels.get(i).getSize().y * 20), getTexture());

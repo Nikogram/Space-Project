@@ -67,12 +67,12 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(2, 1), false, 0, textureManager);
-		playerVessel.generate(2);
-		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0, textureManager);
+		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
+		playerVessel.generate(3);
+		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
 		
 		map = new WarMap();
-		zone = new SectorMap(15000,new Coor(0,0),50, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),50, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
 		state = new Geopolitics(5);
