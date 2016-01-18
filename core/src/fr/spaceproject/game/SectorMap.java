@@ -2,6 +2,7 @@ package fr.spaceproject.game;
 
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Vec2f;
+import fr.spaceproject.vessels.Vessel;
 
 public class SectorMap {
 	private int taille;
@@ -12,21 +13,21 @@ public class SectorMap {
 		posPlay=pos;
 	}
 	
-	public void update(Vec2f placePlayer){
-		if (placePlayer.x>taille){
-			placePlayer.x=-taille;
+	public void update(Vessel playerPlayer){
+		if (playerPlayer.getPosition().x>taille){
+			playerPlayer.setPosition(new Vec2f(-taille+100,0));
 			posPlay=new Coor(posPlay.addXY(1,0));
 		}
-		if(placePlayer.x< -taille){
-			placePlayer.x=taille;
+		if(playerPlayer.getPosition().x< -taille){
+			playerPlayer.setPosition(new Vec2f(taille-100,0));
 			posPlay=new Coor(posPlay.addXY(-1, 0));
 		}
-		if (placePlayer.y>taille){
-			placePlayer.y=-taille;
+		if (playerPlayer.getPosition().y>taille){
+			playerPlayer.setPosition(new Vec2f(0,-taille+100));
 			posPlay=new Coor(posPlay.addXY(0,1));
 		}
-		if(placePlayer.y< -taille){
-			placePlayer.y=taille;
+		if(playerPlayer.getPosition().y< -taille){
+			playerPlayer.setPosition(new Vec2f(0,taille-100));
 			posPlay=new Coor(posPlay.addXY(0,-1));
 		}
 	}

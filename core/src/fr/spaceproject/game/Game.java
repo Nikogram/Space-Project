@@ -51,7 +51,7 @@ public class Game extends ApplicationAdapter
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		
 		map = new WarMap();
-		zone = new SectorMap(2100,new Coor(0,0));
+		zone = new SectorMap(1500,new Coor(0,0));
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map);
 		state = new Geopolitics(5);
 		
@@ -76,7 +76,7 @@ public class Game extends ApplicationAdapter
 		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
 		System.out.println(zone.getCoor().toStrings());
 		//Mise a jour des coordonnees
-		zone.update(playerVessel.getPosition());
+		zone.update(playerVessel);
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
 		camera.update();
