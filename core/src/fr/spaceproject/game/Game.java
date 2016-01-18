@@ -50,7 +50,7 @@ public class Game extends ApplicationAdapter
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(5, 5), new Vec2i(2, 1), true, 0);
 		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),1);
+		zone = new SectorMap(1500,new Coor(0,0),0);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map);
 		state = new Geopolitics(5);
 		
@@ -73,7 +73,7 @@ public class Game extends ApplicationAdapter
 		//Mise a jour de l'HUD
 		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
 		//Mise a jour des coordonnees
-		zone.updateExit(playerVessel);
+		zone.updateExit(playerVessel,map);
 		// Affichage
 		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
 		camera.update();
