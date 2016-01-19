@@ -15,8 +15,9 @@ public class SectorMap {
 	private int taille;
 	private int nbEnnemyVessel;
 	private Coor posPlay;
-	private Vessel[] ennemyVessel;
+	private Vector<Vessel> vessels;
 	private TextureManager textureManager;
+	private Vessel playerVessel;
 	
 	
 	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager){
@@ -24,16 +25,18 @@ public class SectorMap {
 		taille=i;
 		posPlay=pos;
 		nbEnnemyVessel=newnbEnnemyVessel;
-		ennemyVessel = new Vessel[nbEnnemyVessel];
+		vessels = new Vector<Vessel>();
+		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
+		playerVessel.generate(3);
+		vessels.add(playerVessel);
 		createArrayVessel(nbEnnemyVessel);
 	}
 	
 	private void createArrayVessel(int i){
-		ennemyVessel = new Vessel[i];
 		nbEnnemyVessel=i;
-		for (int l=0;l<i;l++){
-			ennemyVessel[l] = new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager);
-			ennemyVessel[l].generate(3);	
+		for (int l=1;l<i+1;l++){
+			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager));
+			vessels.get(l).generate(3);	
 		}
 	}
 	
@@ -66,19 +69,21 @@ public class SectorMap {
 		return taille;
 	}
 	
-	public void updateadd(Vector<Vessel> vessels){
-		for (int l=0;l<ennemyVessel.length;l++)
-			vessels.add(ennemyVessel[l]);
-	}
-	public void updateTime(float fl,Vector<Vessel> vessels){
-		for (int l=0;l<ennemyVessel.length;l++)
-			ennemyVessel[l].update(fl, vessels);
+	public void update(float fl){
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).update(fl, vessels);
 	}
 	public void draw(SpriteBatch display){
-		for (int l=0;l<ennemyVessel.length;l++)
-			ennemyVessel[l].draw(display);
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).draw(display);
 	}
 	public int nbEnnemyVessel(){
-		return nbEnnemyVessel;
+		return vessels.size();
+	}
+	public Vector<Vessel> getVector(){;
+		return vessels;
+	}
+	public Vessel getPlayer(){
+		return vessels.get(0);
 	}
 }
