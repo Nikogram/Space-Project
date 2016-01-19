@@ -13,7 +13,6 @@ import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.gui.MiniMap;
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
@@ -27,11 +26,9 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	protected Vector<Vessel> vessels;
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
 	protected Vessel obstacle;
-	private Vessel playerVessel;
 	
 	
 	protected WarMap map;	//map total de l'univers
@@ -72,19 +69,15 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
-		
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
 		
-		vessels = new Vector<Vessel>();
-		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(1, 1), false, 0, textureManager);
-		playerVessel.generate(2);
-		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
-		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
-		miniMap=new MiniMap(playerVessel.getPosition(),zone,zone.getStation(),textureManager);
-
 		state = new Geopolitics(5);
+		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
+		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
+		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
+
+		
 	}
 
 	@Override

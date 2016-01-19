@@ -1,6 +1,7 @@
 package fr.spaceproject.factions;
 
 public class Faction {
+
 	private int team;
 	private int totalTerritories;
 	
