@@ -1,6 +1,6 @@
 package fr.spaceproject.gui;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;
@@ -24,7 +24,7 @@ public class FactionMap {
 				carte[i][j]=new Sprite(placePlayer.getAdd((i+25)*21,(j+10)*21),new Vec2f(0,0),textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
 			}
 		}
-		//positionPlayer=new Sprite(placePlayer.add(20,20),new Vec2f(0,0),"player.png");
+		//positionPlayer=new Sprite(placePlayer.add(20,20),new Vec2f(0,0),AngryBar"player.png");
 	}
 	
 	public void update(Vec2f placePlayer,Coor coorPlayer,WarMap map){

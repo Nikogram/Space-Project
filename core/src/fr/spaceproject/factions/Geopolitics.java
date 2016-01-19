@@ -9,7 +9,7 @@ public class Geopolitics {
 	public Geopolitics(int i){
 		agresivity=new int[i];
 		for (int j=0;j<i;j++){
-			agresivity[j]=25;
+			agresivity[j]=25*j;
 		}
 		state=new Faction[i];
 		length=i;
@@ -26,6 +26,10 @@ public class Geopolitics {
 	}
 	public int getAgressivity(int team){
 		return agresivity[team];
+	}
+
+	public int[] getAgressivitys(){
+		return agresivity;
 	}
 	
 	public void addAgressivity(int team,int add){
