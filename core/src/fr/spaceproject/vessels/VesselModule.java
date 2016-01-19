@@ -157,6 +157,19 @@ public class VesselModule
 	
 	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
+		for (int x = 0; x < station.getSize().x; ++x)
+		{
+			for (int y = 0; y < station.getSize().y; ++y)
+			{
+				if (type >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+				{
+					energy -= 30;
+					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);
+					return station.getModulePosition(new Vec2i(x, y));
+				}
+			}
+		}
+		
 		for (int i = 0; i < vessels.size(); ++i)
 		{
 			if (sprite.getPosition().getDistance(vessels.get(i).getCenter()) < 100)
@@ -167,7 +180,6 @@ public class VesselModule
 					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
 					{
 						vessels.get(i).modules[x][y].energy -= 30;
-						vessels.get(i).collisionSoundIsPlayed = true;
 						shotVessels.add(vessels.get(i));
 						return vessels.get(i).getCenter();
 					}

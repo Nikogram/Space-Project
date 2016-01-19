@@ -45,7 +45,22 @@ public class CannonVesselModule extends VesselModule
 	
 	@Override
 	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
-	{		
+	{
+		for (int x = 0; x < station.getSize().x; ++x)
+		{
+			for (int y = 0; y < station.getSize().y; ++y)
+			{
+				for (int p = projectiles.size() - 1; p >= 0; --p)
+				{
+					if (station.getModuleType(new Vec2i(x, y)) >= 0 && projectiles.get(p).sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+					{
+						station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - getPower());
+						projectiles.remove(p);
+					}
+				}
+			}
+		}
+		
 		for (int i = 0; i < vessels.size(); ++i)
 		{
 			for (int p = projectiles.size() - 1; p >= 0; --p)

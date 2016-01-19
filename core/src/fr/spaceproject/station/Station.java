@@ -3,6 +3,7 @@ package fr.spaceproject.station;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
+import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
@@ -23,9 +24,7 @@ public class Station
 		for (int x = 0; x < size.x; ++x)
 		{
 			for (int y = 0; y < size.y; ++y)
-			{
 				modules[x][y] = new StationModule(1, 1, new Vec2f(this.position.x + 140 * x, this.position.y + 140 * y), Orientation.Up, textureManager);
-			}
 		}
 		
 		this.position = position.clone();
@@ -44,6 +43,43 @@ public class Station
 	public boolean moduleIsShown(Vec2i modulePosition)
 	{
 		return modules[modulePosition.x][modulePosition.y].getType() >= 0;
+	}
+	
+	public int getModuleType(Vec2i position)
+	{
+		return modules[position.x][position.y].getType();
+	}
+	
+	public Vec2f getModulePosition(Vec2i position)
+	{
+		return modules[position.x][position.y].getSprite(false).getPosition();
+	}
+	
+	public Vec2f getModuleSize(Vec2i position)
+	{
+		return modules[position.x][position.y].getSprite(false).getSize();
+	}
+	
+	public Sprite getModuleSprite(Vec2i position)
+	{
+		return modules[position.x][position.y].getSprite();
+	}
+	
+	public Sprite getModuleSprite(Vec2i position, boolean copy)
+	{
+		if (copy)
+			return modules[position.x][position.y].getSprite(copy);
+		return modules[position.x][position.y].getSprite();
+	}
+	
+	public float getModuleEnergy(Vec2i position)
+	{
+		return modules[position.x][position.y].getEnergy();
+	}
+	
+	public void setModuleEnergy(Vec2i position, float energy)
+	{
+		modules[position.x][position.y].setEnergy(energy);
 	}
 	
 	public void generate(int configuration)

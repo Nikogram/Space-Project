@@ -46,13 +46,13 @@ public class SectorMap {
 		vessels = new Vector<Vessel>();
 		vessels.add(playerVessel);
 		nbEnnemyVessel=i;
-		station = new Station(new Vec2f(0, 0), new Vec2i(10, 5), 1, textureManager);
+		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), 1, textureManager);
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager));
 			if (alignementplayer[alignement]>50)
-				vessels.get(l).generate(3);	
-			else
 				vessels.get(l).generate(1);	
+			else
+				vessels.get(l).generate(3);	
 		}
 	}
 	
@@ -95,9 +95,10 @@ public class SectorMap {
 			vessels.get(l).update(fl, vessels, station);
 	}
 	public void draw(SpriteBatch display){
-		station.draw(display);
+		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).draw(display);
+		station.draw(display);
 	}
 	public int nbEnnemyVessel(){
 		return vessels.size();

@@ -16,7 +16,6 @@ enum VesselAction { MoveForward, MoveBackward, MoveLeft, MoveRight, TurnLeft, Tu
 
 public class Vessel
 {
-	protected Vec2i size;
 	protected VesselModule[][] modules;
 	protected boolean isAI;
 	protected VesselAI AI;
@@ -27,14 +26,12 @@ public class Vessel
 	protected Vec2f cockpitPositionPixels;
 	protected Sound engineSound;
 	protected Sound collisionSound;
-	protected boolean collisionSoundIsPlayed;
 	protected TextureManager textureManager;
 	protected boolean isDestroyed;
 	
 	
 	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
 	{
-		this.size = size;
 		modules = new VesselModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
 		{
@@ -60,7 +57,6 @@ public class Vessel
 		engineSound.play();
 		engineSound.pause();
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("CollisionVessel.mp3"));
-		collisionSoundIsPlayed = false;
 	}
 	
 	public void finalize()
@@ -87,7 +83,7 @@ public class Vessel
 	
 	public Vec2i getSize()
 	{
-		return size.clone();
+		return new Vec2i(modules.length, modules[0].length);
 	}
 	
 	public float getAngle()
@@ -241,9 +237,7 @@ public class Vessel
 						Vec2f forceVector = new Vec2f(collidedObjectPosition.x - getPosition().x, collidedObjectPosition.y - getPosition().y);
 						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
 						cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector));
-						
-						if (!collisionSoundIsPlayed)
-							collisionSound.play();
+						collisionSound.play();
 					}
 					
 					
@@ -281,8 +275,6 @@ public class Vessel
 				engineSound.resume();
 			else
 				engineSound.pause();
-			
-			collisionSoundIsPlayed = false;
 		}
 		
 		return shotVessels;
@@ -301,14 +293,9 @@ public class Vessel
 	{
 		isDestroyed = false;
 		
-		for (int x = 0; x < modules.length; ++x)
-		{
-			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].setType(-2);
-		}
-		
 		if (configuration == 2)
 		{
+			modules = new VesselModule[5][5];
 			setModule(new Vec2i(0, 1), 4, 5, Orientation.Left);
 			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
@@ -332,6 +319,7 @@ public class Vessel
 		}
 		else if (configuration == 3)
 		{
+			modules = new VesselModule[3][3];
 			setModule(new Vec2i(0, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(0, 1), 5, 1, Orientation.Left);
 			setModule(new Vec2i(0, 2), 3, 1, Orientation.Up);
@@ -344,6 +332,7 @@ public class Vessel
 		}
 		else
 		{
+			modules = new VesselModule[5][5];
 			setModule(new Vec2i(2, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(2, 2), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
