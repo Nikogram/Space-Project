@@ -34,7 +34,7 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 1 + 1f * (getLevel() - 1);
+		return 100 + 1f * (getLevel() - 1);
 	}
 	
 	public float getLength()

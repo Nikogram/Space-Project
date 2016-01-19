@@ -26,7 +26,7 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	
+	protected Vector<Vessel> vessels;
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
 	protected Vessel obstacle;
@@ -68,12 +68,13 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
+		vessels = new Vector<Vessel>();
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
 		playerVessel.generate(3);
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
 		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),50, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
 		state = new Geopolitics(5);
@@ -82,11 +83,10 @@ public class Game extends ApplicationAdapter
 	@Override
 	public void render()
 	{
-		System.gc();
-		
-		Vector<Vessel> vessels = new Vector<Vessel>();
+		vessels.clear();
 		vessels.add(playerVessel);
 		zone.updateadd(vessels);
+		
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		zone.updateTime(lastFrameTime, vessels);
@@ -116,7 +116,7 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
 		
-		System.out.println(1 / lastFrameTime);
+		//System.out.println(1 / lastFrameTime);
 	}
 	
 	@Override
