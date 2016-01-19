@@ -296,6 +296,10 @@ public class Vessel
 		if (configuration == 2)
 		{
 			modules = new VesselModule[5][5];
+			for (int x = 0; x < modules.length; ++x)
+				for (int y = 0; y < modules[x].length; ++y)
+					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+			
 			setModule(new Vec2i(0, 1), 4, 5, Orientation.Left);
 			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
@@ -316,10 +320,18 @@ public class Vessel
 			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
 			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
 			
+			cockpitPosition = new Vec2i(2, 1);
+			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
 		}
 		else if (configuration == 3)
 		{
 			modules = new VesselModule[3][3];
+			
+			modules = new VesselModule[5][5];
+			for (int x = 0; x < modules.length; ++x)
+				for (int y = 0; y < modules[x].length; ++y)
+					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+			
 			setModule(new Vec2i(0, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(0, 1), 5, 1, Orientation.Left);
 			setModule(new Vec2i(0, 2), 3, 1, Orientation.Up);
@@ -329,10 +341,19 @@ public class Vessel
 			setModule(new Vec2i(2, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(2, 1), 5, 1, Orientation.Right);
 			setModule(new Vec2i(2, 2), 4, 1, Orientation.Up);
+			
+			cockpitPosition = new Vec2i(1, 1);
+			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
 		}
 		else
 		{
 			modules = new VesselModule[5][5];
+			
+			modules = new VesselModule[5][5];
+			for (int x = 0; x < modules.length; ++x)
+				for (int y = 0; y < modules[x].length; ++y)
+					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+			
 			setModule(new Vec2i(2, 3), 0, 1, Orientation.Up);
 			setModule(new Vec2i(2, 2), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
@@ -344,6 +365,9 @@ public class Vessel
 			setModule(new Vec2i(4, 1), 2, 1, Orientation.Right);
 			setModule(new Vec2i(1, 2), 2, 1, Orientation.Up);
 			setModule(new Vec2i(3, 2), 2, 1, Orientation.Up);
+			
+			cockpitPosition = new Vec2i(2, 1);
+			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
 		}
 	}
 }

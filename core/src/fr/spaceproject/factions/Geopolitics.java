@@ -24,10 +24,13 @@ public class Geopolitics {
 	public int length(){
 		return length;
 	}
-	public int[] getAgressivity(){
-		return agresivity;
+	public int getAgressivity(int team){
+		return agresivity[team];
 	}
 
+	public int[] getAgressivitys(){
+		return agresivity;
+	}
 	
 	public void addAgressivity(int team,int add){
 		if (add<100-agresivity[team])

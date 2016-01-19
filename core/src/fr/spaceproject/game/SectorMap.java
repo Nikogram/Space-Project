@@ -31,7 +31,7 @@ public class SectorMap {
 	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager,Geopolitics politic,WarMap map){
 		this.textureManager = textureManager;
 		taille=i;
-		alignementplayer=politic.getAgressivity();
+		alignementplayer=politic.getAgressivitys();
 		posPlay=pos;
 		nbEnnemyVessel=newnbEnnemyVessel;
 		vessels = new Vector<Vessel>();
@@ -53,6 +53,7 @@ public class SectorMap {
 				vessels.get(l).generate(1);	
 			else
 				vessels.get(l).generate(3);	
+
 		}
 	}
 	
