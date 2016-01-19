@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
@@ -13,12 +14,16 @@ import fr.spaceproject.vessels.Vessel;
 
 public class SectorMap {
 	private int taille;
-	private int nbEnnemyVessel;
+	
 	private Coor posPlay;
-	private Vector<Vessel> vessels;
 	private TextureManager textureManager;
+	
+
+	private int nbEnnemyVessel;
+	private Vector<Vessel> vessels;
 	private Vessel playerVessel;
 	
+	private Station station;
 	
 	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager){
 		this.textureManager = textureManager;
@@ -29,11 +34,14 @@ public class SectorMap {
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
 		playerVessel.generate(3);
 		vessels.add(playerVessel);
-		createArrayVessel(nbEnnemyVessel);
+		createArrayObjects(nbEnnemyVessel,playerVessel);
 	}
 	
-	private void createArrayVessel(int i){
+	private void createArrayObjects(int i,Vessel playerPlayer){
+		vessels = new Vector<Vessel>();
+		vessels.add(playerVessel);
 		nbEnnemyVessel=i;
+		station = new Station(new Vec2f(0, 0), new Vec2i(10, 5), 1, textureManager);
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager));
 			vessels.get(l).generate(3);	
@@ -42,24 +50,24 @@ public class SectorMap {
 	
 	public void updateExit(Vessel playerPlayer,WarMap map){
 		if (playerPlayer.getPosition().x>taille){
-			playerPlayer.setPosition(new Vec2f(-taille+100,0));
+			playerPlayer.setPosition(new Vec2f(-taille+100,playerPlayer.getPosition().y));
 			posPlay=new Coor(posPlay.addXY(1,0));
-			createArrayVessel(map.appartCoor(posPlay.toStrings()));
+			createArrayObjects(map.appartCoor(posPlay.toStrings()),playerVessel);
 		}
 		if(playerPlayer.getPosition().x< -taille){
-			playerPlayer.setPosition(new Vec2f(taille-100,0));
+			playerPlayer.setPosition(new Vec2f(taille-100,playerPlayer.getPosition().y));
 			posPlay=new Coor(posPlay.addXY(-1, 0));
-			createArrayVessel(map.appartCoor(posPlay.toStrings()));
+			createArrayObjects(map.appartCoor(posPlay.toStrings()),playerVessel);
 		}
 		if (playerPlayer.getPosition().y>taille){
-			playerPlayer.setPosition(new Vec2f(0,-taille+100));
+			playerPlayer.setPosition(new Vec2f(playerPlayer.getPosition().x,-taille+100));
 			posPlay=new Coor(posPlay.addXY(0,1));
-			createArrayVessel(map.appartCoor(posPlay.toStrings()));
+			createArrayObjects(map.appartCoor(posPlay.toStrings()),playerVessel);
 		}
 		if(playerPlayer.getPosition().y< -taille){
-			playerPlayer.setPosition(new Vec2f(0,taille-100));
+			playerPlayer.setPosition(new Vec2f(playerPlayer.getPosition().x,taille-100));
 			posPlay=new Coor(posPlay.addXY(0,-1));
-			createArrayVessel(map.appartCoor(posPlay.toStrings()));
+			createArrayObjects(map.appartCoor(posPlay.toStrings()),playerVessel);
 		}
 	}
 	public Coor getCoor(){
@@ -69,11 +77,17 @@ public class SectorMap {
 		return taille;
 	}
 	
-	public void update(float fl){
-		for (int l=0;l<vessels.size();l++)
+	public void update(float fl){ 
+		vessels.get(0).update(fl, vessels);
+		for (int l=1;l<vessels.size();l++){
+			if (vessels.get(l).getIsDestroyed())
+				vessels.remove(l);
+			}
+		for (int l=1;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels);
 	}
 	public void draw(SpriteBatch display){
+		station.draw(display);
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).draw(display);
 	}
@@ -85,5 +99,8 @@ public class SectorMap {
 	}
 	public Vessel getPlayer(){
 		return vessels.get(0);
+	}
+	public Station getStation(){
+		return station;
 	}
 }

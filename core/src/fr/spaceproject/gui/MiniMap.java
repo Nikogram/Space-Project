@@ -16,7 +16,6 @@ import fr.spaceproject.vessels.Vessel;
 public class MiniMap {
 	private Sprite[] image;
 	private int[] imageAppart;
-	private Vec2f[] imageCoor;
 	private TextureManager textureManager;
 	private Sprite font;
 	private int taille;
@@ -27,7 +26,6 @@ public class MiniMap {
 		font=new Sprite(placePlayer.getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
 		image=new Sprite[zone.nbEnnemyVessel()];
 		imageAppart= new int[zone.nbEnnemyVessel()];
-		imageCoor=new Vec2f[zone.nbEnnemyVessel()];
 		image[0]=new Sprite(placePlayer.getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MyVesselMiniMap"));
 	}
 	
@@ -37,6 +35,7 @@ public class MiniMap {
 	}
 	
 	public void update(SectorMap zone,Vector<Vessel> vessels){
+		image=new Sprite[vessels.size()];
 		font=new Sprite(vessels.get(0).getPosition().getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
 		image[0]=new Sprite(Conversion(vessels.get(0).getPosition(),vessels.get(0).getPosition()),new Vec2f(0,0),textureManager.getTexture("MyVesselMiniMap"));
 		for (int i=1;i<vessels.size();i++){
