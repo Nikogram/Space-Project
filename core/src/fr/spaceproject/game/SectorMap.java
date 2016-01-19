@@ -78,13 +78,13 @@ public class SectorMap {
 	}
 	
 	public void update(float fl){ 
-		vessels.get(0).update(fl, vessels);
+		vessels.get(0).update(fl, vessels, station);
 		for (int l=1;l<vessels.size();l++){
 			if (vessels.get(l).getIsDestroyed())
 				vessels.remove(l);
 			}
 		for (int l=1;l<vessels.size();l++)
-			vessels.get(l).update(fl, vessels);
+			vessels.get(l).update(fl, vessels, station);
 	}
 	public void draw(SpriteBatch display){
 		station.draw(display);

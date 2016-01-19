@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
@@ -43,7 +44,7 @@ public class CannonVesselModule extends VesselModule
 	}
 	
 	@Override
-	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{		
 		for (int i = 0; i < vessels.size(); ++i)
 		{
@@ -65,6 +66,7 @@ public class CannonVesselModule extends VesselModule
 						{
 							vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower());
 							projectiles.remove(p);
+							shotVessels.add(vessels.get(i));
 							loopIsBroken = true;
 						}
 						
@@ -79,7 +81,7 @@ public class CannonVesselModule extends VesselModule
 			}
 		}
 		
-		return super.updateCollisions(vessels, moduleVessel);
+		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);
 	}
 	
 	@Override

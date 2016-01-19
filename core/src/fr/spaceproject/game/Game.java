@@ -120,7 +120,7 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
 		
-		System.out.println(1 / lastFrameTime);
+		//System.out.println(1 / lastFrameTime);
 	}
 	
 	@Override

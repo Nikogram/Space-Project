@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.*;
 
 enum VesselAction { MoveForward, MoveBackward, MoveLeft, MoveRight, TurnLeft, TurnRight, Shoot; }
@@ -127,8 +128,10 @@ public class Vessel
 	public boolean getIsDestroyed(){
 		return isDestroyed;
 	}
-	public void update(float lastFrameTime, Vector<Vessel> vessels)
+	public Vector<Vessel> update(float lastFrameTime, Vector<Vessel> vessels, Station station)
 	{
+		Vector<Vessel> shotVessels = new Vector<Vessel>();
+		
 		if (!isDestroyed)
 		{
 			VesselModule cockpit = modules[cockpitPosition.x][cockpitPosition.y];
@@ -225,17 +228,17 @@ public class Vessel
 				actions.add(VesselAction.Shoot);
 			
 			
-			// Application de la mise � jour pour tous les modules		
+			// Application de la mise a jour pour tous les modules		
 			for (int x = 0; x < modules.length; ++x)
 			{
 				for (int y = 0; y < modules[x].length; ++y)
 				{
 					modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].getSprite(), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
-					Vessel collidedVessel = modules[x][y].updateCollisions(vessels, this);
+					Vec2f collidedObjectPosition = modules[x][y].updateCollisions(vessels, this, station, shotVessels);
 					
-					if (collidedVessel != null)
+					if (collidedObjectPosition != null)
 					{
-						Vec2f forceVector = new Vec2f(collidedVessel.getPosition().x - getPosition().x, collidedVessel.getPosition().y - getPosition().y);
+						Vec2f forceVector = new Vec2f(collidedObjectPosition.x - getPosition().x, collidedObjectPosition.y - getPosition().y);
 						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
 						cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector));
 						
@@ -281,6 +284,8 @@ public class Vessel
 			
 			collisionSoundIsPlayed = false;
 		}
+		
+		return shotVessels;
 	}
 	
 	public void draw(SpriteBatch display)

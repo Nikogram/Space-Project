@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
@@ -50,7 +51,7 @@ public class LaserVesselModule extends VesselModule
 	}
 	
 	@Override
-	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		int vesselId = -1;
 		Vec2i modulePosition = new Vec2i(-1, -1);
@@ -118,9 +119,12 @@ public class LaserVesselModule extends VesselModule
 		
 		// Gestion de la collision entre le laser et tous les vaisseaux
 		if (vesselId >= 0)
+		{
 			vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].setEnergy(vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].getEnergy() - getPower());
+			shotVessels.add(vessels.get(vesselId));
+		}
 			
-		return super.updateCollisions(vessels, moduleVessel);
+		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);
 	}
 	
 	@Override

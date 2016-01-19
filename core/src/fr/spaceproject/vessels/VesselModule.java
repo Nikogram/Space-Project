@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.*;
 
 public class VesselModule
@@ -154,7 +155,7 @@ public class VesselModule
 		return 100 + 20 * (level - 1);
 	}
 	
-	public Vessel updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel)
+	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		for (int i = 0; i < vessels.size(); ++i)
 		{
@@ -165,9 +166,10 @@ public class VesselModule
 				{
 					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
 					{
-						//vessels.get(i).modules[x][y].energy -= 10;
+						vessels.get(i).modules[x][y].energy -= 30;
 						vessels.get(i).collisionSoundIsPlayed = true;
-						return vessels.get(i);
+						shotVessels.add(vessels.get(i));
+						return vessels.get(i).getCenter();
 					}
 				}
 			}
