@@ -73,7 +73,7 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		zone = new SectorMap(1500,new Coor(0,0),0, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),50, textureManager);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 

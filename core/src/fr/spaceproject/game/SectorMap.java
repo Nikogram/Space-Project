@@ -44,7 +44,7 @@ public class SectorMap {
 		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), 1, textureManager);
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, 0, textureManager));
-			vessels.get(l).generate(3);	
+			vessels.get(l).generate(3);
 		}
 	}
 	
