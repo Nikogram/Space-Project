@@ -104,6 +104,11 @@ public class VesselModule
 		sprite.move(movement);
 	}
 	
+	public Vec2f getSpriteSize()
+	{
+		return sprite.getSize();
+	}
+	
 	public float getSpriteAngle()
 	{
 		return sprite.getAngle();

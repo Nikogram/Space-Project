@@ -72,11 +72,11 @@ public class Game extends ApplicationAdapter
 	    
 		vessels = new Vector<Vessel>();
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(1, 1), false, 0, textureManager);
-		playerVessel.generate(2);
+		playerVessel.generate(3);
 		station = new Station(new Vec2f(0, 0), new Vec2i(10, 5), 1, textureManager);
 		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),5, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
 		state = new Geopolitics(5);

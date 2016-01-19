@@ -49,8 +49,21 @@ public class Vec2f
 	
 	public void add(Vec2f vector, float angle)
 	{
-		x += vector.x * Math.cos(angle * Math.PI / 180) - vector.y * Math.sin(angle * Math.PI / 180);
-		y += vector.x * Math.sin(angle * Math.PI / 180) + vector.y * Math.cos(angle * Math.PI / 180);
+		if (angle == 0)
+		{
+			x += vector.x;
+			y += vector.y;
+		}
+		else
+		{
+			double angleRad = Math.toRadians(angle);
+			double cosa = Math.cos(angleRad);
+			double sina = Math.sin(angleRad);
+
+			
+			x += vector.x * cosa - vector.y * sina;
+			y += vector.x * sina + vector.y * cosa;
+		}
 	}
 	
 	public Vec2f getAdd(float xd,float yd)
