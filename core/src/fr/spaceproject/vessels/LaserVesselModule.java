@@ -36,7 +36,7 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 1000 + 1000f * (getLevel() - 1);
+		return 100 + 50f * (getLevel() - 1);
 	}
 	
 	public float getLength()
@@ -57,9 +57,13 @@ public class LaserVesselModule extends VesselModule
 		
 		if (!laserIsAlreadyUpdate)
 		{
-			// Recuperation de la position du bouclier le plus proche
+			// Recuperation de la position module le plus proche
 			float moduleDistance = -1;
 			float moduleSize = 0;
+			
+			Sprite tempLaserSprite = new Sprite(new Vec2f(), new Vec2f(getLength(), 6), getTexture());
+			tempLaserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -tempLaserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
+			tempLaserSprite.setAngle(getSprite().getAngle() - 180);
 			
 			for (int i = 0; i < vessels.size(); ++i)
 			{
@@ -69,9 +73,13 @@ public class LaserVesselModule extends VesselModule
 					{
 						for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 						{
-							if (vessels.get(i).modules[x][y].getType() >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(false), new Vec2f()))
+							if (vessels.get(i).modules[x][y].getType() == 5)
+								vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x * 3,
+									vessels.get(i).modules[x][y].getSprite(false).getSize().y * 3));
+							
+							if (vessels.get(i).modules[x][y].getType() >= 0 && tempLaserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(false), new Vec2f()))
 							{
-								float distance = getSpritePosition().getDistance(vessels.get(i).modules[x][y].getSpritePosition());
+								float distance = getSpritePosition().getDistance(vessels.get(i).modules[x][y].getSpritePosition()) - getSpriteSize().x / 2 - vessels.get(i).modules[x][y].getSpriteSize().x / 2;
 								
 								if (moduleDistance == -1 || moduleDistance > distance)
 								{
@@ -81,6 +89,10 @@ public class LaserVesselModule extends VesselModule
 									modulePosition.set(x, y);
 								}
 							}
+							
+							if (vessels.get(i).modules[x][y].getType() == 5)
+								vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x / 3,
+									vessels.get(i).modules[x][y].getSprite(false).getSize().y / 3));
 						}
 					}
 				}
@@ -88,11 +100,10 @@ public class LaserVesselModule extends VesselModule
 			
 			if (moduleDistance > 0)
 			{
-				float shieldRadius = 30;
-				
-				laserSprite.setSize(new Vec2f(moduleDistance - shieldRadius + 3, 6));
+				laserSprite.setSize(new Vec2f(moduleDistance + 3, 6));
 				laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
 				laserSprite.setAngle(getSprite().getAngle() - 180);
+				
 			}
 			else
 			{
@@ -104,35 +115,11 @@ public class LaserVesselModule extends VesselModule
 			laserIsAlreadyUpdate = true;
 		}
 		
+		
 		// Gestion de la collision entre le laser et tous les vaisseaux
 		if (vesselId >= 0)
-		{
 			vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].setEnergy(vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].getEnergy() - getPower());
 			
-			/*for (int i = 0; i < vessels.size(); ++i)
-			{
-				if (vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < laserSprite.getSize().x)
-				{
-					if (vessels.get(i) != moduleVessel)
-					{
-						Sprite sprite = new Sprite(vessels.get(i).getCenter(),
-								new Vec2f(vessels.get(i).getSize().x * 20, vessels.get(i).getSize().y * 20), getTexture());
-						sprite.setAngle(vessels.get(i).getAngle());
-						
-						if (sprite.isCollidedWithSprite(laserSprite, new Vec2f()))
-						for (int x = 0; x < vessels.get(i).modules.length; ++x)
-						{
-							for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
-							{
-								if (vessels.get(i).modules[x][y].getType() >= 0 && laserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(false), new Vec2f()))
-									vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower() * laserSprite.getColor().a);
-							}
-						}
-					}
-				}
-			}*/
-		}
-		
 		return super.updateCollisions(vessels, moduleVessel);
 	}
 	
@@ -151,11 +138,11 @@ public class LaserVesselModule extends VesselModule
 
 		if (timeAfterShoot >= getTimeBeforeShoot() && wantShoot)
 		{
+			laserIsAlreadyUpdate = false;
 			timeAfterShoot = 0;
 			laserSound.play();
 			//laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
 			//laserSprite.setAngle(getSprite().getAngle() - 180);
-			laserIsAlreadyUpdate = false;
 		}
 		
 		float time = 0.05f;

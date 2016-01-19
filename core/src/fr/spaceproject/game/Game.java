@@ -30,8 +30,9 @@ public class Game extends ApplicationAdapter
 	protected Vector<Vessel> vessels;
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
+	protected Vessel obstacle;
 	private Vessel playerVessel;
-	private Station station;
+	
 	
 	protected WarMap map;	//map total de l'univers
 	protected Geopolitics state; //array de faction pour les mettres a jour
@@ -70,37 +71,39 @@ public class Game extends ApplicationAdapter
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
+		
+		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
+		
 		vessels = new Vector<Vessel>();
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(1, 1), false, 0, textureManager);
-		playerVessel.generate(3);
-		station = new Station(new Vec2f(0, 0), new Vec2i(10, 5), 1, textureManager);
+		playerVessel.generate(2);
 		
 		map = new WarMap();
 		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
+
 		state = new Geopolitics(5);
 	}
 
 	@Override
 	public void render()
 	{
-		vessels.clear();
-		vessels.add(playerVessel);
-		zone.updateadd(vessels);
+
+		System.gc();
+
 		
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		zone.updateTime(lastFrameTime, vessels);
-		playerVessel.update(lastFrameTime, vessels);
+		zone.update(lastFrameTime);
 		
 		//Mise a jour de l'HUD
-		carte.update(playerVessel.getPosition(),zone.getCoor(),map);
-		miniMap.update(playerVessel.getPosition(), zone,vessels);
+		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
+		miniMap.update(zone,zone.getVector());
 		//Mise a jour des coordonnees
-		zone.updateExit(playerVessel,map);
+		zone.updateExit(zone.getPlayer(),map);
 		// Affichage
-		camera.position.set(playerVessel.getPosition().x, playerVessel.getPosition().y, 0);
+		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
 		
@@ -108,9 +111,7 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
-		station.draw(display);
 		zone.draw(display);
-		playerVessel.draw(display);
 		carte.draw(display);
 		miniMap.draw(display);
 		display.end();
@@ -118,7 +119,7 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
 		
-		//System.out.println(1 / lastFrameTime);
+		System.out.println(1 / lastFrameTime);
 	}
 	
 	@Override

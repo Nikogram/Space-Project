@@ -23,13 +23,12 @@ public class ShieldVesselModule extends VesselModule
 	@Override
 	public float getMaxEnergy()
 	{
-		return 1000 + 500 * (getLevel() - 1);
+		return 100 + 50 * (getLevel() - 1);
 	}
 	
 	@Override
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions)
 	{
 		super.update(lastFrameTime, vesselSprite, moduleRelativePosition, actions);
-		moveSprite(new Vec2f(0, getSprite().getSize().y / 3));
 	}
 }

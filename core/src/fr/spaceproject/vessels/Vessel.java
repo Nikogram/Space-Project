@@ -124,7 +124,9 @@ public class Vessel
 				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
 		}
 	}
-	
+	public boolean getIsDestroyed(){
+		return isDestroyed;
+	}
 	public void update(float lastFrameTime, Vector<Vessel> vessels)
 	{
 		if (!isDestroyed)
@@ -223,7 +225,7 @@ public class Vessel
 				actions.add(VesselAction.Shoot);
 			
 			
-			// Application de la mise à jour pour tous les modules		
+			// Application de la mise ï¿½ jour pour tous les modules		
 			for (int x = 0; x < modules.length; ++x)
 			{
 				for (int y = 0; y < modules[x].length; ++y)

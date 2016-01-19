@@ -50,15 +50,30 @@ public class CannonVesselModule extends VesselModule
 			for (int p = projectiles.size() - 1; p >= 0; --p)
 			{
 				if (projectiles.get(p).sprite.getPosition().getDistance(vessels.get(i).getCenter()) < 100)
-				loop:
-				for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
-				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 				{
-					if (vessels.get(i).modules[x][y].getType() >= 0 && vessels.get(i).modules[x][y].getSprite(false).isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
+					loop:
+					for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
+					for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
 					{
-						vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower());
-						projectiles.remove(p);
-						break loop;
+						boolean loopIsBroken = false;
+						
+						if (vessels.get(i).modules[x][y].getType() == 5)
+							vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x * 3,
+								vessels.get(i).modules[x][y].getSprite(false).getSize().y * 3));
+						
+						if (vessels.get(i).modules[x][y].getType() >= 0 && vessels.get(i).modules[x][y].getSprite(false).isCollidedWithSprite(projectiles.get(p).sprite, new Vec2f()))
+						{
+							vessels.get(i).modules[x][y].setEnergy(vessels.get(i).modules[x][y].getEnergy() - getPower());
+							projectiles.remove(p);
+							loopIsBroken = true;
+						}
+						
+						if (vessels.get(i).modules[x][y].getType() == 5)
+							vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x / 3,
+								vessels.get(i).modules[x][y].getSprite(false).getSize().y / 3));
+						
+						if (loopIsBroken)
+							break loop;
 					}
 				}
 			}
