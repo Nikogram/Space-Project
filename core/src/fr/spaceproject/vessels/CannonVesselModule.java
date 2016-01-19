@@ -50,9 +50,10 @@ public class CannonVesselModule extends VesselModule
 		{
 			for (int y = 0; y < station.getSize().y; ++y)
 			{
-				for (int p = projectiles.size() - 1; p >= 0; --p)
+				for (int p = projectiles.size() - 1; p >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0; --p)
 				{
-					if (station.getModuleType(new Vec2i(x, y)) >= 0 && projectiles.get(p).sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+					if (projectiles.get(p).sprite.getPosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 100 &&
+							projectiles.get(p).sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 					{
 						station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - getPower());
 						projectiles.remove(p);

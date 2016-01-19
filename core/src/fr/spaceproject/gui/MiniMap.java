@@ -62,6 +62,7 @@ public class MiniMap {
 		font.draw(display);
 		for (int i=0;i<stationImage.length;i++)
 			for (int j=0;j<stationImage[0].length;j++)
+				if (stationImage[i][j] != null)
 				stationImage[i][j].draw(display);
 		for (int i=0;i<image.length;i++){
 		image[i].draw(display);

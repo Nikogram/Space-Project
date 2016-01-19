@@ -64,6 +64,8 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("ShieldVesselModule", "ShieldVesselModule.png");
 		textureManager.addTexture("SimpleVesselModule", "SimpleVesselModule.png");
 		textureManager.addTexture("SimpleStationModule", "SimpleStationModule.png");
+		textureManager.addTexture("BackgroundStationModule", "BackgroundStationModule.png");
+		textureManager.addTexture("BrokenStationModule", "BrokenStationModule.png");
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -73,7 +75,7 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		zone = new SectorMap(1500,new Coor(0,0),50, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),0, textureManager);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 

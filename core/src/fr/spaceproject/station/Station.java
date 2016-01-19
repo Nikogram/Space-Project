@@ -7,6 +7,7 @@ import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.vessels.VesselModule;
 
 public class Station
 {
@@ -86,13 +87,38 @@ public class Station
 	{
 	}
 	
+	public void update()
+	{
+		for (int x = 0; x < modules.length; ++x)
+		{
+			for (int y = 0; y < modules[0].length; ++y)
+			{
+				if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
+					modules[x][y] = new StationModule(-1, 1, modules[x][y].getSprite(false).getPosition(), Orientation.Up, textureManager);
+			}
+		}
+	}
+	
 	public void draw(SpriteBatch display)
 	{
 		for (int x = 0; x < modules.length; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
 			{
-				modules[x][y].draw(display);
+				if (modules[x][y].getType() >= 0)
+					modules[x][y].draw(display);
+			}
+		}
+	}
+	
+	public void drawBackground(SpriteBatch display)
+	{
+		for (int x = 0; x < modules.length; ++x)
+		{
+			for (int y = 0; y < modules[x].length; ++y)
+			{
+				if (modules[x][y].getType() < 0)
+					modules[x][y].draw(display);
 			}
 		}
 	}

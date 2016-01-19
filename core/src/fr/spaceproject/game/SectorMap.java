@@ -85,9 +85,10 @@ public class SectorMap {
 			}
 		for (int l=1;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station);
+		station.update();
 	}
 	public void draw(SpriteBatch display){
-		
+		station.drawBackground(display);
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).draw(display);
 		station.draw(display);

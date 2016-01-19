@@ -1,2 +1,4 @@
-- Taille du vaisseau
+- Taille du vaisseau (zoom en fonction de résolution)
 - Arrêt complet du vaisseau (frein à main ou arret quand vitesse très faible ?)
+- Gerer amitié avec les dégats sur la station
+- Hangar (genre porte de garage ou champ bleu transparent) ou on atterrit par le dessus)

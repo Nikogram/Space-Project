@@ -271,7 +271,7 @@ public class Vessel
 			
 			
 			// Gestion du son		
-			if (flamesAreShown)
+			if (flamesAreShown && !isDestroyed)
 				engineSound.resume();
 			else
 				engineSound.pause();
