@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.*;
 
-class VesselModule
+public class VesselModule
 {
 	private int type;
 	private int level;
@@ -160,7 +160,7 @@ class VesselModule
 				{
 					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
 					{
-						vessels.get(i).modules[x][y].energy -= 10;
+						//vessels.get(i).modules[x][y].energy -= 10;
 						vessels.get(i).collisionSoundIsPlayed = true;
 						return vessels.get(i);
 					}
