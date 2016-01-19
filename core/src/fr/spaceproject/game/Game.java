@@ -48,6 +48,7 @@ public class Game extends ApplicationAdapter
 		
 		textureManager = new TextureManager();
 		textureManager.addTexture("MiniMap", "MiniMap.png");
+		textureManager.addTexture("StationUselessMiniMap", "StationUselessMiniMap.png");
 		textureManager.addTexture("MyVesselMiniMap", "MyVesselMiniMap.png");
 		textureManager.addTexture("EnnemiMiniMap", "EnnemiMiniMap.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
@@ -80,9 +81,9 @@ public class Game extends ApplicationAdapter
 		
 		
 		map = new WarMap();
-		zone = new SectorMap(1500,new Coor(0,0),5, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),0, textureManager);
 		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
-		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
+		miniMap=new MiniMap(playerVessel.getPosition(),zone,zone.getStation(),textureManager);
 
 		state = new Geopolitics(5);
 	}
@@ -100,7 +101,7 @@ public class Game extends ApplicationAdapter
 		
 		//Mise a jour de l'HUD
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
-		miniMap.update(zone,zone.getVector());
+		miniMap.update(zone,zone.getVector(),zone.getStation());
 		//Mise a jour des coordonnees
 		zone.updateExit(zone.getPlayer(),map);
 		// Affichage

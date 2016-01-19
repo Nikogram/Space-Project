@@ -14,18 +14,20 @@ public class Station
 	private Vec2f position;
 	
 	public Station(Vec2f position, Vec2i size, int faction, TextureManager textureManager)
-	{
+	{	
 		this.textureManager = textureManager;
-		position.add(new Vec2f(-size.x * 140 / 2, -size.y * 140 / 2), 0);
+		this.position=position.clone();
+		this.position.add(new Vec2f(-(size.x - 1) * 140 / 2, -(size.y - 1) * 140 / 2), 0);
 		
 		modules = new StationModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
 		{
 			for (int y = 0; y < size.y; ++y)
 			{
-				modules[x][y] = new StationModule(1, 1, new Vec2f(position.x + 140 * x, position.y + 140 * y), Orientation.Up, textureManager);
+				modules[x][y] = new StationModule(1, 1, new Vec2f(this.position.x + 140 * x, this.position.y + 140 * y), Orientation.Up, textureManager);
 			}
 		}
+		this.position = position.clone();
 	}
 	
 	public Vec2f getPosition()
