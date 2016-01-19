@@ -14,7 +14,7 @@ public class Station
 	private Vec2f position;
 	
 	public Station(Vec2f position, Vec2i size, int faction, TextureManager textureManager)
-	{
+	{	
 		this.textureManager = textureManager;
 		this.position = position.clone();
 		this.position.add(new Vec2f(-(size.x - 1) * 140 / 2, -(size.y - 1) * 140 / 2), 0);
