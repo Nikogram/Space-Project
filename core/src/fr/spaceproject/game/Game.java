@@ -13,6 +13,7 @@ import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.gui.MiniMap;
+import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
@@ -26,10 +27,15 @@ public class Game extends ApplicationAdapter
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
 	
-	
+	protected Vector<Vessel> vessels;
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
+<<<<<<< HEAD
 	protected Vessel obstacle;
+=======
+	private Vessel playerVessel;
+	private Station station;
+>>>>>>> 48546bca19302f822240e047e6e11f365b0829c4
 	
 	protected WarMap map;	//map total de l'univers
 	protected Geopolitics state; //array de faction pour les mettres a jour
@@ -62,11 +68,13 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("ProjectileLaserVesselModule", "ProjectileLaserVesselModule.png");
 		textureManager.addTexture("ShieldVesselModule", "ShieldVesselModule.png");
 		textureManager.addTexture("SimpleVesselModule", "SimpleVesselModule.png");
+		textureManager.addTexture("SimpleStationModule", "SimpleStationModule.png");
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 	    
+<<<<<<< HEAD
 		
 		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
 		
@@ -74,13 +82,30 @@ public class Game extends ApplicationAdapter
 		zone = new SectorMap(1500,new Coor(0,0),3, textureManager);
 		carte =new FactionMap(zone.getPlayer().getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getPlayer().getPosition(),zone,textureManager);
+=======
+		vessels = new Vector<Vessel>();
+		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(5, 5), new Vec2i(1, 1), false, 0, textureManager);
+		playerVessel.generate(2);
+		station = new Station(new Vec2f(0, 0), new Vec2i(10, 5), 1, textureManager);
+		
+		map = new WarMap();
+		zone = new SectorMap(1500,new Coor(0,0),5, textureManager);
+		carte =new FactionMap(playerVessel.getPosition(),zone.getCoor(),map, textureManager);
+		miniMap=new MiniMap(playerVessel.getPosition(),zone,textureManager);
+>>>>>>> 48546bca19302f822240e047e6e11f365b0829c4
 		state = new Geopolitics(5);
 	}
 
 	@Override
 	public void render()
 	{
+<<<<<<< HEAD
 		System.gc();
+=======
+		vessels.clear();
+		vessels.add(playerVessel);
+		zone.updateadd(vessels);
+>>>>>>> 48546bca19302f822240e047e6e11f365b0829c4
 		
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
@@ -100,16 +125,16 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
+		station.draw(display);
 		zone.draw(display);
 		carte.draw(display);
 		miniMap.draw(display);
-		obstacle.draw(display);
 		display.end();
 		
 		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
 		
-		System.out.println(1 / lastFrameTime);
+		//System.out.println(1 / lastFrameTime);
 	}
 	
 	@Override
