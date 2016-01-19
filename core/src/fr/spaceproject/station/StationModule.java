@@ -53,6 +53,11 @@ public class StationModule
 		return energy;
 	}
 	
+	public void setEnergy(float energy)
+	{
+		this.energy = energy;
+	}
+	
 	public Sprite getSprite()
 	{
 		return sprite.clone();

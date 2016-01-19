@@ -72,6 +72,16 @@ public class Station
 		return modules[position.x][position.y].getSprite();
 	}
 	
+	public float getModuleEnergy(Vec2i position)
+	{
+		return modules[position.x][position.y].getEnergy();
+	}
+	
+	public void setModuleEnergy(Vec2i position, float energy)
+	{
+		modules[position.x][position.y].setEnergy(energy);
+	}
+	
 	public void generate(int configuration)
 	{
 	}
