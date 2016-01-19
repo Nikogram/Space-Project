@@ -1,5 +1,7 @@
 package fr.spaceproject.station;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -15,6 +17,7 @@ public class StationModule
 	private int level;
 	private float energy;
 	private Sprite sprite;
+	
 	
 	public StationModule(int type, int level, Vec2f position, Orientation orientation, TextureManager textureManager)
 	{
@@ -68,6 +71,15 @@ public class StationModule
 		if (copy)
 			return sprite.clone();
 		return sprite;
+	}
+	
+	public TextureManager getTextureManager()
+	{
+		return textureManager;
+	}
+	
+	public void update(float lastFrameTime)
+	{
 	}
 	
 	public void draw(SpriteBatch display)
