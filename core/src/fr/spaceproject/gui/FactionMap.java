@@ -1,6 +1,6 @@
 package fr.spaceproject.gui;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;

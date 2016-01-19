@@ -1,6 +1,6 @@
 package fr.spaceproject.game;
 
-import java.util.Vector;
+
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -15,8 +15,6 @@ import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.gui.MiniMap;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
-import fr.spaceproject.utils.Vec2f;
-import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
 
 public class Game extends ApplicationAdapter
@@ -68,12 +66,10 @@ public class Game extends ApplicationAdapter
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
-	    
-		obstacle = new Vessel(new Vec2f(-200, -200), new Vec2i(3, 3), new Vec2i(2, 1), true, 0, textureManager);
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		zone = new SectorMap(1500,new Coor(0,0),1, textureManager);
+		zone = new SectorMap(1500,new Coor(0,0),1, textureManager,state,map);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 
