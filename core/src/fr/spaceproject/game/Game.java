@@ -48,6 +48,12 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("StationUselessMiniMap", "StationUselessMiniMap.png");
 		textureManager.addTexture("MyVesselMiniMap", "MyVesselMiniMap.png");
 		textureManager.addTexture("EnnemiMiniMap", "EnnemiMiniMap.png");
+		textureManager.addTexture("PlayerVesselState0", "PlayerVesselState0.png");
+		textureManager.addTexture("PlayerVesselState1", "PlayerVesselState1.png");
+		textureManager.addTexture("PlayerVesselState2", "PlayerVesselState2.png");
+		textureManager.addTexture("PlayerVesselState3", "PlayerVesselState3.png");
+		textureManager.addTexture("PlayerVesselState4", "PlayerVesselState4.png");
+		textureManager.addTexture("PlayerVesselState5", "PlayerVesselState5.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("CannonVesselModule", "CannonVesselModule.png");
@@ -78,7 +84,7 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		zone = new SectorMap(1500,new Coor(0,0),50, textureManager,state,map);
+		zone = new SectorMap(1500,new Coor(0,0),2, textureManager,state,map);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		stateVessel=new VesselState(zone.getVector().get(0),textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);

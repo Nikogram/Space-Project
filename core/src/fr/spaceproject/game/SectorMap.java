@@ -50,7 +50,7 @@ public class SectorMap {
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
 			if (alignementplayer[alignement]<50)
-				vessels.get(l).generate(3);	
+				vessels.get(l).generate(1);	
 			else
 				vessels.get(l).generate(3);	
 
