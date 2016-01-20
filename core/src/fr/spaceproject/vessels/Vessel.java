@@ -70,6 +70,7 @@ public class Vessel
 	{
 		return modules[cockpitPosition.x][cockpitPosition.y].getSpritePosition();
 	}
+
 	
 	public void setPosition(Vec2f position)
 	{
@@ -90,6 +91,10 @@ public class Vessel
 	public float getAngle()
 	{
 		return modules[cockpitPosition.x][cockpitPosition.y].getSpriteAngle();
+	}
+	
+	public int getFaction(){
+		return faction;
 	}
 	
 	public void updateSpeed(float lastFrameTime)

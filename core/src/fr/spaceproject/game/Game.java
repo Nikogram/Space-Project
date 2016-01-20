@@ -77,7 +77,7 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		zone = new SectorMap(1500,new Coor(0,0),10, textureManager,state,map);
+		zone = new SectorMap(1500,new Coor(0,0),1, textureManager,state,map);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 		reput=new AngryBar(zone.getVector().get(0).getPosition(),state,textureManager);
@@ -93,14 +93,14 @@ public class Game extends ApplicationAdapter
 		
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		zone.update(lastFrameTime);
+		zone.update(lastFrameTime,state);
 		
 		//Mise a jour de l'HUD
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
 		miniMap.update(zone,zone.getVector(),zone.getStation());
 		reput.update(zone.getVector().get(0).getPosition(),state,textureManager);
 		//Mise a jour des coordonnees
-		zone.updateExit(zone.getPlayer(),map);
+		zone.updateExit(zone.getPlayer(),map,state);
 		// Affichage
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();

@@ -13,16 +13,16 @@ public class AngryBar {
 	
 	public AngryBar(Vec2f placePlayer,Geopolitics state,TextureManager textureManager){
 		this.textureManager = textureManager;
-		bar = new Sprite[4];
-		for (int i=0;i<4;i++){
-			bar[i]=new Sprite(placePlayer.getAdd(700+25*i,300),new Vec2f(20,10),textureManager.getTexture("ColorFaction"+i));
-		}
+		bar = new Sprite[state.getNbTeam()-1];
+		for (int i=0;i<state.getNbTeam()-1;i++){
+			bar[i]=new Sprite(placePlayer.getAdd(675+25*i,250+state.getAgressivity(i+1)/4),new Vec2f(state.getAgressivity(i+1)/2,20),textureManager.getTexture("ColorFaction"+(i+1)));
+			}
 	}
 	public void update(Vec2f placePlayer,Geopolitics state,TextureManager textureManager){
 		this.textureManager = textureManager;
-		bar = new Sprite[4];
-		for (int i=0;i<4;i++){
-			bar[i]=new Sprite(placePlayer.getAdd(700+25*i,250),new Vec2f(state.getAgressivity(i+1)/4,20),textureManager.getTexture("ColorFaction"+i));
+		bar = new Sprite[state.getNbTeam()-1];
+		for (int i=0;i<state.getNbTeam()-1;i++){
+			bar[i]=new Sprite(placePlayer.getAdd(675+25*i,250+state.getAgressivity(i+1)/4),new Vec2f(state.getAgressivity(i+1)/2,20),textureManager.getTexture("ColorFaction"+(i+1)));
 		}
 	}
 	public void draw(SpriteBatch display){

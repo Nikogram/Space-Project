@@ -3,16 +3,16 @@ package fr.spaceproject.factions;
 public class Geopolitics {
 	
 	private Faction[] state;
-	private int length;
+	private int nbTeam;
 	private int[] agresivity;// 100 tres agressif 0 tres amical
 	
 	public Geopolitics(int i){
 		agresivity=new int[i];
 		for (int j=0;j<i;j++){
-			agresivity[j]=25*j;
+			agresivity[j]=25;
 		}
 		state=new Faction[i];
-		length=i;
+		nbTeam=i;
 		for (int j=1;j<i;j++){
 			state[j]=new Faction(j,1);
 		}
@@ -21,8 +21,8 @@ public class Geopolitics {
 	public Faction getFaction(int i){
 		return state[i];
 	}
-	public int length(){
-		return length;
+	public int getNbTeam(){
+		return nbTeam;
 	}
 	public int getAgressivity(int team){
 		return agresivity[team];
