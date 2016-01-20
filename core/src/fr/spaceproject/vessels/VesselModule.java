@@ -17,10 +17,24 @@ public class VesselModule
 	final private Sprite sprite;
 	private Orientation orientation;
 	private TextureManager textureManager;
+	private boolean isEngine;
 	
 	
 	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
 	{
+		this.isEngine = type == 2;
+		this.textureManager = textureManager;
+		this.type = type;
+		this.level = level;
+		energy = getMaxEnergy();
+		sprite = new Sprite(new Vec2f(), new Vec2f(), getTexture());
+		sprite.setAngle(orientation.ordinal() * 90);
+		this.orientation = orientation;
+	}
+	
+	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
+	{
+		this.isEngine = type == 2 || isEngine;
 		this.textureManager = textureManager;
 		this.type = type;
 		this.level = level;
@@ -43,8 +57,10 @@ public class VesselModule
 			return textureManager.getTexture("CannonVesselModule");
 		else if (type == 5)	// Shield
 			return textureManager.getTexture("ShieldVesselModule");
-		else if (type == -1)	// Broken
+		else if (type == -1 && !isEngine)	// Broken
 			return textureManager.getTexture("BrokenVesselModule");
+		else if (type == -1)	// Broken engine
+			return textureManager.getTexture("BrokenEngineVesselModule");
 		else	// 0 : Simple
 			return textureManager.getTexture("SimpleVesselModule");
 	}

@@ -13,11 +13,17 @@ import fr.spaceproject.utils.Vec2i;
 
 public class BrokenVesselModule extends VesselModule
 {
-private Explosion explosion;
+	private Explosion explosion;
 	
-	public BrokenVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public BrokenVesselModule(int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(-1, level, orientation, textureManager);
+		explosion = new Explosion(new Vec2f(), true, textureManager);
+	}
+	
+	public BrokenVesselModule(int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
+	{
+		super(-1, level, orientation, textureManager, isEngine);
 		explosion = new Explosion(new Vec2f(), true, textureManager);
 	}
 	
@@ -32,8 +38,7 @@ private Explosion explosion;
 	@Override
 	public void draw(SpriteBatch display)
 	{
-		if (getType() > -2)
-			super.draw(display);
+		super.draw(display);
 		explosion.draw(display);      
 	}
 }

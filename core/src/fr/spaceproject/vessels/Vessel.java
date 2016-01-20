@@ -318,10 +318,7 @@ public class Vessel
 							break loop;
 						}
 						
-						if (modules[x][y].getType() == 2)
-							modules[x][y] = new BrokenVesselModule(-2, 1, Orientation.Up, textureManager);
-						else
-							modules[x][y] = new BrokenVesselModule(-1, 1, Orientation.Up, textureManager);
+						modules[x][y] = new BrokenVesselModule(1, modules[x][y].getOrientation(), textureManager, modules[x][y].getType() == 2);
 					}
 				}
 			}
