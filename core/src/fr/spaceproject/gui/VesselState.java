@@ -54,9 +54,9 @@ public class VesselState {
 	
 	
 	private Color ColorModule(Vessel playerVessel,int i,int j){
-		if (playerVessel.getModuleEnergy(new Vec2i(i,j))<0.25f*playerVessel.getModuleMaxEnergy(new Vec2i(i,j)))
+		if (playerVessel.getModuleEnergy(new Vec2i(i,j), true)<0.25f*playerVessel.getModuleMaxEnergy(new Vec2i(i,j)))
 			return new Color(1,0,0,1);
-		else if (playerVessel.getModuleEnergy(new Vec2i(i,j))<0.5f*playerVessel.getModuleMaxEnergy(new Vec2i(i,j)))
+		else if (playerVessel.getModuleEnergy(new Vec2i(i,j), true)<0.5f*playerVessel.getModuleMaxEnergy(new Vec2i(i,j)))
 			return new Color(1,1,0,1);
 		else 
 			return new Color(0,1,0,1);

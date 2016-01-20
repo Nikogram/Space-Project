@@ -320,7 +320,7 @@ public class Vessel
 					}
 					
 					
-					if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
+					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType() >= 0)
 					{
 						if (x == cockpitPosition.x && y == cockpitPosition.y)
 						{

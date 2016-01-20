@@ -41,12 +41,12 @@ public class ShieldVesselModule extends VesselModule
 	
 	public float getTimeBeforeRecharging()
 	{
-		return 10.0f;
+		return 5.0f;
 	}
 	
 	public float getRecharging()
 	{
-		return 1.0f;
+		return 5f;
 	}
 	
 	@Override
