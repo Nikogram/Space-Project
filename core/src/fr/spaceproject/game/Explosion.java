@@ -14,14 +14,16 @@ public class Explosion
 	private float timeAfterExplosion;
 	private Sprite explosionSprite;
 	private Sound explosionSound;
+	private boolean isSmall;
 	
-	public Explosion(Vec2f position, TextureManager textureManager)
+	public Explosion(Vec2f position, boolean isSmall, TextureManager textureManager)
 	{
 		this.textureManager = textureManager;
 		timeAfterExplosion = 0.000001f;
 		explosionSound = Gdx.audio.newSound(Gdx.files.internal("Explosion.mp3"));
 		explosionSound.play();
-		explosionSprite = new Sprite(position, new Vec2f(), textureManager.getTexture("StationExplosion1"));
+		explosionSprite = new Sprite(position, (isSmall ? new Vec2f(20, 20) : new Vec2f(140, 140)), textureManager.getTexture("StationExplosion1"));
+		this.isSmall = isSmall;
 	}
 	
 	public void finalize()
@@ -37,6 +39,11 @@ public class Explosion
 	public float getDissipationFactor()
 	{
 		return 3;
+	}
+	
+	public void setPosition(Vec2f position)
+	{
+		explosionSprite.setPosition(position);
 	}
 	
 	public boolean isFinished()

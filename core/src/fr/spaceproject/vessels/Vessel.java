@@ -17,19 +17,18 @@ enum VesselAction { MoveForward, MoveBackward, MoveLeft, MoveRight, TurnLeft, Tu
 
 public class Vessel
 {
-	protected VesselModule[][] modules;
-	protected boolean isAI;
-	protected VesselAI AI;
-	protected int faction;
-	protected float timeBeforeCall;
-	protected Vector<VesselAction> actions;
-	protected Vec2i cockpitPosition;
-	protected Vec2f cockpitPositionPixels;
-	protected Sound engineSound;
-	protected Sound collisionSound;
-	protected TextureManager textureManager;
-	protected boolean isDestroyed;
-	protected Explosion explosion;
+	private VesselModule[][] modules;
+	private boolean isAI;
+	private VesselAI AI;
+	private int faction;
+	private Vector<VesselAction> actions;
+	private Vec2i cockpitPosition;
+	private Vec2f cockpitPositionPixels;
+	private Sound engineSound;
+	private Sound collisionSound;
+	private TextureManager textureManager;
+	private boolean isDestroyed;
+	private Explosion explosion;
 	
 	
 	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
@@ -47,7 +46,6 @@ public class Vessel
 		this.isAI = isAI;
 		AI = new VesselAI();
 		this.faction = faction;
-		timeBeforeCall = 0;
 		actions = new Vector<VesselAction>();
 		this.cockpitPosition = cockpitPosition;
 		cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
@@ -103,6 +101,11 @@ public class Vessel
 		return modules[modulePositions.x][modulePositions.y].getEnergy();
 	}
 	
+	public void setModuleEnergy(Vec2i modulePositions, float energy)
+	{
+		modules[modulePositions.x][modulePositions.y].setEnergy(energy);
+	}
+	
 	public float getModuleMaxEnergy(Vec2i modulePositions)
 	{
 		return modules[modulePositions.x][modulePositions.y].getMaxEnergy();
@@ -115,15 +118,28 @@ public class Vessel
 	
 	public Sprite getModuleSprite(Vec2i position, boolean copy)
 	{
-		if (copy)
-			return modules[position.x][position.y].getSprite(copy);
-		return modules[position.x][position.y].getSprite();
+		return modules[position.x][position.y].getSprite(copy);
 	}
 	
 	public int getModuleType(Vec2i modulePositions)
 	{
 		return modules[modulePositions.x][modulePositions.y].getType();
 	}
+	
+	public Vec2f getModulePosition(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getSpritePosition();
+	}
+	
+	public Vec2f getModuleSize(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getSpriteSize();
+	}
+	
+	public void setModuleSize(Vec2i modulePositions, Vec2f size)
+	{
+		modules[modulePositions.x][modulePositions.y].setSpriteSize(size);
+	}	
 	
 	public void updateSpeed(float lastFrameTime)
 	{
@@ -289,7 +305,7 @@ public class Vessel
 						if (x == cockpitPosition.x && y == cockpitPosition.y)
 						{
 							isDestroyed = true;
-							explosion = new Explosion(getCenter(), textureManager);
+							explosion = new Explosion(getCenter(), false, textureManager);
 							
 							for (int X = 0; X < modules.length; ++X)
 							{
@@ -303,9 +319,9 @@ public class Vessel
 						}
 						
 						if (modules[x][y].getType() == 2)
-							modules[x][y] = new VesselModule(-2, 1, Orientation.Up, textureManager);
+							modules[x][y] = new BrokenVesselModule(-2, 1, Orientation.Up, textureManager);
 						else
-							modules[x][y] = new VesselModule(-1, 1, Orientation.Up, textureManager);
+							modules[x][y] = new BrokenVesselModule(-1, 1, Orientation.Up, textureManager);
 					}
 				}
 			}
@@ -406,8 +422,6 @@ public class Vessel
 		else if (configuration == 3)
 		{
 			modules = new VesselModule[3][3];
-			
-			modules = new VesselModule[5][5];
 			for (int x = 0; x < modules.length; ++x)
 				for (int y = 0; y < modules[x].length; ++y)
 					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
@@ -427,8 +441,6 @@ public class Vessel
 		}
 		else
 		{
-			modules = new VesselModule[5][5];
-			
 			modules = new VesselModule[5][5];
 			for (int x = 0; x < modules.length; ++x)
 				for (int y = 0; y < modules[x].length; ++y)

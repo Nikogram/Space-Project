@@ -87,17 +87,17 @@ public class LaserVesselModule extends VesselModule
 			{
 				if (vessels.get(i) != moduleVessel && vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < getLength())
 				{
-					for (int x = 0; x < vessels.get(i).modules.length; ++x)
+					for (int x = 0; x < vessels.get(i).getSize().x; ++x)
 					{
-						for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+						for (int y = 0; y < vessels.get(i).getSize().y; ++y)
 						{
-							if (vessels.get(i).modules[x][y].getType() == 5)
-								vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x * 3,
-									vessels.get(i).modules[x][y].getSprite(false).getSize().y * 3));
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
+										vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
 							
-							if (vessels.get(i).modules[x][y].getType() >= 0 && tempLaserSprite.isCollidedWithSprite(vessels.get(i).modules[x][y].getSprite(false), new Vec2f()))
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && tempLaserSprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 							{
-								float distance = getSpritePosition().getDistance(vessels.get(i).modules[x][y].getSpritePosition()) - getSpriteSize().x / 2 - vessels.get(i).modules[x][y].getSpriteSize().x / 2;
+								float distance = getSpritePosition().getDistance(vessels.get(i).getModulePosition(new Vec2i(x, y))) - getSpriteSize().x / 2 - vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 2;
 								
 								if (moduleDistance == -1 || moduleDistance > distance)
 								{
@@ -107,9 +107,9 @@ public class LaserVesselModule extends VesselModule
 								}
 							}
 							
-							if (vessels.get(i).modules[x][y].getType() == 5)
-								vessels.get(i).modules[x][y].getSprite(false).setSize(new Vec2f(vessels.get(i).modules[x][y].getSprite(false).getSize().x / 3,
-									vessels.get(i).modules[x][y].getSprite(false).getSize().y / 3));
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
+										vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
 						}
 					}
 				}
@@ -135,12 +135,13 @@ public class LaserVesselModule extends VesselModule
 		// Gestion de la collision entre le laser et tous les vaisseaux
 		if (vesselId >= 0)
 		{
-			vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].setEnergy(vessels.get(vesselId).modules[modulePosition.x][modulePosition.y].getEnergy() - getPower());
+			vessels.get(vesselId).setModuleEnergy(modulePosition, vessels.get(vesselId).getModuleEnergy(modulePosition) - getPower());
 			shotVessels.add(vessels.get(vesselId));
 		}
 		else if (stationModulePosition.x != -1)
 		{
 			station.setModuleEnergy(stationModulePosition, station.getModuleEnergy(stationModulePosition) - getPower());
+			station.addAttackingVessel(moduleVessel);
 		}
 			
 		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);

@@ -10,9 +10,9 @@ import fr.spaceproject.utils.Vec2f;
 
 public class Projectile
 {
-	protected Sprite sprite;
-	protected float timeBeforeDestruction;
-	protected Sound sound;
+	private Sprite sprite;
+	private float timeBeforeDestruction;
+	private Sound sound;
 	
 	public Projectile(Vec2f position, Vec2f speed, float angle, float lifeTime, TextureManager textureManager)
 	{
@@ -28,6 +28,28 @@ public class Projectile
     {
 		sound.dispose();
     }
+	
+	public Vec2f getSpritePosition()
+	{
+		return sprite.getPosition();
+	}
+	
+	public Sprite getSprite()
+	{
+		return sprite.clone();
+	}
+	
+	public Sprite getSprite(boolean copy)
+	{
+		if (copy)
+			return sprite.clone();
+		return sprite;
+	}
+	
+	public float getTimeBeforeDestruction()
+	{
+		return timeBeforeDestruction;
+	}
 	
 	public void update(float lastFrameTime)
 	{
