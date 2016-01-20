@@ -114,7 +114,7 @@ public class Sprite
 	
 	public void setColor(Color color)
 	{
-		color = new Color(color);
+		this.color = new Color(color);
 	}
 	
 	public void setAlpha(float alpha)

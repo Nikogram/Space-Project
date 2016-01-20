@@ -74,22 +74,27 @@ public class CannonVesselModule extends VesselModule
 					for (int y = 0; y < vessels.get(i).getSize().y ; ++y)
 					{
 						boolean loopIsBroken = false;
+						boolean spriteIsResized = false;
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+						if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5 && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
+						{
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
 									vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
+							spriteIsResized = true;
+						}
 						
 						if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSprite(projectiles.get(p).getSprite(false), new Vec2f()))
 						{
 							vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - getPower());
+							vessels.get(i).setModuleIsTouched(new Vec2i(x, y));
 							projectiles.remove(p);
 							shotVessels.add(vessels.get(i));
 							loopIsBroken = true;
 						}
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+						if (spriteIsResized)
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
-									vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
+								vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
 						
 						if (loopIsBroken)
 							break loop;
