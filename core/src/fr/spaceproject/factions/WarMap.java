@@ -35,7 +35,7 @@ public class WarMap {
 	}
 	
 	public void warBegin(Geopolitics state){
-		for (int i=1;i<state.length();i++){
+		for (int i=1;i<state.getNbTeam();i++){
 			warTurn(state.getFaction(i),state);
 		}
 	}
