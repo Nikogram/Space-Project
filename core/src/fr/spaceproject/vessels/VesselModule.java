@@ -32,19 +32,20 @@ public class VesselModule
 	
 	public Texture getTexture()
 	{
+		// -2 : inexistant
 		if (type == 1)	// Cockpit
 			return textureManager.getTexture("CockpitVesselModule");
 		else if (type == 2)	// Engine
 			return textureManager.getTexture("EngineVesselModule");
 		else if (type == 3)	// Cannon
 			return textureManager.getTexture("CannonVesselModule");
-		else if (type == 4)	// Shield
+		else if (type == 4)	// Laser
 			return textureManager.getTexture("CannonVesselModule");
 		else if (type == 5)	// Shield
 			return textureManager.getTexture("ShieldVesselModule");
 		else if (type == -1)	// Broken
 			return textureManager.getTexture("BrokenVesselModule");
-		else	// Simple
+		else	// 0 : Simple
 			return textureManager.getTexture("SimpleVesselModule");
 	}
 	

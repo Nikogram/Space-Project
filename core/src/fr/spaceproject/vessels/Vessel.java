@@ -93,8 +93,36 @@ public class Vessel
 		return modules[cockpitPosition.x][cockpitPosition.y].getSpriteAngle();
 	}
 	
-	public int getFaction(){
+	public int getFaction()
+	{
 		return faction;
+	}
+	
+	public float getModuleEnergy(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getEnergy();
+	}
+	
+	public float getModuleMaxEnergy(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getMaxEnergy();
+	}
+	
+	public Sprite getModuleSprite(Vec2i position)
+	{
+		return modules[position.x][position.y].getSprite();
+	}
+	
+	public Sprite getModuleSprite(Vec2i position, boolean copy)
+	{
+		if (copy)
+			return modules[position.x][position.y].getSprite(copy);
+		return modules[position.x][position.y].getSprite();
+	}
+	
+	public float getModuleType(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getMaxEnergy();
 	}
 	
 	public void updateSpeed(float lastFrameTime)
