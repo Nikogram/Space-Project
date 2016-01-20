@@ -1,5 +1,7 @@
 package fr.spaceproject.station;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.utils.Orientation;
@@ -7,6 +9,7 @@ import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.vessels.Vessel;
 import fr.spaceproject.vessels.VesselModule;
 
 public class Station
@@ -14,6 +17,7 @@ public class Station
 	private StationModule[][] modules;
 	private TextureManager textureManager;
 	private Vec2f position;
+	private Vector<Vessel> attackingVessels;
 	
 	public Station(Vec2f position, Vec2i size, int faction, TextureManager textureManager)
 	{	
@@ -87,7 +91,7 @@ public class Station
 	{
 	}
 	
-	public void update(float lastFrameTime)
+	public Vector<Vessel> update(float lastFrameTime)
 	{
 		for (int x = 0; x < modules.length; ++x)
 		{
@@ -99,6 +103,8 @@ public class Station
 					modules[x][y].update(lastFrameTime);
 			}
 		}
+		
+		return attackingVessels;
 	}
 	
 	public void draw(SpriteBatch display)
