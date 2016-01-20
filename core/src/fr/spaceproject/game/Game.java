@@ -63,6 +63,13 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("ShieldVesselModule", "ShieldVesselModule.png");
 		textureManager.addTexture("SimpleVesselModule", "SimpleVesselModule.png");
 		textureManager.addTexture("SimpleStationModule", "SimpleStationModule.png");
+		textureManager.addTexture("BackgroundStationModule", "BackgroundStationModule.png");
+		textureManager.addTexture("BrokenStationModule", "BrokenStationModule.png");
+		textureManager.addTexture("StationExplosion1", "Explosion/Station/1.png");
+		textureManager.addTexture("StationExplosion2", "Explosion/Station/2.png");
+		textureManager.addTexture("StationExplosion3", "Explosion/Station/3.png");
+		textureManager.addTexture("StationExplosion4", "Explosion/Station/4.png");
+		textureManager.addTexture("StationExplosion5", "Explosion/Station/5.png");
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -70,8 +77,7 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		
-		zone = new SectorMap(1500,new Coor(0,0),0, textureManager,state,map);
+		zone = new SectorMap(1500,new Coor(0,0),10, textureManager,state,map);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 		reput=new AngryBar(zone.getVector().get(0).getPosition(),state,textureManager);

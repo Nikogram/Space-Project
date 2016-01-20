@@ -16,7 +16,7 @@ public class Projectile
 	
 	public Projectile(Vec2f position, Vec2f speed, float angle, float lifeTime, TextureManager textureManager)
 	{
-		sprite = new Sprite(position, new Vec2f(), textureManager.getTexture("ProjectileCannonVesselModule"));
+		sprite = new Sprite(position, new Vec2f(8, 4), textureManager.getTexture("ProjectileCannonVesselModule"));
 		sprite.setAngle(angle);
 		sprite.setSpeed(speed);
 		timeBeforeDestruction = lifeTime;

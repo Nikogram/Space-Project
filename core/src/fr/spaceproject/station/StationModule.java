@@ -1,5 +1,7 @@
 package fr.spaceproject.station;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -11,31 +13,32 @@ import fr.spaceproject.utils.Vec2f;
 public class StationModule
 {
 	private TextureManager textureManager;
-	private Sprite sprite;
 	private int type;
 	private int level;
 	private float energy;
+	private Sprite sprite;
+	
 	
 	public StationModule(int type, int level, Vec2f position, Orientation orientation, TextureManager textureManager)
 	{
 		this.textureManager = textureManager;
-		sprite = new Sprite(position, new Vec2f(140, 140), getTexture());
 		this.type = type;
 		this.level = level;
 		energy = getMaxEnergy();
+		sprite = new Sprite(position, new Vec2f(140, 140), getTexture());
 	}
 	
 	public Texture getTexture()
 	{
-		if (type == 1)	// Simple
-			return textureManager.getTexture("SimpleStationModule");
+		if (type == -1)	// Broken
+			return textureManager.getTexture("BrokenStationModule");
 		else	// Simple
 			return textureManager.getTexture("SimpleStationModule");
 	}
 	
 	public float getMaxEnergy()
 	{
-		return 5000 + 1000 * (level - 1);
+		return 500 + 250 * (level - 1);
 	}
 	
 	public int getType()
@@ -68,6 +71,15 @@ public class StationModule
 		if (copy)
 			return sprite.clone();
 		return sprite;
+	}
+	
+	public TextureManager getTextureManager()
+	{
+		return textureManager;
+	}
+	
+	public void update(float lastFrameTime)
+	{
 	}
 	
 	public void draw(SpriteBatch display)

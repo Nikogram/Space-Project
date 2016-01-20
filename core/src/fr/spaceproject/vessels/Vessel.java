@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.game.Explosion;
 import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.*;
 
@@ -28,6 +29,7 @@ public class Vessel
 	protected Sound collisionSound;
 	protected TextureManager textureManager;
 	protected boolean isDestroyed;
+	protected Explosion explosion;
 	
 	
 	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
@@ -53,8 +55,7 @@ public class Vessel
 		isDestroyed = false;
 		
 		engineSound = Gdx.audio.newSound(Gdx.files.internal("EngineVesselModule.wav"));
-		engineSound.loop();
-		engineSound.play();
+		engineSound.loop(0.5f);
 		engineSound.pause();
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("CollisionVessel.mp3"));
 	}
@@ -121,9 +122,17 @@ public class Vessel
 				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
 		}
 	}
-	public boolean getIsDestroyed(){
+	
+	public boolean isDestroyed()
+	{
 		return isDestroyed;
 	}
+	
+	public boolean isExplosing()
+	{
+		return explosion != null;
+	}
+	
 	public Vector<Vessel> update(float lastFrameTime, Vector<Vessel> vessels, Station station)
 	{
 		Vector<Vessel> shotVessels = new Vector<Vessel>();
@@ -224,7 +233,8 @@ public class Vessel
 				actions.add(VesselAction.Shoot);
 			
 			
-			// Application de la mise a jour pour tous les modules		
+			// Application de la mise a jour pour tous les modules	
+			loop:
 			for (int x = 0; x < modules.length; ++x)
 			{
 				for (int y = 0; y < modules[x].length; ++y)
@@ -237,14 +247,27 @@ public class Vessel
 						Vec2f forceVector = new Vec2f(collidedObjectPosition.x - getPosition().x, collidedObjectPosition.y - getPosition().y);
 						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
 						cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector));
-						collisionSound.play();
+						collisionSound.play(1f);
 					}
 					
 					
 					if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
 					{
 						if (x == cockpitPosition.x && y == cockpitPosition.y)
+						{
 							isDestroyed = true;
+							explosion = new Explosion(getCenter(), textureManager);
+							
+							for (int X = 0; X < modules.length; ++X)
+							{
+								for (int Y = 0; Y < modules[x].length; ++Y)
+								{
+									modules[X][Y] = new VesselModule(-2, 1, Orientation.Up, textureManager);
+								}
+							}
+							
+							break loop;
+						}
 						
 						if (modules[x][y].getType() == 2)
 							modules[x][y] = new VesselModule(-2, 1, Orientation.Up, textureManager);
@@ -271,10 +294,17 @@ public class Vessel
 			
 			
 			// Gestion du son		
-			if (flamesAreShown)
+			if (flamesAreShown && !isDestroyed)
 				engineSound.resume();
 			else
 				engineSound.pause();
+		}
+		else if (explosion != null)
+		{
+			explosion.update(lastFrameTime);
+			
+			if (explosion.isFinished())
+				explosion = null;
 		}
 		
 		return shotVessels;
@@ -285,7 +315,24 @@ public class Vessel
 		for (int x = 0; x < modules.length && !isDestroyed; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				modules[x][y].draw(display);
+				if (modules[x][y].getType() >= 0)
+					modules[x][y].draw(display);
+		}
+	}
+	
+	public void drawForeground(SpriteBatch display)
+	{		
+		if (explosion != null)
+			explosion.draw(display);
+	}
+	
+	public void drawBackground(SpriteBatch display)
+	{		
+		for (int x = 0; x < modules.length && !isDestroyed; ++x)
+		{
+			for (int y = 0; y < modules[x].length; ++y)
+				if (modules[x][y].getType() < 0)
+					modules[x][y].draw(display);
 		}
 	}
 	

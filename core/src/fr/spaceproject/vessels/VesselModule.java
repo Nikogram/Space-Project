@@ -161,7 +161,8 @@ public class VesselModule
 		{
 			for (int y = 0; y < station.getSize().y; ++y)
 			{
-				if (type >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+				if (sprite.getPosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 140 && 
+						type >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 				{
 					energy -= 30;
 					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);

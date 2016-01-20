@@ -88,18 +88,24 @@ public class SectorMap {
 	
 	public void update(float fl){ 
 		vessels.get(0).update(fl, vessels, station);
-		for (int l=1;l<vessels.size();l++){
-			if (vessels.get(l).getIsDestroyed())
+		for (int l=1;l<vessels.size();l++)
+		{
+			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing())
 				vessels.remove(l);
-			}
+		}
 		for (int l=1;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station);
+		station.update(fl);
 	}
 	public void draw(SpriteBatch display){
-		
+		station.drawBackground(display);
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).drawBackground(display);
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).draw(display);
 		station.draw(display);
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).drawForeground(display);
 	}
 	public int nbEnnemyVessel(){
 		return vessels.size();
