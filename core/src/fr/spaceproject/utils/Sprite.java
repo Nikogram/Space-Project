@@ -145,7 +145,7 @@ public class Sprite
 	public boolean isCollidedWithSprite(Sprite sprite, Vec2f intersectionPoint)
 	{
 		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
-				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifié
+				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifiï¿½
 		{
 			Vec2f spriteVertices[] = {new Vec2f(-sprite.size.x / 2, -sprite.size.y / 2),
 					new Vec2f(sprite.size.x / 2, -sprite.size.y / 2),
@@ -231,14 +231,14 @@ public class Sprite
 		
 		// Soit P le point d'intersection
 		// On a P = A + k*AB et P = C + m*CD, donc A + k*AB = C + m*CD
-		// Après décomposition on a k et m
+		// Aprï¿½s dï¿½composition on a k et m
 		
 		Vec2f AB = new Vec2f(B.x - A.x, B.y - A.y);
 		Vec2f CD = new Vec2f(D.x - C.x, D.y - C.y);
 		
 		float denominator = AB.x * CD.y - AB.y * CD.x;
 		if (denominator == 0)
-			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId, intersectionPoint);	// on recommence avec un petit décalage pour ne plus avoir de segments paralleles
+			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId, intersectionPoint);	// on recommence avec un petit dï¿½calage pour ne plus avoir de segments paralleles
 		
 		float k = -(A.x * CD.y - C.x * CD.y - CD.x * A.y + CD.x * C.y) / denominator;
 		float m = -(-AB.x * A.y + AB.x * C.y + AB.y * A.x - AB.y * C.x) / denominator;
