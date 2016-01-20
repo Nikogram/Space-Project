@@ -120,9 +120,9 @@ public class Vessel
 		return modules[position.x][position.y].getSprite();
 	}
 	
-	public float getModuleType(Vec2i modulePositions)
+	public int getModuleType(Vec2i modulePositions)
 	{
-		return modules[modulePositions.x][modulePositions.y].getMaxEnergy();
+		return modules[modulePositions.x][modulePositions.y].getType();
 	}
 	
 	public void updateSpeed(float lastFrameTime)

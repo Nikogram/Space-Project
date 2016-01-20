@@ -14,6 +14,7 @@ import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.AngryBar;
 import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.gui.MiniMap;
+import fr.spaceproject.gui.VesselState;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.vessels.Vessel;
@@ -28,7 +29,7 @@ public class Game extends ApplicationAdapter
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
 	private AngryBar reput;
-	
+	private VesselState stateVessel;
 	
 	protected WarMap map;	//map total de l'univers
 	protected Geopolitics state; //array de faction pour les mettres a jour
@@ -79,6 +80,7 @@ public class Game extends ApplicationAdapter
 		state = new Geopolitics(5);
 		zone = new SectorMap(1500,new Coor(0,0),1, textureManager,state,map);
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
+		stateVessel=new VesselState(zone.getVector().get(0),textureManager);
 		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
 		reput=new AngryBar(zone.getVector().get(0).getPosition(),state,textureManager);
 		
@@ -99,6 +101,7 @@ public class Game extends ApplicationAdapter
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
 		miniMap.update(zone,zone.getVector(),zone.getStation());
 		reput.update(zone.getVector().get(0).getPosition(),state,textureManager);
+		stateVessel.Update(zone.getVector().get(0),textureManager);
 		//Mise a jour des coordonnees
 		zone.updateExit(zone.getPlayer(),map,state);
 		// Affichage
@@ -114,6 +117,7 @@ public class Game extends ApplicationAdapter
 		carte.draw(display);
 		miniMap.draw(display);
 		reput.draw(display);
+		stateVessel.draw(display);
 		display.end();
 		
 		if (Gdx.input.isKeyPressed(Keys.M))
