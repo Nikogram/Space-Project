@@ -37,7 +37,7 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 100 + 50f * (getLevel() - 1);
+		return 20 + 20f * (getLevel() - 1);
 	}
 	
 	public float getLength()
@@ -91,9 +91,14 @@ public class LaserVesselModule extends VesselModule
 					{
 						for (int y = 0; y < vessels.get(i).getSize().y; ++y)
 						{
-							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+							boolean spriteIsResized = false;
+							
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5 && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
+							{
 								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
 										vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
+								spriteIsResized = true;
+							}
 							
 							if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && tempLaserSprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 							{
@@ -107,7 +112,7 @@ public class LaserVesselModule extends VesselModule
 								}
 							}
 							
-							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5)
+							if (spriteIsResized)
 								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
 										vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
 						}
@@ -136,6 +141,7 @@ public class LaserVesselModule extends VesselModule
 		if (vesselId >= 0)
 		{
 			vessels.get(vesselId).setModuleEnergy(modulePosition, vessels.get(vesselId).getModuleEnergy(modulePosition) - getPower());
+			vessels.get(vesselId).setModuleIsTouched(new Vec2i(modulePosition.x, modulePosition.y));
 			shotVessels.add(vessels.get(vesselId));
 		}
 		else if (stationModulePosition.x != -1)

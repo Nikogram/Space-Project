@@ -101,6 +101,21 @@ public class Vessel
 		return modules[modulePositions.x][modulePositions.y].getEnergy();
 	}
 	
+	public float getModuleEnergy(Vec2i modulePositions, boolean forceNormalEnergy)
+	{
+		return modules[modulePositions.x][modulePositions.y].getEnergy(forceNormalEnergy);
+	}
+	
+	public void setModuleEnergy(Vec2i modulePositions, float energy, boolean forceNormalEnergy)
+	{
+		modules[modulePositions.x][modulePositions.y].setEnergy(energy, forceNormalEnergy);
+	}
+	
+	public float getModuleSubEnergy(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getSubEnergy();
+	}
+	
 	public void setModuleEnergy(Vec2i modulePositions, float energy)
 	{
 		modules[modulePositions.x][modulePositions.y].setEnergy(energy);
@@ -139,7 +154,12 @@ public class Vessel
 	public void setModuleSize(Vec2i modulePositions, Vec2f size)
 	{
 		modules[modulePositions.x][modulePositions.y].setSpriteSize(size);
-	}	
+	}
+	
+	public void setModuleIsTouched(Vec2i modulePositions)
+	{
+		modules[modulePositions.x][modulePositions.y].setIsTouched();
+	}
 	
 	public void updateSpeed(float lastFrameTime)
 	{
@@ -300,7 +320,7 @@ public class Vessel
 					}
 					
 					
-					if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
+					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType() >= 0)
 					{
 						if (x == cockpitPosition.x && y == cockpitPosition.y)
 						{
@@ -370,6 +390,12 @@ public class Vessel
 	{		
 		if (explosion != null)
 			explosion.draw(display);
+		
+		for (int x = 0; x < modules.length && !isDestroyed; ++x)
+		{
+			for (int y = 0; y < modules[x].length; ++y)
+				modules[x][y].drawForeground(display);
+		}
 	}
 	
 	public void drawBackground(SpriteBatch display)

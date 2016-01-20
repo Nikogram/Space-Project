@@ -3,6 +3,7 @@ package fr.spaceproject.vessels;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -14,10 +15,13 @@ public class VesselModule
 	private int type;
 	private int level;
 	private float energy;
+	private float subEnergy;
 	final private Sprite sprite;
 	private Orientation orientation;
 	private TextureManager textureManager;
 	private boolean isEngine;
+	private boolean isTouched;
+	private boolean firstFrameIsTouched;
 	
 	
 	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
@@ -27,9 +31,12 @@ public class VesselModule
 		this.type = type;
 		this.level = level;
 		energy = getMaxEnergy();
+		subEnergy = 0;
 		sprite = new Sprite(new Vec2f(), new Vec2f(), getTexture());
 		sprite.setAngle(orientation.ordinal() * 90);
 		this.orientation = orientation;
+		isTouched = false;
+		firstFrameIsTouched = false;
 	}
 	
 	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
@@ -87,12 +94,42 @@ public class VesselModule
 	
 	public float getEnergy()
 	{
-		return energy;
+		if (subEnergy <= 0)
+			return energy;
+		return subEnergy;
 	}
 	
 	public void setEnergy(float energy)
 	{
-		this.energy = energy;
+		if (subEnergy <= 0)
+			this.energy = energy;
+		else
+			subEnergy = energy;
+	}
+	
+	public float getEnergy(boolean forceNormalEnergy)
+	{
+		if (forceNormalEnergy)
+			return energy;
+		return getEnergy();
+	}
+	
+	public void setEnergy(float energy, boolean forceNormalEnergy)
+	{
+		if (forceNormalEnergy)
+			this.energy = energy;
+		else
+			setEnergy(energy);
+	}
+	
+	public float getSubEnergy()
+	{
+		return subEnergy;
+	}
+	
+	public void setSubEnergy(float energy)
+	{
+		subEnergy = energy;
 	}
 	
 	public Sprite getSprite()
@@ -177,8 +214,25 @@ public class VesselModule
 		return 100 + 20 * (level - 1);
 	}
 	
+	public boolean isTouched()
+	{
+		return isTouched;
+	}
+	
+	public void setIsTouched()
+	{
+		firstFrameIsTouched = true;
+		isTouched = true;
+	}
+	
 	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
+		//if (!firstFrameIsTouched)
+			isTouched = false;
+		
+		//if (firstFrameIsTouched)
+		//	firstFrameIsTouched = false;
+		
 		for (int x = 0; x < station.getSize().x; ++x)
 		{
 			for (int y = 0; y < station.getSize().y; ++y)
@@ -203,7 +257,7 @@ public class VesselModule
 				{
 					if (type >= 0 && vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 					{
-						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - 30);
+						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - 30, true);
 						shotVessels.add(vessels.get(i));
 						return vessels.get(i).getCenter();
 					}
@@ -225,5 +279,9 @@ public class VesselModule
 	{
 		if (type >= -1)
 			sprite.draw(display);
+	}
+	
+	public void drawForeground(SpriteBatch display)
+	{
 	}
 }
