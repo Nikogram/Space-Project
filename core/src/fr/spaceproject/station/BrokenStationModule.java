@@ -18,7 +18,7 @@ public class BrokenStationModule extends StationModule
 	{
 		super(-1, level, position, orientation, textureManager);
 		
-		explosion = new Explosion(position, textureManager);
+		explosion = new Explosion(position, false, textureManager);
 	}
 	
 	@Override

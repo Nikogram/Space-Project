@@ -111,6 +111,11 @@ public class VesselModule
 		return sprite.getSize();
 	}
 	
+	public void setSpriteSize(Vec2f size)
+	{
+		sprite.setSize(size);
+	}
+	
 	public float getSpriteAngle()
 	{
 		return sprite.getAngle();
@@ -167,6 +172,7 @@ public class VesselModule
 				{
 					energy -= 30;
 					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);
+					station.addAttackingVessel(moduleVessel);
 					return station.getModulePosition(new Vec2i(x, y));
 				}
 			}
@@ -175,13 +181,13 @@ public class VesselModule
 		for (int i = 0; i < vessels.size(); ++i)
 		{
 			if (sprite.getPosition().getDistance(vessels.get(i).getCenter()) < 100)
-			for (int x = 0; x < vessels.get(i).modules.length && vessels.get(i) != moduleVessel; ++x)
+			for (int x = 0; x < vessels.get(i).getSize().x && vessels.get(i) != moduleVessel; ++x)
 			{
-				for (int y = 0; y < vessels.get(i).modules[x].length; ++y)
+				for (int y = 0; y < vessels.get(i).getSize().y; ++y)
 				{
-					if (type >= 0 && vessels.get(i).modules[x][y].type >= 0 && sprite.isCollidedWithSprite(vessels.get(i).modules[x][y].sprite, new Vec2f()))
+					if (type >= 0 && vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 					{
-						vessels.get(i).modules[x][y].energy -= 30;
+						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - 30);
 						shotVessels.add(vessels.get(i));
 						return vessels.get(i).getCenter();
 					}

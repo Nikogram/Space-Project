@@ -1,5 +1,6 @@
 package fr.spaceproject.station;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,7 @@ public class Station
 		}
 		
 		this.position = position.clone();
+		attackingVessels = new Vector<Vessel>();
 	}
 	
 	public Vec2f getPosition()
@@ -87,6 +89,11 @@ public class Station
 		modules[position.x][position.y].setEnergy(energy);
 	}
 	
+	public void addAttackingVessel(Vessel vessel)
+	{
+		attackingVessels.add(vessel);
+	}
+	
 	public void generate(int configuration)
 	{
 	}
@@ -104,7 +111,11 @@ public class Station
 			}
 		}
 		
-		return attackingVessels;
+		Vector<Vessel> tempVessels = new Vector<Vessel>();
+		for (int i = 0; i < attackingVessels.size(); ++i)
+			tempVessels.add(attackingVessels.get(i));
+		attackingVessels.clear();
+		return tempVessels;
 	}
 	
 	public void draw(SpriteBatch display)
