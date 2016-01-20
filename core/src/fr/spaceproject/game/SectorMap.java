@@ -28,6 +28,8 @@ public class SectorMap {
 	
 	private Station station;
 	
+	private Background background;
+	
 	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager,Geopolitics politic,WarMap map){
 		this.textureManager = textureManager;
 		taille=i;
@@ -38,6 +40,7 @@ public class SectorMap {
 		playerVessel.generate(3);
 		vessels.add(playerVessel);
 		createArrayObjects(nbEnnemyVessel,playerVessel,map,pos,politic);
+		background = new Background(new Vec2f(taille, taille), textureManager);
 	}
 	
 	private void createArrayObjects(int i,Vessel playerPlayer,WarMap map,Coor pos,Geopolitics state){
@@ -106,6 +109,7 @@ public class SectorMap {
 		station.update(fl);
 	}
 	public void draw(SpriteBatch display){
+		background.draw(display, playerVessel.getPosition());
 		station.drawBackground(display);
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).drawBackground(display);
