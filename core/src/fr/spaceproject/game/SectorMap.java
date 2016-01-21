@@ -51,7 +51,7 @@ public class SectorMap {
 		nbEnnemyVessel=i;
 		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), alignement, textureManager);
 		for (int l=1;l<i+1;l++){
-			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, /*map.appartCoor(pos.toStrings())*/(int)Math.round(Math.random() + 1), textureManager));
+			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
 			if (vessels.get(l).getFaction() == 2)
 				vessels.get(l).generate(2);	
 			else
@@ -90,41 +90,37 @@ public class SectorMap {
 	}
 	
 	public void update(float fl,Geopolitics state){ 
-		for (int l=1;l<vessels.size();l++)
-		{
-			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
-				for (int i=1;i<state.getNbTeam();i++){
-					if (i!=vessels.get(l).getFaction())
-						state.decAgressivity(i,2);
-					else {
-						state.addAgressivity(i,10);
+		for (int l=1;l<vessels.size();l++){
+				for (int j=0;j<vessels.get(l).getAttackingVessel().size();j++){
+					if ( vessels.get(l).getAttackingVessel().get(j).getFaction()==0 && !vessels.get(l).isDestroyed())
+						state.addAgressivity(vessels.get(l).getFaction(),1);
+					if (vessels.get(l).getAttackingVessel().get(j).getFaction()==0 && vessels.get(l).isDestroyed()){
+						for (int i=1;i<state.getNbTeam();i++){
+							if (i!=vessels.get(l).getFaction())
+								state.decAgressivity(i,5);
+							else {
+								state.addAgressivity(i,10);
+							}
+						}
 					}
+			
 				}
+		}
+		for (int l=1;l<vessels.size();l++){
+			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
 				vessels.remove(l);
 			}
 		}
-		
-		for (int l=0;l<vessels.size();l++)
+		for (int l=0;l<vessels.size();l++){
 			vessels.get(l).clearAttackingVessel();
 		station.clearAttackingVessel();
+		}
 		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
 		station.update(fl, alignementplayer, vessels);
-		
-		
-		for (int j = 0; j < vessels.size(); ++j)
-		{
-			Vector<Vessel> collidedVessels = vessels.get(j).getAttackingVessel();
-			
-			for (int k = 0; k < collidedVessels.size(); ++k)
-			{
-				if (collidedVessels.get(k).getFaction() == 0)
-				{
-				}
-			}
-		}
-	}
+}
+	
 	public void draw(SpriteBatch display){
 		background.draw(display, playerVessel.getPosition());
 		station.drawBackground(display);
