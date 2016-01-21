@@ -88,7 +88,7 @@ public class CannonVesselModule extends VesselModule
 							vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - getPower());
 							vessels.get(i).setModuleIsTouched(new Vec2i(x, y));
 							projectiles.remove(p);
-							shotVessels.add(vessels.get(i));
+							vessels.get(i).addAttackingVessel(moduleVessel);
 							loopIsBroken = true;
 						}
 						

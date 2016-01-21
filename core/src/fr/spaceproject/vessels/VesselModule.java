@@ -21,7 +21,6 @@ public class VesselModule
 	private TextureManager textureManager;
 	private boolean isEngine;
 	private boolean isTouched;
-	private boolean firstFrameIsTouched;
 	
 	
 	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
@@ -36,7 +35,6 @@ public class VesselModule
 		sprite.setAngle(orientation.ordinal() * 90);
 		this.orientation = orientation;
 		isTouched = false;
-		firstFrameIsTouched = false;
 	}
 	
 	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
@@ -221,17 +219,12 @@ public class VesselModule
 	
 	public void setIsTouched()
 	{
-		firstFrameIsTouched = true;
 		isTouched = true;
 	}
 	
 	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
-		//if (!firstFrameIsTouched)
-			isTouched = false;
-		
-		//if (firstFrameIsTouched)
-		//	firstFrameIsTouched = false;
+		isTouched = false;
 		
 		for (int x = 0; x < station.getSize().x; ++x)
 		{
@@ -258,7 +251,7 @@ public class VesselModule
 					if (type >= 0 && vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 					{
 						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - 30, true);
-						shotVessels.add(vessels.get(i));
+						vessels.get(i).addAttackingVessel(moduleVessel);
 						return vessels.get(i).getCenter();
 					}
 				}
