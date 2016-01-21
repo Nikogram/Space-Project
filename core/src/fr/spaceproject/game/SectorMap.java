@@ -49,7 +49,7 @@ public class SectorMap {
 		vessels = new Vector<Vessel>();
 		vessels.add(playerVessel);
 		nbEnnemyVessel=i;
-		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), 1, textureManager);
+		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), alignement, textureManager);
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
 			if (alignementplayer[alignement]<50)
@@ -90,7 +90,7 @@ public class SectorMap {
 	}
 	
 	public void update(float fl,Geopolitics state){ 
-		vessels.get(0).update(fl, vessels, station);
+		Vector<Vessel> lol = vessels.get(0).update(fl, vessels, station);
 		for (int l=1;l<vessels.size();l++)
 		{
 			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
@@ -106,7 +106,12 @@ public class SectorMap {
 		}
 		for (int l=1;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station);
-		station.update(fl);
+		station.update(fl, alignementplayer, vessels);
+		
+		for (int i = 0; i < lol.size(); ++i)
+		{
+			System.out.println(lol.get(i).getFaction());
+		}
 	}
 	public void draw(SpriteBatch display){
 		background.draw(display, playerVessel.getPosition());

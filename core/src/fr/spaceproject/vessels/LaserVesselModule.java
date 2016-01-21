@@ -142,7 +142,7 @@ public class LaserVesselModule extends VesselModule
 		{
 			vessels.get(vesselId).setModuleEnergy(modulePosition, vessels.get(vesselId).getModuleEnergy(modulePosition) - getPower());
 			vessels.get(vesselId).setModuleIsTouched(new Vec2i(modulePosition.x, modulePosition.y));
-			shotVessels.add(vessels.get(vesselId));
+			vessels.get(vesselId).addAttackingVessel(moduleVessel);
 		}
 		else if (stationModulePosition.x != -1)
 		{

@@ -29,6 +29,7 @@ public class Vessel
 	private TextureManager textureManager;
 	private boolean isDestroyed;
 	private Explosion explosion;
+	private Vector<Vessel> attackingVessels;
 	
 	
 	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
@@ -56,6 +57,7 @@ public class Vessel
 		engineSound.loop(0.5f);
 		engineSound.pause();
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("CollisionVessel.mp3"));
+		attackingVessels = new Vector<Vessel>();
 	}
 	
 	public void finalize()
@@ -202,9 +204,14 @@ public class Vessel
 		return explosion != null;
 	}
 	
+	public void addAttackingVessel(Vessel vessel)
+	{
+		attackingVessels.add(vessel);
+	}
+	
 	public Vector<Vessel> update(float lastFrameTime, Vector<Vessel> vessels, Station station)
 	{
-		Vector<Vessel> shotVessels = new Vector<Vessel>();
+		attackingVessels.clear();
 		
 		if (!isDestroyed)
 		{
@@ -309,7 +316,7 @@ public class Vessel
 				for (int y = 0; y < modules[x].length; ++y)
 				{
 					modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].getSprite(), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
-					Vec2f collidedObjectPosition = modules[x][y].updateCollisions(vessels, this, station, shotVessels);
+					Vec2f collidedObjectPosition = modules[x][y].updateCollisions(vessels, this, station, attackingVessels);
 					
 					if (collidedObjectPosition != null)
 					{
@@ -373,7 +380,7 @@ public class Vessel
 				explosion = null;
 		}
 		
-		return shotVessels;
+		return attackingVessels;
 	}
 	
 	public void draw(SpriteBatch display)

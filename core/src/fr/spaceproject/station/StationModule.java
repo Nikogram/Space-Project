@@ -1,5 +1,7 @@
 package fr.spaceproject.station;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +11,7 @@ import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
+import fr.spaceproject.vessels.Vessel;
 
 public class StationModule
 {
@@ -32,6 +35,8 @@ public class StationModule
 	{
 		if (type == -1)	// Broken
 			return textureManager.getTexture("BrokenStationModule");
+		if (type == 1)	// Cannon
+			return textureManager.getTexture("SimpleStationModule");
 		else	// Simple
 			return textureManager.getTexture("SimpleStationModule");
 	}
@@ -78,7 +83,7 @@ public class StationModule
 		return textureManager;
 	}
 	
-	public void update(float lastFrameTime)
+	public void update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
 	{
 	}
 	

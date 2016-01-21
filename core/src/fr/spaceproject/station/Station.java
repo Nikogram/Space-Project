@@ -98,7 +98,7 @@ public class Station
 	{
 	}
 	
-	public Vector<Vessel> update(float lastFrameTime)
+	public Vector<Vessel> update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
 	{
 		for (int x = 0; x < modules.length; ++x)
 		{
@@ -107,7 +107,7 @@ public class Station
 				if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
 					modules[x][y] = new BrokenStationModule(1, modules[x][y].getSprite(false).getPosition(), Orientation.Up, textureManager);
 				else
-					modules[x][y].update(lastFrameTime);
+					modules[x][y].update(lastFrameTime, factionsAgressivity, vessels);
 			}
 		}
 		
