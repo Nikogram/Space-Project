@@ -53,7 +53,7 @@ public class SectorMap {
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
 			if (alignementplayer[alignement]<50)
-				vessels.get(l).generate(1);	
+				vessels.get(l).generate(3);	
 			else
 				vessels.get(l).generate(3);	
 
@@ -90,11 +90,8 @@ public class SectorMap {
 	}
 	
 	public void update(float fl,Geopolitics state){ 
-		Vector<Vessel> truc =vessels.get(0).update(fl, vessels, station);
-		if 	(truc.size()!=0)
-			System.out.println(truc.size());
-		for (int l=1;l<vessels.size();l++)
-		{
+		
+		for (int l=1;l<vessels.size();l++){
 			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
 				for (int i=1;i<state.getNbTeam();i++){
 					if (i!=vessels.get(l).getFaction())
@@ -106,16 +103,18 @@ public class SectorMap {
 				vessels.remove(l);
 			}
 		}
-		for (int l=1;l<vessels.size();l++){
-			Vector<Vessel> vector= vessels.get(l).update(fl, vessels, station);
-			if 	(vector.size()!=0)
-				System.out.println(vector.size());
-			for (int j=1;j<vector.size();j++){
-				if ( vector.get(j).getFaction()==0){
-						state.addAgressivity(vessels.get(l).getFaction(),10);
+			for (int l=0;l<vessels.size();l++){
+					for (int j=0;j<vessels.get(l).getAttackingVessel().size();j++){
+						System.out.println("ok");
+						if ( vessels.get(l).getAttackingVessel().get(j).getFaction()==0){
+							System.out.println("bien");
+							state.addAgressivity(vessels.get(l).getFaction(),100);
 				}
 			}
 		}
+			for (int l=0;l<vessels.size();l++){
+				vessels.get(l).update(fl, vessels, station,state.getAgressivitys());
+			}
 		station.update(fl,alignementplayer,vessels);
 	}
 	
