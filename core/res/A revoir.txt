@@ -2,3 +2,9 @@
 - Arrêt complet du vaisseau (frein à main ou arret quand vitesse très faible ?)
 - Gerer amitié avec les dégats sur la station
 - Hangar (genre porte de garage ou champ bleu transparent) ou on atterrit par le dessus)
+- Revoir dégats en fonction de la vitesse (pour les collisions)
+- Revoir vitesse max en fonction du nombre de propulseurs
+
+
+
+- Au lieu d'un rebond, on continue la collision quannd on rentre dans un module (avec diminution de la vitesse de base)

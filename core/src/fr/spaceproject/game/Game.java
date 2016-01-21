@@ -89,9 +89,13 @@ public class Game extends ApplicationAdapter
 		state = new Geopolitics(5);
 
 		
+<<<<<<< HEAD
 
 		zone = new SectorMap(1500,new Coor(0,0),0, textureManager,state,map);
 
+=======
+		zone = new SectorMap(4000,new Coor(0,0),20, textureManager,state,map);
+>>>>>>> a802a0ae03e1435aadab3b41732abcae93769304
 		
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		stateVessel=new VesselState(zone.getVector().get(0),textureManager);
