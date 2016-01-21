@@ -308,6 +308,9 @@ public class Vessel
 			
 			// Modification de l'acceleration
 			Vec2f newAcceleration = new Vec2f(0, 0);
+			Orientation pushOrientation = null;
+			Vec2f initialSpeed = cockpit.getSpriteSpeed();
+			Vec2f initialAcceleration = cockpit.getSpriteAcceleration();
 			
 			if (!currentActions.get(VesselAction.MoveForward) && !currentActions.get(VesselAction.MoveBackward) &&
 					!currentActions.get(VesselAction.MoveLeft) && !currentActions.get(VesselAction.MoveRight))
@@ -316,36 +319,47 @@ public class Vessel
 			{			
 				if (currentActions.get(VesselAction.MoveForward))
 				{
-					newAcceleration.add(new Vec2f(0, getAcceleration(Orientation.Down)), cockpit.getSpriteAngle());
+					pushOrientation = Orientation.Down;
+					newAcceleration.add(new Vec2f(0, getAcceleration(pushOrientation)), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveForward);
 				}
 				if (currentActions.get(VesselAction.MoveBackward))
 				{
-					newAcceleration.add(new Vec2f(0, -getAcceleration(Orientation.Up)), cockpit.getSpriteAngle());
+					pushOrientation = Orientation.Up;
+					newAcceleration.add(new Vec2f(0, -getAcceleration(pushOrientation)), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveBackward);
 				}
 				if (currentActions.get(VesselAction.MoveLeft))
 				{
-					newAcceleration.add(new Vec2f(-getAcceleration(Orientation.Right), 0), cockpit.getSpriteAngle());
+					pushOrientation = Orientation.Right;
+					newAcceleration.add(new Vec2f(-getAcceleration(pushOrientation), 0), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveLeft);
 				}
 				if (currentActions.get(VesselAction.MoveRight))
 				{
-					newAcceleration.add(new Vec2f(getAcceleration(Orientation.Left), 0), cockpit.getSpriteAngle());
+					pushOrientation = Orientation.Left;
+					newAcceleration.add(new Vec2f(getAcceleration(pushOrientation), 0), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveRight);
 				}
 			}
 			
-			if (cockpit.getSpriteSpeed().getLength() > 200)
-				cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(200));
 			
-			
-			if (newAcceleration.getLength() > 100)
-				newAcceleration.normalize(100);
+			if (pushOrientation != null && newAcceleration.getLength() > getAcceleration(pushOrientation))
+				newAcceleration.normalize(getAcceleration(pushOrientation));
 			cockpit.setSpriteAcceleration(newAcceleration);
 			updateSpeed(lastFrameTime);
 			
+			if (pushOrientation != null)
+			{
+				if (cockpit.getSpriteSpeed().getLength() > initialSpeed.getLength() && cockpit.getSpriteSpeed().getLength() > getMaxSpeed(pushOrientation))
+					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
+			}
 			
+			if (faction == 0)
+				System.out.println((int)cockpit.getSpriteSpeed().getLength());
+			if (faction == 0 && pushOrientation != null)
+				System.out.println(" / " + (int)getMaxSpeed(pushOrientation));
+				
 			// Autres actions
 			if (currentActions.get(VesselAction.Shoot))
 				actions.add(VesselAction.Shoot);

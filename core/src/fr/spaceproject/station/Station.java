@@ -94,11 +94,24 @@ public class Station
 		attackingVessels.add(vessel);
 	}
 	
+	public Vector<Vessel> getAttackingVessel()
+	{
+		Vector<Vessel> tempsAttackingVessels = new Vector<Vessel>();
+		for (int i = 0; i < attackingVessels.size(); ++i)
+			tempsAttackingVessels.add(attackingVessels.get(i));
+		return tempsAttackingVessels;
+	}
+	
+	public void clearAttackingVessel()
+	{
+		attackingVessels.clear();
+	}
+	
 	public void generate(int configuration)
 	{
 	}
 	
-	public Vector<Vessel> update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
+	public void update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
 	{
 		for (int x = 0; x < modules.length; ++x)
 		{
@@ -110,12 +123,6 @@ public class Station
 					modules[x][y].update(lastFrameTime, factionsAgressivity, vessels);
 			}
 		}
-		
-		Vector<Vessel> tempVessels = new Vector<Vessel>();
-		for (int i = 0; i < attackingVessels.size(); ++i)
-			tempVessels.add(attackingVessels.get(i));
-		attackingVessels.clear();
-		return tempVessels;
 	}
 	
 	public void draw(SpriteBatch display)

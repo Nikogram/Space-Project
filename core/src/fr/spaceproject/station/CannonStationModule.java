@@ -17,6 +17,7 @@ public class CannonStationModule extends StationModule
 	public CannonStationModule(int level, Vec2f position, Orientation orientation, TextureManager textureManager)
 	{
 		super(1, level, position, orientation, textureManager);
+		cannonSprite = new Sprite(new Vec2f(), new Vec2f(), textureManager.getTexture("CannonVesselModule"));
 	}
 	
 	@Override

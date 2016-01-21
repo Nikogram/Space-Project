@@ -73,6 +73,7 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("SimpleVesselModule", "SimpleVesselModule.png");
 		textureManager.addTexture("SimpleStationModule", "SimpleStationModule.png");
 		textureManager.addTexture("BackgroundStationModule", "BackgroundStationModule.png");
+		textureManager.addTexture("CannonStationModule", "CannonStationModule.png");
 		textureManager.addTexture("BrokenStationModule", "BrokenStationModule.png");
 		textureManager.addTexture("StationExplosion1", "Explosion/Station/1.png");
 		textureManager.addTexture("StationExplosion2", "Explosion/Station/2.png");

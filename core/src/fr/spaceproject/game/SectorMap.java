@@ -106,6 +106,7 @@ public class SectorMap {
 		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).clearAttackingVessel();
+		station.clearAttackingVessel();
 		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
@@ -120,7 +121,6 @@ public class SectorMap {
 			{
 				if (collidedVessels.get(k).getFaction() == 0)
 				{
-					System.out.println("Ok");
 				}
 			}
 		}
