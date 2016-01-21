@@ -35,7 +35,7 @@ public class CannonVesselModule extends VesselModule
 	
 	public float getProjectileLifeTime()
 	{
-		return 1;
+		return 5;
 	}
 	
 	public float getProjectileSpeed()

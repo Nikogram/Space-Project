@@ -37,7 +37,7 @@ public class SectorMap {
 		nbEnnemyVessel=newnbEnnemyVessel;
 		vessels = new Vector<Vessel>();
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
-		playerVessel.generate(3);
+		playerVessel.generate(2);
 		vessels.add(playerVessel);
 		createArrayObjects(nbEnnemyVessel,playerVessel,map,pos,politic);
 		background = new Background(new Vec2f(taille, taille), textureManager);
@@ -51,9 +51,9 @@ public class SectorMap {
 		nbEnnemyVessel=i;
 		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), alignement, textureManager);
 		for (int l=1;l<i+1;l++){
-			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
-			if (alignementplayer[alignement]<50)
-				vessels.get(l).generate(3);	
+			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, /*map.appartCoor(pos.toStrings())*/(int)Math.round(Math.random() + 1), textureManager));
+			if (vessels.get(l).getFaction() == 2)
+				vessels.get(l).generate(2);	
 			else
 				vessels.get(l).generate(3);	
 
@@ -103,11 +103,27 @@ public class SectorMap {
 				vessels.remove(l);
 			}
 		}
+		
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).clearAttackingVessel();
+		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
 		station.update(fl, alignementplayer, vessels);
 		
 		
+		for (int j = 0; j < vessels.size(); ++j)
+		{
+			Vector<Vessel> collidedVessels = vessels.get(j).getAttackingVessel();
+			
+			for (int k = 0; k < collidedVessels.size(); ++k)
+			{
+				if (collidedVessels.get(k).getFaction() == 0)
+				{
+					System.out.println("Ok");
+				}
+			}
+		}
 	}
 	public void draw(SpriteBatch display){
 		background.draw(display, playerVessel.getPosition());

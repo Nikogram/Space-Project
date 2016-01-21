@@ -218,10 +218,43 @@ public class Vessel
 		return tempsAttackingVessels;
 	}
 	
-	public void update(float lastFrameTime, Vector<Vessel> vessels, Station station, int[] factionsAgressivity)
+	public void clearAttackingVessel()
 	{
 		attackingVessels.clear();
+	}
+	
+	public float getMaxSpeed(Orientation orientation)
+	{
+		int engineLevelCount = 0;
+		for (int x = 0; x < modules.length; ++x)
+		{
+			for (int y = 0; y < modules[x].length; ++y)
+			{
+				if (modules[x][y].getType() == 2 && orientation.equals(modules[x][y].getOrientation()))
+					engineLevelCount += modules[x][y].getLevel();
+			}
+		}
 		
+		return 100 + 100 * engineLevelCount;
+	}
+	
+	public float getAcceleration(Orientation orientation)
+	{
+		int engineLevelCount = 0;
+		for (int x = 0; x < modules.length; ++x)
+		{
+			for (int y = 0; y < modules[x].length; ++y)
+			{
+				if (modules[x][y].getType() == 2 && orientation.equals(modules[x][y].getOrientation()))
+					engineLevelCount += modules[x][y].getLevel();
+			}
+		}
+		
+		return 50 + 50 * engineLevelCount;
+	}
+	
+	public void update(float lastFrameTime, Vector<Vessel> vessels, Station station, int[] factionsAgressivity)
+	{
 		if (!isDestroyed)
 		{
 			VesselModule cockpit = modules[cockpitPosition.x][cockpitPosition.y];
@@ -257,7 +290,7 @@ public class Vessel
 					currentActions.put(VesselAction.Shoot, true);
 			}
 			else
-				AI.update(vessels, this, currentActions, lastFrameTime * 100);
+				AI.update(vessels, this, currentActions, factionsAgressivity, lastFrameTime * 100);
 			
 			
 			// Modification de la vitesse
@@ -283,22 +316,22 @@ public class Vessel
 			{			
 				if (currentActions.get(VesselAction.MoveForward))
 				{
-					newAcceleration.add(new Vec2f(0, 100), cockpit.getSpriteAngle());
+					newAcceleration.add(new Vec2f(0, getAcceleration(Orientation.Down)), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveForward);
 				}
 				if (currentActions.get(VesselAction.MoveBackward))
 				{
-					newAcceleration.add(new Vec2f(0, -100), cockpit.getSpriteAngle());
+					newAcceleration.add(new Vec2f(0, -getAcceleration(Orientation.Up)), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveBackward);
 				}
 				if (currentActions.get(VesselAction.MoveLeft))
 				{
-					newAcceleration.add(new Vec2f(-100, 0), cockpit.getSpriteAngle());
+					newAcceleration.add(new Vec2f(-getAcceleration(Orientation.Right), 0), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveLeft);
 				}
 				if (currentActions.get(VesselAction.MoveRight))
 				{
-					newAcceleration.add(new Vec2f(100, 0), cockpit.getSpriteAngle());
+					newAcceleration.add(new Vec2f(getAcceleration(Orientation.Left), 0), cockpit.getSpriteAngle());
 					actions.add(VesselAction.MoveRight);
 				}
 			}

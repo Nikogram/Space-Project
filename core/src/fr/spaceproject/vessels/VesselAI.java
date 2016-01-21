@@ -27,14 +27,14 @@ public class VesselAI
 		return (float)Math.acos(cosa);
 	}
 	
-	public void update(Vector<Vessel> vessels, Vessel vessel, Map<VesselAction, Boolean> currentActions, float angleMovement)
+	public void update(Vector<Vessel> vessels, Vessel vessel, Map<VesselAction, Boolean> currentActions, int[] factionsAgressivity, float angleMovement)
 	{
 		if (targetVessel == null || targetVessel.isDestroyed())
-			targetVessel = getClosestVessel(vessels, vessel);
+			targetVessel = getClosestVessel(vessels, vessel, factionsAgressivity);
 		
-		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > 2000)
+		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > 4000)
 			goToMapCenter = true;
-		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < 500)
+		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < 3500)
 			goToMapCenter = false;
 		
 		if (targetVessel != null)
@@ -61,7 +61,7 @@ public class VesselAI
 		}
 	}
 	
-	private Vessel getClosestVessel(Vector<Vessel> vessels, Vessel vessel)
+	private Vessel getClosestVessel(Vector<Vessel> vessels, Vessel vessel, int[] factionsAgressivity)
 	{
 		Vessel closestVessel = null;
 		float closestVesselDistance = Float.MAX_VALUE;
@@ -70,10 +70,13 @@ public class VesselAI
 		{
 			float vesselDistance = vessel.getPosition().getDistance(vessels.get(i).getPosition());
 			
-			if (vessel != vessels.get(i) && vesselDistance < closestVesselDistance && !vessels.get(i).isDestroyed())
+			if (vessel != vessels.get(i) && vesselDistance < closestVesselDistance && !vessels.get(i).isDestroyed() && vessels.get(i).getFaction() != vessel.getFaction())
 			{
-				closestVessel = vessels.get(i);
-				closestVesselDistance = vesselDistance;
+				if (vessels.get(i).getFaction() != 0 || (vessels.get(i).getFaction() == 0 && factionsAgressivity[vessel.getFaction()] >= 50))
+				{
+					closestVessel = vessels.get(i);
+					closestVesselDistance = vesselDistance;
+				}
 			}
 		}
 		
