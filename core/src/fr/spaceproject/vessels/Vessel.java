@@ -7,6 +7,7 @@ import java.util.Vector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.game.Explosion;
@@ -209,7 +210,15 @@ public class Vessel
 		attackingVessels.add(vessel);
 	}
 	
-	public Vector<Vessel> update(float lastFrameTime, Vector<Vessel> vessels, Station station)
+	public Vector<Vessel> getAttackingVessel()
+	{
+		Vector<Vessel> tempsAttackingVessels = new Vector<Vessel>();
+		for (int i = 0; i < attackingVessels.size(); ++i)
+			tempsAttackingVessels.add(attackingVessels.get(i));
+		return tempsAttackingVessels;
+	}
+	
+	public void update(float lastFrameTime, Vector<Vessel> vessels, Station station, int[] factionsAgressivity)
 	{
 		attackingVessels.clear();
 		
@@ -248,7 +257,7 @@ public class Vessel
 					currentActions.put(VesselAction.Shoot, true);
 			}
 			else
-				AI.update(this, vessels.get(0), currentActions, lastFrameTime * 100);
+				AI.update(vessels, this, currentActions, lastFrameTime * 100);
 			
 			
 			// Modification de la vitesse
@@ -379,8 +388,6 @@ public class Vessel
 			if (explosion.isFinished())
 				explosion = null;
 		}
-		
-		return attackingVessels;
 	}
 	
 	public void draw(SpriteBatch display)

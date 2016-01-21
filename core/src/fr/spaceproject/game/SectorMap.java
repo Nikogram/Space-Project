@@ -90,7 +90,6 @@ public class SectorMap {
 	}
 	
 	public void update(float fl,Geopolitics state){ 
-		Vector<Vessel> lol = vessels.get(0).update(fl, vessels, station);
 		for (int l=1;l<vessels.size();l++)
 		{
 			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
@@ -104,14 +103,11 @@ public class SectorMap {
 				vessels.remove(l);
 			}
 		}
-		for (int l=1;l<vessels.size();l++)
-			vessels.get(l).update(fl, vessels, station);
+		for (int l=0;l<vessels.size();l++)
+			vessels.get(l).update(fl, vessels, station, alignementplayer);
 		station.update(fl, alignementplayer, vessels);
 		
-		for (int i = 0; i < lol.size(); ++i)
-		{
-			System.out.println(lol.get(i).getFaction());
-		}
+		
 	}
 	public void draw(SpriteBatch display){
 		background.draw(display, playerVessel.getPosition());
