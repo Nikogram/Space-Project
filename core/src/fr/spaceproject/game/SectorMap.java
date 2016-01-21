@@ -28,6 +28,8 @@ public class SectorMap {
 	
 	private Station station;
 	
+	private Background background;
+	
 	public SectorMap(int i,Coor pos,int newnbEnnemyVessel, TextureManager textureManager,Geopolitics politic,WarMap map){
 		this.textureManager = textureManager;
 		taille=i;
@@ -35,9 +37,10 @@ public class SectorMap {
 		nbEnnemyVessel=newnbEnnemyVessel;
 		vessels = new Vector<Vessel>();
 		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, textureManager);
-		playerVessel.generate(3);
+		playerVessel.generate(2);
 		vessels.add(playerVessel);
 		createArrayObjects(nbEnnemyVessel,playerVessel,map,pos,politic);
+		background = new Background(new Vec2f(taille, taille), textureManager);
 	}
 	
 	private void createArrayObjects(int i,Vessel playerPlayer,WarMap map,Coor pos,Geopolitics state){
@@ -50,7 +53,7 @@ public class SectorMap {
 		for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2000 - 1000), (float)(Math.random() * 2000 - 1000)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), textureManager));
 			if (alignementplayer[alignement]<50)
-				vessels.get(l).generate(3);	
+				vessels.get(l).generate(1);	
 			else
 				vessels.get(l).generate(3);	
 
@@ -101,11 +104,19 @@ public class SectorMap {
 				vessels.remove(l);
 			}
 		}
-		for (int l=1;l<vessels.size();l++)
-			vessels.get(l).update(fl, vessels, station);
+		for (int l=1;l<vessels.size();l++){
+			Vector<Vessel> vector= vessels.get(l).update(fl, vessels, station);
+			for (int j=0;j<vector.size();j++){
+				if (j!=vector.size() && vector.get(j).getFaction()==0){
+						state.addAgressivity(vessels.get(l).getFaction(),10);
+				}
+			}
+		}
 		station.update(fl);
 	}
+	
 	public void draw(SpriteBatch display){
+		background.draw(display, playerVessel.getPosition());
 		station.drawBackground(display);
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).drawBackground(display);

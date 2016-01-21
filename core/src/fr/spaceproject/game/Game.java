@@ -79,6 +79,7 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("StationExplosion3", "Explosion/Station/3.png");
 		textureManager.addTexture("StationExplosion4", "Explosion/Station/4.png");
 		textureManager.addTexture("StationExplosion5", "Explosion/Station/5.png");
+		textureManager.addTexture("Blank", "Blank.png");
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -86,9 +87,10 @@ public class Game extends ApplicationAdapter
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
-		
+
 
 		zone = new SectorMap(1500,new Coor(0,0),1, textureManager,state,map);
+
 		
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
 		stateVessel=new VesselState(zone.getVector().get(0),textureManager);
@@ -134,7 +136,7 @@ public class Game extends ApplicationAdapter
 		if (Gdx.input.isKeyPressed(Keys.M))
 			map.warBegin(state);
 		
-		//System.out.println(1 / lastFrameTime);
+		System.out.println(1 / lastFrameTime);
 	}
 	
 	@Override
