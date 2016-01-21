@@ -90,7 +90,9 @@ public class SectorMap {
 	}
 	
 	public void update(float fl,Geopolitics state){ 
-		Vector<Vessel> lol = vessels.get(0).update(fl, vessels, station);
+		Vector<Vessel> truc =vessels.get(0).update(fl, vessels, station);
+		if 	(truc.size()!=0)
+			System.out.println(truc.size());
 		for (int l=1;l<vessels.size();l++)
 		{
 			if (vessels.get(l).isDestroyed() && !vessels.get(l).isExplosing()){
@@ -104,26 +106,17 @@ public class SectorMap {
 				vessels.remove(l);
 			}
 		}
-<<<<<<< HEAD
 		for (int l=1;l<vessels.size();l++){
 			Vector<Vessel> vector= vessels.get(l).update(fl, vessels, station);
-			for (int j=0;j<vector.size();j++){
-				if (j!=vector.size() && vector.get(j).getFaction()==0){
+			if 	(vector.size()!=0)
+				System.out.println(vector.size());
+			for (int j=1;j<vector.size();j++){
+				if ( vector.get(j).getFaction()==0){
 						state.addAgressivity(vessels.get(l).getFaction(),10);
 				}
 			}
 		}
-		station.update(fl);
-=======
-		for (int l=1;l<vessels.size();l++)
-			vessels.get(l).update(fl, vessels, station);
-		station.update(fl, alignementplayer, vessels);
-		
-		for (int i = 0; i < lol.size(); ++i)
-		{
-			System.out.println(lol.get(i).getFaction());
-		}
->>>>>>> 24c4378d508d2ef6732cd59c1b7ba554c0d27af2
+		station.update(fl,alignementplayer,vessels);
 	}
 	
 	public void draw(SpriteBatch display){
