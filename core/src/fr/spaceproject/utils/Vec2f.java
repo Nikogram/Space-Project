@@ -74,6 +74,11 @@ public class Vec2f
 		return newVector;
 	}
 	
+	public Vec2f getNegative()
+	{
+		return new Vec2f(-x, -y);
+	}
+	
 	public float getDistance(Vec2f vector)
 	{
 		return getAdd(-vector.x,-vector.y).getLength();

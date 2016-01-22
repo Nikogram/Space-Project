@@ -222,7 +222,7 @@ public class VesselModule
 		isTouched = true;
 	}
 	
-	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		isTouched = false;
 		
@@ -233,10 +233,10 @@ public class VesselModule
 				if (sprite.getPosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 140 && 
 						type >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
 				{
-					energy -= 30;
+					energy -= sprite.getSpeed().getLength() * 0.1;
 					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);
 					station.addAttackingVessel(moduleVessel);
-					return station.getModulePosition(new Vec2i(x, y));
+					return station.getModuleSprite(new Vec2i(x, y));
 				}
 			}
 		}
@@ -252,7 +252,7 @@ public class VesselModule
 					{
 						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - 30, true);
 						vessels.get(i).addAttackingVessel(moduleVessel);
-						return vessels.get(i).getCenter();
+						return vessels.get(i).getModuleSprite(new Vec2i(x, y));
 					}
 				}
 			}
