@@ -2,6 +2,7 @@ package fr.spaceproject.vessels;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.station.Station;
@@ -123,6 +124,7 @@ public class CannonVesselModule extends VesselModule
 		{
 			Vec2f projectilePosition = getSprite().getRotatedPosition(new Vec2f(0, 0), getSprite().getAngle() - 180);
 			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), getSprite().getAngle() - 180, getProjectileLifeTime(), getTextureManager()));
+			projectiles.get(projectiles.size() - 1).getSprite(false).setColor(new Color(0, 1, 0, 1));
 			timeAfterShoot = 0;
 		}
 		

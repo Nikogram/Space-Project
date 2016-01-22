@@ -18,7 +18,7 @@ public class VesselAI
 		this.sectorSize = sectorSize;
 	}
 	
-	public float getAnglesDifference(Vec2f angle1, Vec2f angle2)
+	private float getAnglesDifference(Vec2f angle1, Vec2f angle2)
 	{
 		float dot = angle1.x * angle2.x + angle1.y * angle2.y;
 		float mag_v1 = (float)Math.sqrt( angle1.x * angle1.x + angle1.y * angle1.y );

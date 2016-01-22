@@ -20,6 +20,7 @@ public class StationModule
 	private int level;
 	private float energy;
 	private Sprite sprite;
+	private Orientation orientation;
 	
 	
 	public StationModule(int type, int level, Vec2f position, Orientation orientation, TextureManager textureManager)
@@ -29,6 +30,7 @@ public class StationModule
 		this.level = level;
 		energy = getMaxEnergy();
 		sprite = new Sprite(position, new Vec2f(140, 140), getTexture());
+		this.orientation = orientation;
 	}
 	
 	public Texture getTexture()
@@ -78,12 +80,27 @@ public class StationModule
 		return sprite;
 	}
 	
+	public Vec2f getSpritePosition()
+	{
+		return sprite.getPosition();
+	}
+	
+	public Orientation getOrientation()
+	{
+		return orientation;
+	}
+	
 	public TextureManager getTextureManager()
 	{
 		return textureManager;
 	}
 	
-	public void update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
+	public void update(float lastFrameTime, int faction, int[] factionsAgressivity, Vector<Vessel> vessels)
+	{
+		updateCollisions(vessels);
+	}
+	
+	public void updateCollisions(Vector<Vessel> vessels)
 	{
 	}
 	

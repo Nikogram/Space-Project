@@ -19,18 +19,34 @@ public class Station
 	private TextureManager textureManager;
 	private Vec2f position;
 	private Vector<Vessel> attackingVessels;
+	int faction;
 	
 	public Station(Vec2f position, Vec2i size, int faction, TextureManager textureManager)
 	{	
 		this.textureManager = textureManager;
 		this.position = position.clone();
 		this.position.add(new Vec2f(-(size.x - 1) * 140 / 2, -(size.y - 1) * 140 / 2), 0);
+		this.faction = faction;
 		
 		modules = new StationModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
 		{
 			for (int y = 0; y < size.y; ++y)
-				modules[x][y] = new StationModule(1, 1, new Vec2f(this.position.x + 140 * x, this.position.y + 140 * y), Orientation.Up, textureManager);
+			{
+				Orientation orientation = Orientation.Down;
+				if (x == 0)
+					orientation = Orientation.Left;
+				else if (x == size.x - 1)
+					orientation = Orientation.Right;
+				else if (y == size.y - 1)
+					orientation = Orientation.Up;
+				
+				
+				if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1)
+					modules[x][y] = new CannonStationModule(1, new Vec2f(this.position.x + 140 * x, this.position.y + 140 * y), orientation, textureManager);
+				else
+					modules[x][y] = new StationModule(1, 1, new Vec2f(this.position.x + 140 * x, this.position.y + 140 * y), Orientation.Up, textureManager);
+			}
 		}
 		
 		this.position = position.clone();
@@ -120,9 +136,11 @@ public class Station
 				if (modules[x][y].getEnergy() < 0 && modules[x][y].getType() >= 0)
 					modules[x][y] = new BrokenStationModule(1, modules[x][y].getSprite(false).getPosition(), Orientation.Up, textureManager);
 				else
-					modules[x][y].update(lastFrameTime, factionsAgressivity, vessels);
+					modules[x][y].update(lastFrameTime, faction, factionsAgressivity, vessels);
 			}
 		}
+		
+		
 	}
 	
 	public void draw(SpriteBatch display)

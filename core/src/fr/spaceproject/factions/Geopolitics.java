@@ -9,7 +9,7 @@ public class Geopolitics {
 	public Geopolitics(int i){
 		agresivity=new int[i];
 		for (int j=0;j<i;j++){
-			agresivity[j]=25;
+			agresivity[j]=75;
 		}
 		state=new Faction[i];
 		nbTeam=i;
