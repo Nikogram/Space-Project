@@ -51,7 +51,7 @@ public class LaserVesselModule extends VesselModule
 	}
 	
 	@Override
-	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		// Recuperation de la position module le plus proche
 		int vesselId = -1;

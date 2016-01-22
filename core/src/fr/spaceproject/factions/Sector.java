@@ -16,9 +16,14 @@ public class Sector {
 		this.isInWar = false;
 	}
 	
-	public Sector(int Party) {
-		this.alignement = Party;
+	public Sector(int Team) {
+		this.alignement = Team;
 	}
+	
+	public float TimeSinceInWar(){
+		return timethisSectorinWar;
+	}
+	
 	
 	public int getAlignement() {
 		return alignement;
@@ -28,6 +33,10 @@ public class Sector {
 		this.isInWar = true;
 		this.timethisSectorinWar = time.getTime();
 		this.ennemieAlignement = ennemiTeam;
+	}
+	
+	public void setPeace(){
+		this.isInWar = false;
 	}
 	
 	public int getEnnemiAlignement(){

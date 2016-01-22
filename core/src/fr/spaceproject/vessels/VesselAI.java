@@ -9,11 +9,13 @@ public class VesselAI
 {
 	Vessel targetVessel;
 	boolean goToMapCenter;
+	Vec2f sectorSize;
 	
-	public VesselAI()
+	public VesselAI(Vec2f sectorSize)
 	{
 		targetVessel = null;
 		goToMapCenter = false;
+		this.sectorSize = sectorSize;
 	}
 	
 	public float getAnglesDifference(Vec2f angle1, Vec2f angle2)
@@ -32,14 +34,14 @@ public class VesselAI
 		if (targetVessel == null || targetVessel.isDestroyed())
 			targetVessel = getClosestVessel(vessels, vessel, factionsAgressivity);
 		
-		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > 4000)
+		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > Math.min(sectorSize.x, sectorSize.y) / 2)
 			goToMapCenter = true;
-		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < 3500)
+		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < 0.2 * Math.min(sectorSize.x, sectorSize.y) / 2)
 			goToMapCenter = false;
 		
-		if (targetVessel != null)
+		if (targetVessel != null || goToMapCenter)
 		{
-			Vec2f targetPosition = (goToMapCenter ? new Vec2f() : targetVessel.getPosition());
+			Vec2f targetPosition = (goToMapCenter || targetVessel == null ? new Vec2f() : targetVessel.getPosition());
 			
 			Vec2f distanceVessels = new Vec2f(vessel.getPosition().x - targetPosition.x, vessel.getPosition().y - targetPosition.y);
 			float distanceBeetweenVessels = distanceVessels.getLength();

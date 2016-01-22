@@ -30,6 +30,22 @@ public class WarMap {
 		this.discoverSector =25;
 	}
 	
+	public void update(Time time,Geopolitics state){
+		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
+		while (it.hasNext()){
+			Entry<String, Sector> value = it.next();
+			if (value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>10){
+				value.getValue().setPeace();
+				if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
+					state.getFaction(value.getValue().getEnnemiAlignement()).winTerritorie();
+					state.getFaction(value.getValue().getAlignement()).loseTerritorie();
+					value.getValue().setNewAlignement(value.getValue().getEnnemiAlignement());
+				
+				}
+			}
+		}
+	}
+	
 	public int appartCoor(String str){
 		if (World.containsKey(str))
 		return this.World.get(str).getAlignement();
@@ -62,12 +78,7 @@ public class WarMap {
 		String verif =notimp.addXY(x,y);
 		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
 			World.get(verif).setWar(time,team.getNumber());
-			if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
-				team.winTerritorie();
-				state.getFaction(World.get(verif).getAlignement()).loseTerritorie();
-				World.get(verif).setNewAlignement(team.getNumber());
 			
-			}
 		}
 	}
 }

@@ -30,9 +30,10 @@ public class Vessel
 	private boolean isDestroyed;
 	private Explosion explosion;
 	private Vector<Vessel> attackingVessels;
+	private Vec2f nextSpeed;
 	
 	
-	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, TextureManager textureManager)
+	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, Vec2f sectorSize, TextureManager textureManager)
 	{
 		modules = new VesselModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
@@ -45,7 +46,7 @@ public class Vessel
 		}
 		
 		this.isAI = isAI;
-		AI = new VesselAI();
+		AI = new VesselAI(sectorSize);
 		this.faction = faction;
 		actions = new Vector<VesselAction>();
 		this.cockpitPosition = cockpitPosition;
@@ -253,7 +254,7 @@ public class Vessel
 	}
 	
 	public void update(float lastFrameTime, Vector<Vessel> vessels, Station station, int[] factionsAgressivity)
-	{
+	{		
 		if (!isDestroyed)
 		{
 			VesselModule cockpit = modules[cockpitPosition.x][cockpitPosition.y];
@@ -354,10 +355,10 @@ public class Vessel
 					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
 			}
 			
-			if (faction == 0)
+			/*if (faction == 0)
 				System.out.println((int)cockpit.getSpriteSpeed().getLength());
 			if (faction == 0 && pushOrientation != null)
-				System.out.println(" / " + (int)getMaxSpeed(pushOrientation));
+				System.out.println(" / " + (int)getMaxSpeed(pushOrientation));*/
 				
 			// Autres actions
 			if (currentActions.get(VesselAction.Shoot))
@@ -371,16 +372,15 @@ public class Vessel
 				for (int y = 0; y < modules[x].length; ++y)
 				{
 					modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].getSprite(), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
-					Vec2f collidedObjectPosition = modules[x][y].updateCollisions(vessels, this, station, attackingVessels);
+					Sprite collidedObject = modules[x][y].updateCollisions(vessels, this, station, attackingVessels);
 					
-					if (collidedObjectPosition != null)
+					if (collidedObject != null)
 					{
-						Vec2f forceVector = new Vec2f(collidedObjectPosition.x - getPosition().x, collidedObjectPosition.y - getPosition().y);
-						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
-						cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector));
-						collisionSound.play(1f);
+						Vec2f forceVector = new Vec2f(collidedObject.getPosition().x - getPosition().x, collidedObject.getPosition().y - getPosition().y);
+ 						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
+ 						cockpit.setSpriteSpeed(/*cockpit.getSpriteSpeed().getAdd(*/forceVector/*)*/);
+ 						collisionSound.play(1f);
 					}
-					
 					
 					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType() >= 0)
 					{
@@ -479,14 +479,14 @@ public class Vessel
 				for (int y = 0; y < modules[x].length; ++y)
 					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
 			
-			setModule(new Vec2i(0, 1), 4, 5, Orientation.Left);
+			setModule(new Vec2i(0, 1), 4, 1, Orientation.Left);
 			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
 			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
 			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
 			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
 			setModule(new Vec2i(1, 2), 5, 1, Orientation.Left);
 			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 4), 3, 5, Orientation.Up);
+			setModule(new Vec2i(1, 4), 3, 1, Orientation.Up);
 			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
 			setModule(new Vec2i(2, 3), 5, 1, Orientation.Up);
 			setModule(new Vec2i(2, 4), 2, 1, Orientation.Up);
@@ -494,8 +494,8 @@ public class Vessel
 			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
 			setModule(new Vec2i(3, 2), 5, 1, Orientation.Right);
 			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 4), 3, 5, Orientation.Up);
-			setModule(new Vec2i(4, 1), 4, 5, Orientation.Right);
+			setModule(new Vec2i(3, 4), 3, 1, Orientation.Up);
+			setModule(new Vec2i(4, 1), 4, 1, Orientation.Right);
 			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
 			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
 			

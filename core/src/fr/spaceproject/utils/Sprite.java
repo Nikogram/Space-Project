@@ -13,6 +13,7 @@ public class Sprite
 	private Vec2f size;
 	private float angle;
 	private Vec2f speed;
+	private Vec2f nextSpeed;
 	private Vec2f acceleration;
 	private Texture texture;
 	private Color color;

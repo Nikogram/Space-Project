@@ -93,7 +93,7 @@ public class Game extends ApplicationAdapter
 		state = new Geopolitics(5);
 
 		
-		zone = new SectorMap(1500,new Coor(0,0),0, textureManager,state,map);
+		zone = new SectorMap(1500,new Coor(0,0),20, textureManager,state,map);
 
 		
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
@@ -118,6 +118,8 @@ public class Game extends ApplicationAdapter
 		stateVessel.Update(zone.getVector().get(0),textureManager);
 		//Mise a jour des coordonnees
 		zone.updateExit(zone.getPlayer(),map,state);
+		//Mise a jour de la map de l'univers 
+		map.update(time,state);
 		// Affichage
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();

@@ -44,7 +44,7 @@ public class CannonVesselModule extends VesselModule
 	}
 	
 	@Override
-	public Vec2f updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		for (int x = 0; x < station.getSize().x; ++x)
 		{
