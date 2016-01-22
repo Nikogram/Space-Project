@@ -14,10 +14,12 @@ import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.gui.AngryBar;
 import fr.spaceproject.gui.FactionMap;
 import fr.spaceproject.gui.MiniMap;
+import fr.spaceproject.gui.VesselCreation;
 import fr.spaceproject.gui.VesselState;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Time;
+import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.vessels.Vessel;
 
 public class Game extends ApplicationAdapter
@@ -34,10 +36,11 @@ public class Game extends ApplicationAdapter
 	private VesselState stateVessel;
 	
 	protected WarMap map;	//map total de l'univers
-	protected Geopolitics state; //array de faction pour les mettres a jour
-	
+	protected Geopolitics state; //array de faction pour les mettres a jour	
 	
 	private SectorMap zone; //gere la zone en elle meme
+	
+	protected VesselCreation vesselCreation; // interface de creation du vaisseau du joueur
 	
 
 	@Override
@@ -83,6 +86,7 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("StationExplosion4", "Explosion/Station/4.png");
 		textureManager.addTexture("StationExplosion5", "Explosion/Station/5.png");
 		textureManager.addTexture("Blank", "Blank.png");
+		textureManager.addTexture("Arrow", "Arrow.png");
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -93,7 +97,9 @@ public class Game extends ApplicationAdapter
 		state = new Geopolitics(5);
 
 		
-		zone = new SectorMap(1500,new Coor(0,0),0, textureManager,state,map);
+		zone = new SectorMap(8000,new Coor(0,0),0, textureManager,state,map);
+		
+		vesselCreation = new VesselCreation(textureManager);
 
 		
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
@@ -120,6 +126,9 @@ public class Game extends ApplicationAdapter
 		zone.updateExit(zone.getPlayer(),map,state);
 		//Mise a jour de la map de l'univers 
 		map.update(time,state);
+		
+		vesselCreation.update(lastFrameTime, new Vec2f(camera.position.x, camera.position.y), new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), zone.getPlayer());
+		
 		// Affichage
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
@@ -134,6 +143,7 @@ public class Game extends ApplicationAdapter
 		miniMap.draw(display);
 		reput.draw(display);
 		stateVessel.draw(display);
+		vesselCreation.draw(display);
 		display.end();
 		
 		if (Gdx.input.isKeyPressed(Keys.M))
