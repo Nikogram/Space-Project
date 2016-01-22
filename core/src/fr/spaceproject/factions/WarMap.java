@@ -6,10 +6,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.spaceproject.utils.Coor;
+import fr.spaceproject.utils.Time;
 
 public class WarMap {
 	private int discoverSector;
 	private Map<String,Sector> World;
+	
+	public Sector getZone(String Coor){
+		return World.get(Coor);
+	}
 	
 	public WarMap(){
 		World =new LinkedHashMap<String,Sector>();
@@ -34,28 +39,29 @@ public class WarMap {
 		}
 	}
 	
-	public void warBegin(Geopolitics state){
+	public void warBegin(Geopolitics state,Time time){
 		for (int i=1;i<state.getNbTeam();i++){
-			warTurn(state.getFaction(i),state);
+			warTurn(state.getFaction(i),state,time);
 		}
 	}
 	
-	private void warTurn(Faction team,Geopolitics state){
+	private void warTurn(Faction team,Geopolitics state,Time time){
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
 			if (value.getValue().getAlignement()==team.getNumber()){
-				battle(new Coor(value.getKey()),1,0,team,state);
-				battle(new Coor(value.getKey()),-1,0,team,state);
-				battle(new Coor(value.getKey()),0,-1,team,state);
-				battle(new Coor(value.getKey()),0,1,team,state);
+				battle(new Coor(value.getKey()),1,0,team,state,time);
+				battle(new Coor(value.getKey()),-1,0,team,state,time);
+				battle(new Coor(value.getKey()),0,-1,team,state,time);
+				battle(new Coor(value.getKey()),0,1,team,state,time);
 			}
 		}
 	}
 	
-	private void battle(Coor notimp,int x,int y,Faction team,Geopolitics state){
+	private void battle(Coor notimp,int x,int y,Faction team,Geopolitics state,Time time){
 		String verif =notimp.addXY(x,y);
 		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
+			World.get(verif).setWar(time,team.getNumber());
 			if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
 				team.winTerritorie();
 				state.getFaction(World.get(verif).getAlignement()).loseTerritorie();

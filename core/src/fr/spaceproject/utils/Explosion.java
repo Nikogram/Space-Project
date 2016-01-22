@@ -1,12 +1,8 @@
-package fr.spaceproject.game;
+package fr.spaceproject.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import fr.spaceproject.utils.Sprite;
-import fr.spaceproject.utils.TextureManager;
-import fr.spaceproject.utils.Vec2f;
 
 public class Explosion
 {
