@@ -65,15 +65,26 @@ public class CannonStationModule extends StationModule
 		targetVessel =  getClosestVessel(vessels, faction, factionsAgressivity);
 		if (targetVessel != null)
 		{
-			 focusPoint(lastFrameTime, targetVessel.getPosition());
+			focusPoint(lastFrameTime, targetVessel.getPosition());
+			if (cannonSprite.getAngle() > getOrientation().ordinal() * 90 + 45)
+				cannonSprite.setAngle(getOrientation().ordinal() * 90 + 45);
+			else if (cannonSprite.getAngle() < getOrientation().ordinal() * 90 - 45)
+				cannonSprite.setAngle(getOrientation().ordinal() * 90 - 45);
 			 
-			 if (getSpritePosition().getDistance(targetVessel.getPosition()) < 600)
-				 isShooting = true;
+			 
+			Vec2f distancePoint = new Vec2f(cannonSprite.getPosition().x - targetVessel.getPosition().x, cannonSprite.getPosition().y - targetVessel.getPosition().y);		
+			Vec2f sightVector = new Vec2f(-1, 0);
+			sightVector.rotate(cannonSprite.getAngle());
+			
+			float angle = (float)Math.toDegrees(getAnglesDifference(distancePoint, sightVector)) - 90;
+			 
+			if (getSpritePosition().getDistance(targetVessel.getPosition()) < 600 && Math.abs(angle) < 10)
+				isShooting = true;
 		}
 		
 		if (timeAfterShoot >= getTimeBeforeShoot() && isShooting)
 		{
-			Vec2f projectilePosition = getSprite().getRotatedPosition(new Vec2f(0, getSprite(false).getSize().y), cannonSprite.getAngle() - 180);
+			Vec2f projectilePosition = getSprite().getRotatedPosition(new Vec2f(0, -getSprite(false).getSize().y / 2), cannonSprite.getAngle() - 180);
 			projectiles.add(new Projectile(projectilePosition, new Vec2f(0, -getProjectileSpeed()), cannonSprite.getAngle() - 180, getProjectileLifeTime(), getTextureManager()));
 			timeAfterShoot = 0;
 			projectiles.get(projectiles.size() - 1).getSprite(false).setColor(new Color(1, 1, 0.0f, 1));

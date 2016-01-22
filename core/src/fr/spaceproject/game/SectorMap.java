@@ -50,14 +50,14 @@ public class SectorMap {
 		vessels.add(playerVessel);
 		nbEnnemyVessel=i;
 		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5), alignement, textureManager);
-		for (int l=1;l<i+1;l++){
+		/*for (int l=1;l<i+1;l++){
 			vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()), new Vec2f(2*taille, 2*taille), textureManager));
 			if (vessels.get(l).getFaction() == 2)
 				vessels.get(l).generate(2);	
 			else
 				vessels.get(l).generate(3);	
 
-		}
+		}*/
 	}
 	
 	public void updateExit(Vessel playerPlayer,WarMap map,Geopolitics state){

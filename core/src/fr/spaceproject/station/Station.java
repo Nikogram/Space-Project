@@ -139,8 +139,6 @@ public class Station
 					modules[x][y].update(lastFrameTime, faction, factionsAgressivity, vessels);
 			}
 		}
-		
-		
 	}
 	
 	public void draw(SpriteBatch display)
