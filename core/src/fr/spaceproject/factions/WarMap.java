@@ -11,6 +11,7 @@ import fr.spaceproject.utils.Time;
 public class WarMap {
 	private int discoverSector;
 	private Map<String,Sector> World;
+	private float timeSinceLastWar;
 	
 	public Sector getZone(String Coor){
 		return World.get(Coor);
@@ -28,13 +29,18 @@ public class WarMap {
 		World.get("2 2").setNewAlignement(3);
 		World.get("2 -2").setNewAlignement(4);
 		this.discoverSector =25;
+		timeSinceLastWar = 0;
 	}
 	
 	public void update(Time time,Geopolitics state){
+		if (time.getTime()-timeSinceLastWar>120){
+			timeSinceLastWar=time.getTime();
+			warBegin(state,time);
+		}
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
-			if (value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>10){
+			if (value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>45){
 				value.getValue().setPeace();
 				if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
 					state.getFaction(value.getValue().getEnnemiAlignement()).winTerritorie();
@@ -78,7 +84,6 @@ public class WarMap {
 		String verif =notimp.addXY(x,y);
 		if (World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
 			World.get(verif).setWar(time,team.getNumber());
-			
 		}
 	}
 }

@@ -93,7 +93,7 @@ public class Game extends ApplicationAdapter
 		state = new Geopolitics(5);
 
 		
-		zone = new SectorMap(1500,new Coor(0,0),0, textureManager,state,map);
+		zone = new SectorMap(4000,new Coor(0,0),0, textureManager,state,map);
 
 		
 		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
@@ -110,7 +110,6 @@ public class Game extends ApplicationAdapter
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		zone.update(lastFrameTime,state);
 		time.update(lastFrameTime);
-		System.out.println(time.getTime());
 		//Mise a jour de l'HUD
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
 		miniMap.update(zone,zone.getVector(),zone.getStation());

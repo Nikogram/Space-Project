@@ -38,7 +38,9 @@ public class Sector {
 	public void setPeace(){
 		this.isInWar = false;
 	}
-	
+	public void setWarState(){
+		this.isInWar =true;
+	}
 	public int getEnnemiAlignement(){
 		return ennemieAlignement;
 	}

@@ -27,21 +27,24 @@ public class VesselState {
 					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+playerVessel.getModuleType(new Vec2i(i,j))));
 					playerImage[i][j].setColor(new Color(0,1,0,1));
 				}
+				else
+					types[i][j]=-2;
 				
 	}
 	
 	public void Update(Vessel playerVessel,TextureManager textureManager){
 		playerImage =new Sprite[playerVessel.getSize().x][playerVessel.getSize().y];
 		for (int i=0;i<playerVessel.getSize().x;i++)
-			for (int j=0;j<playerVessel.getSize().y;j++)
-				if (playerVessel.getModuleType(new Vec2i(i,j))==types[i][j]){
+			for (int j=0;j<playerVessel.getSize().y;j++){
+				if (playerVessel.getModuleType(new Vec2i(i,j))==types[i][j] && types[i][j]>-1){
 					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+playerVessel.getModuleType(new Vec2i(i,j))));
 					playerImage[i][j].setColor(ColorModule(playerVessel,i,j));
 				}
-				else{
+				if (playerVessel.getModuleType(new Vec2i(i,j))!=types[i][j]){
 					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+types[i][j]));
 					playerImage[i][j].setColor(new Color(0.2f,0.2f,0.2f,1));
 				}
+			}
 	}
 	
 	public void draw(SpriteBatch display){
