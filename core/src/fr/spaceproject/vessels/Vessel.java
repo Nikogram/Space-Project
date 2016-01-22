@@ -378,8 +378,8 @@ public class Vessel
 					if (collidedObject != null)
 					{
 						Vec2f forceVector = new Vec2f(collidedObject.getPosition().x - getPosition().x, collidedObject.getPosition().y - getPosition().y);
- 						forceVector.normalize(-cockpit.getSpriteSpeed().getLength() - 50);
- 						cockpit.setSpriteSpeed(/*cockpit.getSpriteSpeed().getAdd(*/forceVector/*)*/);
+ 						forceVector.normalize(-Math.min(cockpit.getSpriteSpeed().getLength() + 50, 300));
+ 						cockpit.setSpriteSpeed(forceVector);
  						collisionSound.play(1f);
 					}
 					

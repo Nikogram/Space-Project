@@ -25,9 +25,9 @@ public class BrokenStationModule extends StationModule
 	}
 	
 	@Override
-	public void update(float lastFrameTime, int[] factionsAgressivity, Vector<Vessel> vessels)
+	public void update(float lastFrameTime, int faction, int[] factionsAgressivity, Vector<Vessel> vessels)
 	{
-		super.update(lastFrameTime, factionsAgressivity, vessels);
+		super.update(lastFrameTime, faction, factionsAgressivity, vessels);
 		explosion.update(lastFrameTime);
 	}
 	
