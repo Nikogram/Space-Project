@@ -38,8 +38,7 @@ public class SectorMap {
 		posPlay=pos;
 		nbEnnemyVessel=newnbEnnemyVessel;
 		vessels = new Vector<Vessel>();
-		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(3, 3), new Vec2i(1, 1), false, 0, new Vec2f(2*taille, 2*taille), textureManager);
-		playerVessel.generate(2);
+		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(7, 7), new Vec2i(3, 3), false, 0, new Vec2f(2*taille, 2*taille), textureManager);
 		vessels.add(playerVessel);
 		createArrayObjects(nbEnnemyVessel,playerVessel,map,pos,politic);
 		background = new Background(new Vec2f(taille, taille), textureManager);
