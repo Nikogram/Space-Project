@@ -17,6 +17,7 @@ import fr.spaceproject.gui.MiniMap;
 import fr.spaceproject.gui.VesselState;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
+import fr.spaceproject.utils.Time;
 import fr.spaceproject.vessels.Vessel;
 
 public class Game extends ApplicationAdapter
@@ -25,6 +26,7 @@ public class Game extends ApplicationAdapter
 	protected TextureManager textureManager;
 	protected OrthographicCamera camera;
 	protected float lastFrameTime;
+	private Time time;
 	
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
@@ -85,6 +87,7 @@ public class Game extends ApplicationAdapter
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
+		time =new Time();
 		
 		map = new WarMap();
 		state = new Geopolitics(5);
@@ -106,7 +109,8 @@ public class Game extends ApplicationAdapter
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
 		zone.update(lastFrameTime,state);
-		
+		time.update(lastFrameTime);
+		System.out.println(time.getTime());
 		//Mise a jour de l'HUD
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
 		miniMap.update(zone,zone.getVector(),zone.getStation());
@@ -114,6 +118,8 @@ public class Game extends ApplicationAdapter
 		stateVessel.Update(zone.getVector().get(0),textureManager);
 		//Mise a jour des coordonnees
 		zone.updateExit(zone.getPlayer(),map,state);
+		//Mise a jour de la map de l'univers 
+		map.update(time,state);
 		// Affichage
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
@@ -131,7 +137,7 @@ public class Game extends ApplicationAdapter
 		display.end();
 		
 		if (Gdx.input.isKeyPressed(Keys.M))
-			map.warBegin(state);
+			map.warBegin(state,time);
 		
 		//System.out.println(1 / lastFrameTime);
 	}

@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.game.Explosion;
+import fr.spaceproject.utils.Explosion;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
