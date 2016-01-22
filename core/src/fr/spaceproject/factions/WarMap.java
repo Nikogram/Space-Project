@@ -20,7 +20,7 @@ public class WarMap {
 		World =new LinkedHashMap<String,Sector>();
 		for (int j=2;j>-3;j--){
 			for (int i=-2;i<3;i++){
-					this.World.put((new Coor(i,j)).toStrings(),new Sector());
+					this.World.put((new Coor(i,j)).toStrings(),new Sector((int)(4*Math.random())+1));
 			}
 		}
 		World.get("-2 -2").setNewAlignement(1);
