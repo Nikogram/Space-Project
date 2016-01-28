@@ -135,7 +135,6 @@ public class SectorMap {
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
 		station.update(fl, alignementplayer, vessels);
 		if (map.getZone(posPlay.toStrings()).isInWar()){
-			System.out.println(nbEnnemyVessel);
 			if (nbEnnemyVessel==0)
 				map.getZone(posPlay.toStrings()).setPeace();
 			if (nbAllyVessel==0){

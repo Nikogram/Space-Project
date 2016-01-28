@@ -54,6 +54,4 @@ public class FactionMap {
 		return "ColorFaction"+Integer.toString(map.appartCoor(coorReach));
 	}
 	
-	
-	
-	}
+}

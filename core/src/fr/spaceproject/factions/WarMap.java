@@ -57,7 +57,7 @@ public class WarMap {
 		if (World.containsKey(str))
 		return this.World.get(str).getAlignement();
 		else{
-			this.World.put(str,new Sector());
+			this.World.put(str,new Sector((int)(4*Math.random()+1)));
 			return 0;
 		}
 	}
