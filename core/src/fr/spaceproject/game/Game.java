@@ -116,7 +116,7 @@ public class Game extends ApplicationAdapter
 	{
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		zone.update(lastFrameTime,state);
+		zone.update(lastFrameTime,state,map);
 		time.update(lastFrameTime);
 		//Mise a jour de l'HUD
 		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
@@ -126,7 +126,7 @@ public class Game extends ApplicationAdapter
 		//Mise a jour des coordonnees
 		zone.updateExit(zone.getPlayer(),map,state);
 		//Mise a jour de la map de l'univers 
-		map.update(time,state);
+		map.update(time,state,zone.getCoor().toStrings());
 		
 		if(vesselCreation.update(lastFrameTime, new Vec2f(camera.position.x, camera.position.y), new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), zone.getPlayer()))
 			stateVessel=new VesselState(zone.getVector().get(0),textureManager);

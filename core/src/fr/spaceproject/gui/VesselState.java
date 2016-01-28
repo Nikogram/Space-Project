@@ -2,6 +2,7 @@ package fr.spaceproject.gui;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -25,7 +26,7 @@ public class VesselState {
 			for (int j=0;j<playerVessel.getSize().y;j++)
 				if (playerVessel.getModuleType(new Vec2i(i,j)).ordinal()>VesselModuleType.Broken.ordinal()){
 					types[i][j]=playerVessel.getModuleType(new Vec2i(i,j));
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-Gdx.graphics.getWidth()/2+25+31*i,Gdx.graphics.getHeight()/2-210+31*j),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
 					playerImage[i][j].setColor(new Color(0,1,0,1));
 				}
 				else
@@ -38,11 +39,11 @@ public class VesselState {
 		for (int i=0;i<playerVessel.getSize().x;i++)
 			for (int j=0;j<playerVessel.getSize().y;j++){
 				if (playerVessel.getModuleType(new Vec2i(i,j)).equals(types[i][j]) && types[i][j].ordinal()>VesselModuleType.Broken.ordinal()){
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-Gdx.graphics.getWidth()/2+25+31*i,Gdx.graphics.getHeight()/2-210+31*j),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
 					playerImage[i][j].setColor(ColorModule(playerVessel,i,j));
 				}
 				if (!playerVessel.getModuleType(new Vec2i(i,j)).equals(types[i][j])){
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(types[i][j].ordinal() - 2)));
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-Gdx.graphics.getWidth()/2+25+31*i,Gdx.graphics.getHeight()/2-210+31*j),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(types[i][j].ordinal() - 2)));
 					playerImage[i][j].setColor(new Color(0.2f,0.2f,0.2f,1));
 				}
 			}
