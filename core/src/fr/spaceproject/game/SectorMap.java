@@ -53,13 +53,13 @@ public class SectorMap {
 		vessels.add(playerVessel);
 		nbEnnemyVessel=i;
 		if (map.getZone(pos.toStrings()).isInWar()){
-			for (int l=1;l<i;l++){
+			for (int l=1;l<i+1;l++){
 				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
-				vessels.get(l).generate(2);// allies
+				vessels.get(l).generate(3);// allies
 			}
-			for (int l=i;l<i+j;l++){
+			for (int l=i+1;l<i+j+2;l++){
 				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.getZone(pos.toStrings()).getEnnemiAlignement(),new Vec2f(taille/2,taille/2), textureManager));
-				vessels.get(l).generate(3);
+				vessels.get(l).generate(2);
 			}
 		}
 		else{
@@ -135,7 +135,7 @@ public class SectorMap {
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
 		station.update(fl, alignementplayer, vessels);
 		if (map.getZone(posPlay.toStrings()).isInWar()){
-			System.out.println(map.getZone(posPlay.toStrings()).getEnnemiAlignement());
+			System.out.println(nbEnnemyVessel);
 			if (nbEnnemyVessel==0)
 				map.getZone(posPlay.toStrings()).setPeace();
 			if (nbAllyVessel==0){

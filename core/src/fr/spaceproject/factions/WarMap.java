@@ -34,14 +34,14 @@ public class WarMap {
 	}
 	
 	public void update(Time time,Geopolitics state,String posPlayer){
-		if (time.getTime()-timeSinceLastWar>0.25){
+		if (time.getTime()-timeSinceLastWar>15 || time.getTime()<0.1){
 			timeSinceLastWar=time.getTime();
 			warBegin(state,time,posPlayer);
 		}
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
-			if (value.getKey()!=posPlayer && value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>0.24){
+			if (!value.getKey().equals(posPlayer) && value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>14){
 				value.getValue().setPeace();
 				if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
 					state.getFaction(value.getValue().getEnnemiAlignement()).winTerritorie();
@@ -83,7 +83,8 @@ public class WarMap {
 	
 	private void battle(Coor notimp,int x,int y,Faction team,Geopolitics state,Time time,String posPlayer){
 		String verif =notimp.addXY(x,y);
-		if (verif!=posPlayer && World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && !World.get(verif).isInWar() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
+		if (!verif.equals(posPlayer) && World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && !World.get(verif).isInWar() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
+			System.out.println(verif);
 			World.get(verif).setWar(time,team.getNumber());
 		}
 	}
