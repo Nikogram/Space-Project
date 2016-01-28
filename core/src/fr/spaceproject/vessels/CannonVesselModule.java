@@ -5,19 +5,19 @@ import java.util.Vector;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.vessels.station.Station;
 
 public class CannonVesselModule extends VesselModule
 {
 	protected Vector<Projectile> projectiles;
 	protected float timeAfterShoot;
 	
-	public CannonVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public CannonVesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(type, level, orientation, textureManager);
 		projectiles = new Vector<Projectile>();
@@ -51,10 +51,10 @@ public class CannonVesselModule extends VesselModule
 		{
 			for (int y = 0; y < station.getSize().y; ++y)
 			{
-				for (int p = projectiles.size() - 1; p >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0; --p)
+				for (int p = projectiles.size() - 1; p >= 0 && station.getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal(); --p)
 				{
 					if (projectiles.get(p).getSpritePosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 100 &&
-							projectiles.get(p).getSprite(false).isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+							projectiles.get(p).getSprite(false).isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false)))
 					{
 						station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - getPower());
 						station.addAttackingVessel(moduleVessel);
@@ -77,14 +77,15 @@ public class CannonVesselModule extends VesselModule
 						boolean loopIsBroken = false;
 						boolean spriteIsResized = false;
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5 && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
+						if (vessels.get(i).getModuleType(new Vec2i(x, y)).equals(VesselModuleType.Shield) && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
 						{
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
 									vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
+							vessels.get(i).updateModuleVertices(new Vec2i(x, y));
 							spriteIsResized = true;
 						}
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSprite(projectiles.get(p).getSprite(false), new Vec2f()))
+						if (vessels.get(i).getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSprite(projectiles.get(p).getSprite(false)))
 						{
 							vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - getPower());
 							vessels.get(i).setModuleIsTouched(new Vec2i(x, y));
@@ -94,8 +95,11 @@ public class CannonVesselModule extends VesselModule
 						}
 						
 						if (spriteIsResized)
+						{
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
 								vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
+							vessels.get(i).updateModuleVertices(new Vec2i(x, y));
+						}
 						
 						if (loopIsBroken)
 							break loop;

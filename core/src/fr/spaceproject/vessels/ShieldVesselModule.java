@@ -19,7 +19,7 @@ public class ShieldVesselModule extends VesselModule
 	private boolean animationIsLaunched;
 	private float timeBeforeRecharging;
 	
-	public ShieldVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public ShieldVesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(type, level, orientation, textureManager);
 		setSubEnergy(getMaxSubEnergy());
@@ -88,6 +88,15 @@ public class ShieldVesselModule extends VesselModule
 			if (getSubEnergy() < 0)
 				setSubEnergy(0);
 		}
+		
+		ballSprite.updateVertices();
+	}
+	
+	@Override
+	public void updateVertices()
+	{
+		super.updateVertices();
+		ballSprite.updateVertices();
 	}
 	
 	@Override

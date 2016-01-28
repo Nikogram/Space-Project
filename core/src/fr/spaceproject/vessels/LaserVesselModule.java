@@ -6,12 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
+import fr.spaceproject.vessels.station.Station;
 
 public class LaserVesselModule extends VesselModule
 {
@@ -19,8 +19,9 @@ public class LaserVesselModule extends VesselModule
 	protected float timeAfterShoot;
 	protected Sound laserSound;
 	boolean laserIsAlreadyUpdate;
+	boolean laserIsOn;
 	
-	public LaserVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public LaserVesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(type, level, orientation, textureManager);
 		laserSprite = new Sprite(new Vec2f(), new Vec2f(getLength(), 6), textureManager.getTexture("ProjectileLaserVesselModule"));
@@ -37,7 +38,7 @@ public class LaserVesselModule extends VesselModule
 	
 	public float getPower()
 	{
-		return 20 + 20f * (getLevel() - 1);
+		return 40 + 20f * (getLevel() - 1);
 	}
 	
 	public float getLength()
@@ -65,12 +66,15 @@ public class LaserVesselModule extends VesselModule
 			Sprite tempLaserSprite = new Sprite(new Vec2f(), new Vec2f(getLength(), 6), getTexture());
 			tempLaserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -tempLaserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
 			tempLaserSprite.setAngle(getSprite().getAngle() - 180);
+			tempLaserSprite.updateVertices();
+			Vec2f vertex1 = tempLaserSprite.getVertex(0);
+			Vec2f vertex2 = tempLaserSprite.getVertex(2);
 			
 			for (int x = 0; x < station.getSize().x; ++x)
 			{
 				for (int y = 0; y < station.getSize().y; ++y)
 				{
-					if (station.getModuleType(new Vec2i(x, y)) >= 0 && tempLaserSprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+					if (station.getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && station.getModuleSprite(new Vec2i(x, y), false).isCollidedWithSegment(vertex1, vertex2))
 					{
 						float distance = getSpritePosition().getDistance(station.getModulePosition(new Vec2i(x, y))) - getSpriteSize().x / 2 - station.getModuleSize(new Vec2i(x, y)).x / 4;
 						
@@ -85,22 +89,27 @@ public class LaserVesselModule extends VesselModule
 			
 			for (int i = 0; i < vessels.size(); ++i)
 			{
-				if (vessels.get(i) != moduleVessel && vessels.get(i).getCenter().getDistance(laserSprite.getPosition()) < getLength())
+				if (vessels.get(i) != moduleVessel)
 				{
+					Sprite tempSprite = new Sprite(vessels.get(i).getCenter(), new Vec2f(200, 200), getTexture());
+					tempSprite.setAngle(vessels.get(i).getAngle());
+					
+					if (tempSprite.isCollidedWithSegment(vertex1, vertex2))
 					for (int x = 0; x < vessels.get(i).getSize().x; ++x)
 					{
 						for (int y = 0; y < vessels.get(i).getSize().y; ++y)
 						{
 							boolean spriteIsResized = false;
 							
-							if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5 && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)).equals(VesselModuleType.Shield) && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
 							{
 								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
 										vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
+								vessels.get(i).updateModuleVertices(new Vec2i(x, y));
 								spriteIsResized = true;
 							}
 							
-							if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && tempLaserSprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+							if (vessels.get(i).getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSegment(vertex1, vertex2))
 							{
 								float distance = getSpritePosition().getDistance(vessels.get(i).getModulePosition(new Vec2i(x, y))) - getSpriteSize().x / 2 - vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 2;
 								
@@ -113,8 +122,11 @@ public class LaserVesselModule extends VesselModule
 							}
 							
 							if (spriteIsResized)
+							{
 								vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
 										vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
+								vessels.get(i).updateModuleVertices(new Vec2i(x, y));
+							}
 						}
 					}
 				}
@@ -158,6 +170,7 @@ public class LaserVesselModule extends VesselModule
 	{
 		super.update(lastFrameTime, vesselSprite, moduleRelativePosition, actions);
 		timeAfterShoot += lastFrameTime;
+		laserIsOn = false;
 		
 		boolean wantShoot = false;
 		for (int i = 0; i < actions.size() && !wantShoot; ++i)
@@ -171,17 +184,18 @@ public class LaserVesselModule extends VesselModule
 			laserIsAlreadyUpdate = false;
 			timeAfterShoot = 0;
 			laserSound.play();
-			//laserSprite.setPosition(getSprite().getRotatedPosition(new Vec2f(0, -laserSprite.getSize().x / 2 - getSprite().getSize().x / 2), getSprite().getAngle() - 180));
-			//laserSprite.setAngle(getSprite().getAngle() - 180);
+			laserIsOn = true;
 		}
 		
-		float time = 0.05f;
+		laserSprite.setAlpha(laserIsOn ? 1 : 0);
+		
+		/*float time = 0.05f;
 		if (timeAfterShoot > time * 2)
 			laserSprite.setAlpha(0);
 		else if (timeAfterShoot < time)
 			laserSprite.setAlpha((1 / time) * timeAfterShoot);
 		else
-			laserSprite.setAlpha(1 - (1 / time) * (timeAfterShoot - time));
+			laserSprite.setAlpha(1 - (1 / time) * (timeAfterShoot - time));*/
 	}
 	
 	@Override

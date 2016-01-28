@@ -17,13 +17,13 @@ public class BrokenVesselModule extends VesselModule
 	
 	public BrokenVesselModule(int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(-1, level, orientation, textureManager);
+		super(VesselModuleType.Broken, level, orientation, textureManager);
 		explosion = new Explosion(new Vec2f(), true, textureManager);
 	}
 	
 	public BrokenVesselModule(int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
 	{
-		super(-1, level, orientation, textureManager, isEngine);
+		super(VesselModuleType.Broken, level, orientation, textureManager, isEngine);
 		explosion = new Explosion(new Vec2f(), true, textureManager);
 	}
 	

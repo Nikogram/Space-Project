@@ -14,6 +14,7 @@ import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
+import fr.spaceproject.vessels.VesselModuleType;
 
 public class VesselCreation
 {
@@ -24,7 +25,7 @@ public class VesselCreation
 	Button[] modulesButtons;
 	Button[] orientationButtons;
 	Button[][] vesselButtons;
-	int[][] vesselButtonsModuleId;
+	VesselModuleType[][] vesselButtonsModuleId;
 	Button ok;
 	Button cancel;
 	
@@ -44,7 +45,8 @@ public class VesselCreation
 			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("EngineVesselModule")),
 			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("CannonVesselModule")),
 			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("CannonVesselModule")),
-			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("ShieldVesselModule"))
+			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("ShieldVesselModule")),
+			new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("ReinforcedVesselModule"))
 		};
 		modulesButtons[1].setIsActive(true);
 		
@@ -60,16 +62,16 @@ public class VesselCreation
 			orientationButtons[i].setAngle(i * 90);
 		
 		vesselButtons = new Button[7][7];
-		vesselButtonsModuleId = new int[7][7];
+		vesselButtonsModuleId = new VesselModuleType[7][7];
 		for (int x = 0; x < 7; ++x)
 		{
 			for (int y = 0; y < 7; ++y)
 			{
 				vesselButtons[x][y] = new Button(new Vec2f(), new Vec2f(30, 30), textureManager.getTexture("Blank"));
-				vesselButtonsModuleId[x][y] = -2;
+				vesselButtonsModuleId[x][y] = VesselModuleType.Inexisting;
 			}
 		}
-		vesselButtonsModuleId[3][3] = 1;
+		vesselButtonsModuleId[3][3] = VesselModuleType.Cockpit;
 		
 		ok = new Button(new Vec2f(), new Vec2f(40, 40), textureManager.getTexture("Blank"));
 		ok.setColor(new Color(0, 1, 0, 1));
@@ -99,9 +101,14 @@ public class VesselCreation
 					else if (vesselButtons[x][y].getAngle() == 270)
 						orientation = Orientation.Right;
 					
-					playerVessel.setModule(new Vec2i(x, y), vesselButtonsModuleId[x][y], 10, orientation);
+					
+					playerVessel.setModule(new Vec2i(x, y), vesselButtonsModuleId[x][y], 1, orientation);
 				}
 			}
+			
+			playerVessel.setPosition(new Vec2f());
+			playerVessel.revive();
+			
 			
 			isActive = false;
 			canBeActived = true;
@@ -152,20 +159,22 @@ public class VesselCreation
 			{
 				vesselButtons[x][y].update(cameraPosition, cameraSize);
 				
-				if (vesselButtonsModuleId[x][y] == -2)
+				if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Inexisting))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("Blank"));
-				else if (vesselButtonsModuleId[x][y] == 0)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Simple))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("SimpleVesselModule"));
-				else if (vesselButtonsModuleId[x][y] == 1)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Cockpit))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("CockpitVesselModule"));
-				else if (vesselButtonsModuleId[x][y] == 2)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Engine))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("EngineVesselModule"));
-				else if (vesselButtonsModuleId[x][y] == 3)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Cannon))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("CannonVesselModule"));
-				else if (vesselButtonsModuleId[x][y] == 4)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Laser))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("CannonVesselModule"));
-				else if (vesselButtonsModuleId[x][y] == 5)
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Shield))
 					vesselButtons[x][y].setTexture(textureManager.getTexture("ShieldVesselModule"));
+				else if (vesselButtonsModuleId[x][y].equals(VesselModuleType.Reinforced))
+					vesselButtons[x][y].setTexture(textureManager.getTexture("ReinforcedVesselModule"));
 				
 				vesselButtons[x][y].setPosition(new Vec2f((x - 3f) * 30, (y - 3f) * 30 + 80).getAdd(cameraPosition));
 			}
@@ -175,7 +184,7 @@ public class VesselCreation
 		for (int i = 0; i < modulesButtons.length; ++i)
 		{
 			modulesButtons[i].update(cameraPosition, cameraSize);
-			modulesButtons[i].setPosition(new Vec2f((i - 2.5f) * 50, -125).getAdd(cameraPosition));
+			modulesButtons[i].setPosition(new Vec2f((i - 3f) * 50, -125).getAdd(cameraPosition));
 			
 			if (modulesButtons[i].isActive())
 				modulesButtons[i].setColor(new Color(1, 0.5f, 0.5f, 1f));
@@ -202,17 +211,19 @@ public class VesselCreation
 			vesselButtons[activedVesselButton.x][activedVesselButton.y].setAngle(getActiveOrientationButton() * 90);
 			
 			if (getActiveModuleButton() == 0)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = -2;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Inexisting;
 			if (getActiveModuleButton() == 1)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = 0;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Simple;
 			if (getActiveModuleButton() == 2)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = 2;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Engine;
 			if (getActiveModuleButton() == 3)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = 3;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Cannon;
 			if (getActiveModuleButton() == 4)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = 4;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Laser;
 			if (getActiveModuleButton() == 5)
-				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = 5;
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Shield;
+			if (getActiveModuleButton() == 6)
+				vesselButtonsModuleId[activedVesselButton.x][activedVesselButton.y] = VesselModuleType.Reinforced;
 		}
 		
 		

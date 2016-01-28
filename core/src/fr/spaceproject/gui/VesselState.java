@@ -10,25 +10,26 @@ import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
+import fr.spaceproject.vessels.VesselModuleType;
 
 
 public class VesselState {
 	
 	private Sprite[][] playerImage;
-	private int[][] types;
+	private VesselModuleType[][] types;
 	
 	public VesselState(Vessel playerVessel,TextureManager textureManager){
 		playerImage =new Sprite[playerVessel.getSize().x][playerVessel.getSize().y];
-		types=new int[playerVessel.getSize().x][playerVessel.getSize().y];
+		types=new VesselModuleType[playerVessel.getSize().x][playerVessel.getSize().y];
 		for (int i=0;i<playerVessel.getSize().x;i++)
 			for (int j=0;j<playerVessel.getSize().y;j++)
-				if (playerVessel.getModuleType(new Vec2i(i,j))>-1){
+				if (playerVessel.getModuleType(new Vec2i(i,j)).ordinal()>VesselModuleType.Broken.ordinal()){
 					types[i][j]=playerVessel.getModuleType(new Vec2i(i,j));
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+playerVessel.getModuleType(new Vec2i(i,j))));
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
 					playerImage[i][j].setColor(new Color(0,1,0,1));
 				}
 				else
-					types[i][j]=-2;
+					types[i][j]=VesselModuleType.Inexisting;
 				
 	}
 	
@@ -36,12 +37,12 @@ public class VesselState {
 		playerImage =new Sprite[playerVessel.getSize().x][playerVessel.getSize().y];
 		for (int i=0;i<playerVessel.getSize().x;i++)
 			for (int j=0;j<playerVessel.getSize().y;j++){
-				if (playerVessel.getModuleType(new Vec2i(i,j))==types[i][j] && types[i][j]>-1){
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+playerVessel.getModuleType(new Vec2i(i,j))));
+				if (playerVessel.getModuleType(new Vec2i(i,j)).equals(types[i][j]) && types[i][j].ordinal()>VesselModuleType.Broken.ordinal()){
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(playerVessel.getModuleType(new Vec2i(i,j)).ordinal() - 2)));
 					playerImage[i][j].setColor(ColorModule(playerVessel,i,j));
 				}
-				if (playerVessel.getModuleType(new Vec2i(i,j))!=types[i][j]){
-					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+types[i][j]));
+				if (!playerVessel.getModuleType(new Vec2i(i,j)).equals(types[i][j])){
+					playerImage[i][j] =new Sprite(playerVessel.getPosition().getAdd(-550+31*i,+350-31*(3-j)),new Vec2f(0,0),textureManager.getTexture("PlayerVesselState"+(types[i][j].ordinal() - 2)));
 					playerImage[i][j].setColor(new Color(0.2f,0.2f,0.2f,1));
 				}
 			}

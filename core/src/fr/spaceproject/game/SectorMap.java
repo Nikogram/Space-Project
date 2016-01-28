@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.Geopolitics;
 import fr.spaceproject.factions.WarMap;
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
+import fr.spaceproject.vessels.station.Station;
 
 public class SectorMap {
 	private int taille;
@@ -38,7 +38,7 @@ public class SectorMap {
 		posPlay=pos;
 		nbEnnemyVessel=newnbEnnemyVessel;
 		vessels = new Vector<Vessel>();
-		playerVessel = new Vessel(new Vec2f(0, 0), new Vec2i(7, 7), new Vec2i(3, 3), false, 0, new Vec2f(2*taille, 2*taille), textureManager);
+		playerVessel = new Vessel(new Vec2f(0, 0), false, 0, new Vec2f(2*taille, 2*taille), textureManager);
 		vessels.add(playerVessel);
 		createArrayObjects(nbEnnemyVessel,playerVessel,map,pos,politic);
 		background = new Background(new Vec2f(taille, taille), textureManager);
@@ -54,20 +54,20 @@ public class SectorMap {
 			warry=true;
 			map.getZone(pos.toStrings()).setPeace();
 			for (int l=1;l<5;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
 				vessels.get(l).generate(2);// allies
 			}
 			for (int l=5;l<10;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.getZone(pos.toStrings()).getEnnemiAlignement(),new Vec2f(taille/2,taille/2), textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.getZone(pos.toStrings()).getEnnemiAlignement(),new Vec2f(taille/2,taille/2), textureManager));
 				vessels.get(l).generate(3);
 			}
 		}
 		else{
 			for (int l=1;l<5;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), new Vec2i(3, 3), new Vec2i(1, 1), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
 				vessels.get(l).generate(2);
 			}
-		station = new Station(new Vec2f(-1000, 0), new Vec2i(10, 5),map.appartCoor(pos.toStrings()) , textureManager);
+		station = new Station(new Vec2f(-1000, 0),map.appartCoor(pos.toStrings()),  new Vec2f(taille/2,taille/2), textureManager);
 		}
 	}
 	
@@ -145,7 +145,7 @@ public class SectorMap {
 		
 		for (int l=0;l<vessels.size();l++)
 			vessels.get(l).update(fl, vessels, station, alignementplayer);
-		station.update(fl, alignementplayer, vessels);
+		station.update(fl, vessels, station, alignementplayer);
 }
 	
 	public void draw(SpriteBatch display){

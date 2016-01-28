@@ -55,6 +55,7 @@ public class Projectile
 	{
 		timeBeforeDestruction -= lastFrameTime;
 		sprite.updateSpeed(lastFrameTime);
+		sprite.updateVertices();
 	}
 	
 	public void draw(SpriteBatch display)

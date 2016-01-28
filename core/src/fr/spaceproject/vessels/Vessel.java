@@ -10,37 +10,41 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.*;
-
-enum VesselAction { MoveForward, MoveBackward, MoveLeft, MoveRight, TurnLeft, TurnRight, Shoot; }
+import fr.spaceproject.vessels.station.Station;
 
 public class Vessel
 {
-	private VesselModule[][] modules;
-	private boolean isAI;
-	private VesselAI AI;
-	private int faction;
-	private Vector<VesselAction> actions;
-	private Vec2i cockpitPosition;
-	private Vec2f cockpitPositionPixels;
-	private Sound engineSound;
-	private Sound collisionSound;
-	private TextureManager textureManager;
-	private boolean isDestroyed;
-	private Explosion explosion;
-	private Vector<Vessel> attackingVessels;
-	private Vec2f nextSpeed;
+	protected VesselModule[][] modules;
+	protected boolean isAI;
+	protected VesselAI AI;
+	protected int faction;
+	protected Vec2f position;
+	protected Vec2i size;
+	protected Vector<VesselAction> actions;
+	protected Vec2i cockpitPosition;
+	protected Vec2f cockpitPositionPixels;
+	protected Sound engineSound;
+	protected Sound collisionSound;
+	protected TextureManager textureManager;
+	protected boolean isDestroyed;
+	protected Explosion explosion;
+	protected Vector<Vessel> attackingVessels;
+	protected Vec2f nextSpeed;
 	
 	
-	public Vessel(Vec2f position, Vec2i size, Vec2i cockpitPosition, boolean isAI, int faction, Vec2f sectorSize, TextureManager textureManager)
+	public Vessel(Vec2f position, boolean isAI, int faction, Vec2f sectorSize, TextureManager textureManager)
 	{
+		this.position = position;
+		size = new Vec2i(7, 7);
+		cockpitPosition = new Vec2i(3, 3);
+		
 		modules = new VesselModule[size.x][size.y];
 		for (int x = 0; x < size.x; ++x)
 		{
 			for (int y = 0; y < size.y; ++y)
 			{
-				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? 1 : -2), 1, Orientation.Up, textureManager);
+				modules[x][y] = new VesselModule((x == cockpitPosition.x && y == cockpitPosition.y ? VesselModuleType.Cockpit : VesselModuleType.Inexisting), 1, Orientation.Up, textureManager);
 				modules[x][y].setSpritePosition(position);
 			}
 		}
@@ -49,7 +53,6 @@ public class Vessel
 		AI = new VesselAI(sectorSize);
 		this.faction = faction;
 		actions = new Vector<VesselAction>();
-		this.cockpitPosition = cockpitPosition;
 		cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
 		this.textureManager = textureManager;
 		isDestroyed = false;
@@ -139,9 +142,14 @@ public class Vessel
 		return modules[position.x][position.y].getSprite(copy);
 	}
 	
-	public int getModuleType(Vec2i modulePositions)
+	public VesselModuleType getModuleType(Vec2i modulePositions)
 	{
 		return modules[modulePositions.x][modulePositions.y].getType();
+	}
+	
+	public boolean moduleIsShown(Vec2i modulePositions)
+	{
+		return modules[modulePositions.x][modulePositions.y].getType().ordinal() > VesselModuleType.Broken.ordinal();
 	}
 	
 	public Vec2f getModulePosition(Vec2i modulePositions)
@@ -173,22 +181,27 @@ public class Vessel
 		}
 	}
 	
-	public void setModule(Vec2i position, int type, int level, Orientation orientation)
+	public void updateModuleVertices(Vec2i modulePositions)
+	{
+		modules[modulePositions.x][modulePositions.y].updateVertices();
+	}
+	
+	public void setModule(Vec2i position, VesselModuleType type, int level, Orientation orientation)
 	{
 		if (position.x >= 0 && position.y >= 0 && position.x < modules.length && position.y < modules[0].length)
 		{
-			if (type == 1)
+			if (type.equals(VesselModuleType.Cockpit))
 			{
 				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
 				modules[position.x][position.y].setSpritePosition(cockpitPositionPixels);
 			}
-			else if (type == 2)
+			else if (type.equals(VesselModuleType.Engine))
 				modules[position.x][position.y] = new EngineVesselModule(type, level, orientation, textureManager);
-			else if (type == 3)
+			else if (type.equals(VesselModuleType.Cannon))
 				modules[position.x][position.y] = new CannonVesselModule(type, level, orientation, textureManager);
-			else if (type == 4)
+			else if (type.equals(VesselModuleType.Laser))
 				modules[position.x][position.y] = new LaserVesselModule(type, level, orientation, textureManager);
-			else if (type == 5)
+			else if (type.equals(VesselModuleType.Shield))
 				modules[position.x][position.y] = new ShieldVesselModule(type, level, orientation, textureManager);
 			else
 				modules[position.x][position.y] = new VesselModule(type, level, orientation, textureManager);
@@ -230,12 +243,12 @@ public class Vessel
 		{
 			for (int y = 0; y < modules[x].length; ++y)
 			{
-				if (modules[x][y].getType() == 2 && orientation.equals(modules[x][y].getOrientation()))
+				if (modules[x][y].getType().equals(VesselModuleType.Engine) && orientation.equals(modules[x][y].getOrientation()))
 					engineLevelCount += modules[x][y].getLevel();
 			}
 		}
 		
-		return 100 + 100 * engineLevelCount;
+		return 100 + 20 * engineLevelCount;
 	}
 	
 	public float getAcceleration(Orientation orientation)
@@ -245,12 +258,17 @@ public class Vessel
 		{
 			for (int y = 0; y < modules[x].length; ++y)
 			{
-				if (modules[x][y].getType() == 2 && orientation.equals(modules[x][y].getOrientation()))
+				if (modules[x][y].getType().equals(VesselModuleType.Engine) && orientation.equals(modules[x][y].getOrientation()))
 					engineLevelCount += modules[x][y].getLevel();
 			}
 		}
 		
-		return 50 + 50 * engineLevelCount;
+		return 50 + 10 * engineLevelCount;
+	}
+	
+	public void revive()
+	{
+		isDestroyed = false;
 	}
 	
 	public void update(float lastFrameTime, Vector<Vessel> vessels, Station station, int[] factionsAgressivity)
@@ -355,10 +373,6 @@ public class Vessel
 					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
 			}
 			
-			/*if (faction == 0)
-				System.out.println((int)cockpit.getSpriteSpeed().getLength());
-			if (faction == 0 && pushOrientation != null)
-				System.out.println(" / " + (int)getMaxSpeed(pushOrientation));*/
 				
 			// Autres actions
 			if (currentActions.get(VesselAction.Shoot))
@@ -382,7 +396,7 @@ public class Vessel
  						collisionSound.play(1f);
 					}
 					
-					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType() >= 0)
+					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType().ordinal() > VesselModuleType.Broken.ordinal())
 					{
 						if (x == cockpitPosition.x && y == cockpitPosition.y)
 						{
@@ -393,14 +407,14 @@ public class Vessel
 							{
 								for (int Y = 0; Y < modules[x].length; ++Y)
 								{
-									modules[X][Y] = new VesselModule(-2, 1, Orientation.Up, textureManager);
+									modules[X][Y] = new VesselModule(VesselModuleType.Inexisting, 1, Orientation.Up, textureManager);
 								}
 							}
 							
 							break loop;
 						}
 						
-						modules[x][y] = new BrokenVesselModule(1, modules[x][y].getOrientation(), textureManager, modules[x][y].getType() == 2);
+						modules[x][y] = new BrokenVesselModule(1, modules[x][y].getOrientation(), textureManager, modules[x][y].getType().equals(VesselModuleType.Engine));
 					}
 				}
 			}
@@ -436,12 +450,14 @@ public class Vessel
 		}
 	}
 	
+	
+	
 	public void draw(SpriteBatch display)
 	{
 		for (int x = 0; x < modules.length && !isDestroyed; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				if (modules[x][y].getType() >= 0)
+				if (modules[x][y].getType().ordinal() > VesselModuleType.Broken.ordinal())
 					modules[x][y].draw(display);
 		}
 	}
@@ -463,7 +479,7 @@ public class Vessel
 		for (int x = 0; x < modules.length && !isDestroyed; ++x)
 		{
 			for (int y = 0; y < modules[x].length; ++y)
-				if (modules[x][y].getType() < 0)
+				if (modules[x][y].getType().ordinal() <= VesselModuleType.Broken.ordinal())
 					modules[x][y].draw(display);
 		}
 	}
@@ -477,27 +493,27 @@ public class Vessel
 			modules = new VesselModule[5][5];
 			for (int x = 0; x < modules.length; ++x)
 				for (int y = 0; y < modules[x].length; ++y)
-					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+					setModule(new Vec2i(x, y), VesselModuleType.Inexisting, 1, Orientation.Up);
 			
-			setModule(new Vec2i(0, 1), 4, 1, Orientation.Left);
-			setModule(new Vec2i(0, 2), 2, 1, Orientation.Left);
-			setModule(new Vec2i(0, 3), 2, 1, Orientation.Left);
-			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 2), 5, 1, Orientation.Left);
-			setModule(new Vec2i(1, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 4), 3, 1, Orientation.Up);
-			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(2, 3), 5, 1, Orientation.Up);
-			setModule(new Vec2i(2, 4), 2, 1, Orientation.Up);
-			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 2), 5, 1, Orientation.Right);
-			setModule(new Vec2i(3, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 4), 3, 1, Orientation.Up);
-			setModule(new Vec2i(4, 1), 4, 1, Orientation.Right);
-			setModule(new Vec2i(4, 2), 2, 1, Orientation.Right);
-			setModule(new Vec2i(4, 3), 2, 1, Orientation.Right);
+			setModule(new Vec2i(0, 1), VesselModuleType.Laser, 1, Orientation.Left);
+			setModule(new Vec2i(0, 2), VesselModuleType.Engine, 1, Orientation.Left);
+			setModule(new Vec2i(0, 3), VesselModuleType.Engine, 1, Orientation.Left);
+			setModule(new Vec2i(1, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(1, 1), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(1, 2), VesselModuleType.Shield, 1, Orientation.Left);
+			setModule(new Vec2i(1, 3), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(1, 4), VesselModuleType.Cannon, 1, Orientation.Up);
+			setModule(new Vec2i(2, 1), VesselModuleType.Cockpit, 1, Orientation.Up);
+			setModule(new Vec2i(2, 3), VesselModuleType.Shield, 1, Orientation.Up);
+			setModule(new Vec2i(2, 4), VesselModuleType.Engine, 1, Orientation.Up);
+			setModule(new Vec2i(3, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(3, 1), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(3, 2), VesselModuleType.Shield, 1, Orientation.Right);
+			setModule(new Vec2i(3, 3), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(3, 4), VesselModuleType.Cannon, 1, Orientation.Up);
+			setModule(new Vec2i(4, 1), VesselModuleType.Laser, 1, Orientation.Right);
+			setModule(new Vec2i(4, 2), VesselModuleType.Engine, 1, Orientation.Right);
+			setModule(new Vec2i(4, 3), VesselModuleType.Engine, 1, Orientation.Right);
 			
 			cockpitPosition = new Vec2i(2, 1);
 			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
@@ -507,17 +523,17 @@ public class Vessel
 			modules = new VesselModule[3][3];
 			for (int x = 0; x < modules.length; ++x)
 				for (int y = 0; y < modules[x].length; ++y)
-					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+					setModule(new Vec2i(x, y), VesselModuleType.Inexisting, 1, Orientation.Up);
 			
-			setModule(new Vec2i(0, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(0, 1), 5, 1, Orientation.Left);
-			setModule(new Vec2i(0, 2), 3, 1, Orientation.Up);
-			setModule(new Vec2i(1, 0), 5, 1, Orientation.Down);
-			setModule(new Vec2i(1, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(1, 2), 5, 1, Orientation.Up);
-			setModule(new Vec2i(2, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(2, 1), 5, 1, Orientation.Right);
-			setModule(new Vec2i(2, 2), 4, 1, Orientation.Up);
+			setModule(new Vec2i(0, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(0, 1), VesselModuleType.Shield, 1, Orientation.Left);
+			setModule(new Vec2i(0, 2), VesselModuleType.Cannon, 1, Orientation.Up);
+			setModule(new Vec2i(1, 0), VesselModuleType.Shield, 1, Orientation.Down);
+			setModule(new Vec2i(1, 1), VesselModuleType.Cockpit, 1, Orientation.Up);
+			setModule(new Vec2i(1, 2), VesselModuleType.Shield, 1, Orientation.Up);
+			setModule(new Vec2i(2, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(2, 1), VesselModuleType.Shield, 1, Orientation.Right);
+			setModule(new Vec2i(2, 2), VesselModuleType.Laser, 1, Orientation.Up);
 			
 			cockpitPosition = new Vec2i(1, 1);
 			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();
@@ -527,19 +543,19 @@ public class Vessel
 			modules = new VesselModule[5][5];
 			for (int x = 0; x < modules.length; ++x)
 				for (int y = 0; y < modules[x].length; ++y)
-					setModule(new Vec2i(x, y), -2, 1, Orientation.Up);
+					setModule(new Vec2i(x, y), VesselModuleType.Inexisting, 1, Orientation.Up);
 			
-			setModule(new Vec2i(2, 3), 0, 1, Orientation.Up);
-			setModule(new Vec2i(2, 2), 0, 1, Orientation.Up);
-			setModule(new Vec2i(1, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(3, 1), 0, 1, Orientation.Up);
-			setModule(new Vec2i(2, 1), 1, 1, Orientation.Up);
-			setModule(new Vec2i(1, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(3, 0), 2, 1, Orientation.Down);
-			setModule(new Vec2i(0, 1), 2, 1, Orientation.Left);
-			setModule(new Vec2i(4, 1), 2, 1, Orientation.Right);
-			setModule(new Vec2i(1, 2), 2, 1, Orientation.Up);
-			setModule(new Vec2i(3, 2), 2, 1, Orientation.Up);
+			setModule(new Vec2i(2, 3), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(2, 2), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(1, 1), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(3, 1), VesselModuleType.Simple, 1, Orientation.Up);
+			setModule(new Vec2i(2, 1), VesselModuleType.Cockpit, 1, Orientation.Up);
+			setModule(new Vec2i(1, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(3, 0), VesselModuleType.Engine, 1, Orientation.Down);
+			setModule(new Vec2i(0, 1), VesselModuleType.Engine, 1, Orientation.Left);
+			setModule(new Vec2i(4, 1), VesselModuleType.Engine, 1, Orientation.Right);
+			setModule(new Vec2i(1, 2), VesselModuleType.Engine, 1, Orientation.Up);
+			setModule(new Vec2i(3, 2), VesselModuleType.Engine, 1, Orientation.Up);
 			
 			cockpitPosition = new Vec2i(2, 1);
 			cockpitPositionPixels = modules[cockpitPosition.x][cockpitPosition.y].getSprite().getPosition();

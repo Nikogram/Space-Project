@@ -20,7 +20,7 @@ public class EngineVesselModule extends VesselModule
 	protected float time;
 	
 	
-	public EngineVesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public EngineVesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager)
 	{
 		super(type, level, orientation, textureManager);
 		flamesSprite = new Sprite(new Vec2f(), new Vec2f(), textureManager.getTexture("FlamesEngineVesselModule"));

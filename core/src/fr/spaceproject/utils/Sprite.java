@@ -18,6 +18,7 @@ public class Sprite
 	private Texture texture;
 	private Color color;
 	private Vec2f oldPosition;
+	private Vec2f[] vertices;
 	
 	public Sprite(Vec2f position, Vec2f size, Texture texture)
 	{
@@ -33,6 +34,9 @@ public class Sprite
 			this.size = new Vec2f(texture.getHeight(), texture.getWidth());
 		else
 			this.size = size.clone();
+		
+		vertices = new Vec2f[]{new Vec2f(), new Vec2f(),new Vec2f(), new Vec2f()};
+		updateVertices();
 	}
 	
 	@Override
@@ -143,7 +147,33 @@ public class Sprite
 				position.y + (float)(relativePositionToRotate.x * sina + relativePositionToRotate.y * cosa));	
 	}
 	
-	public boolean isCollidedWithSprite(Sprite sprite, Vec2f intersectionPoint)
+	public Vec2f getVertex(int vertexId)
+	{		
+		if (vertexId >= 0 && vertexId < 4)
+			return vertices[vertexId].clone();
+		return new Vec2f();
+	}
+	
+	private Vec2f getVertexComputing(int vertexId)
+	{		
+		if (vertexId == 0)
+			return getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), (angle - 90));
+		else if (vertexId == 1)
+			return getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), (angle - 90));
+		else if (vertexId == 2)
+			return getRotatedPosition(new Vec2f(size.x / 2, +size.y / 2), (angle - 90));
+		else if (vertexId == 3)
+			return getRotatedPosition(new Vec2f(-size.x / 2, +size.y / 2), (angle - 90));
+		return new Vec2f();
+	}
+	
+	public void updateVertices()
+	{
+		for (int i = 0; i < 4; ++i)
+			vertices[i].set(getVertexComputing(i));	
+	}
+	
+	public boolean isCollidedWithSprite(Sprite sprite)
 	{
 		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
 				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifiï¿½
@@ -158,7 +188,7 @@ public class Sprite
 			
 			for (int i = 0; i < 4; ++i)
 			{
-				if (isCollidedWithSegment(spriteVertices[i], spriteVertices[i + 1 > 3 ? 0 : i + 1], intersectionPoint))
+				if (isCollidedWithSegment(spriteVertices[i], spriteVertices[i + 1 > 3 ? 0 : i + 1]))
 					return true;
 			}
 			
@@ -179,7 +209,7 @@ public class Sprite
 				
 				for (int i = 0; i < 4; ++i)
 				{
-					if (isCollidedWithSegment(spriteVertices[i], spriteOldVertices[i], intersectionPoint))
+					if (isCollidedWithSegment(spriteVertices[i], spriteOldVertices[i]))
 						return true;
 				}
 			}
@@ -188,18 +218,18 @@ public class Sprite
 		return false;
 	}
 	
-	public boolean isCollidedWithSegment(Vec2f A, Vec2f B, Vec2f intersectionPoint)
+	public boolean isCollidedWithSegment(Vec2f A, Vec2f B)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			if (borderIsCollidedWithSegment(A, B, i, intersectionPoint))
+			if (borderIsCollidedWithSegment(A, B, i))
 				return true;
 		}
 		
 		return false;
 	}
 	
-	public boolean borderIsCollidedWithSegment(Vec2f A, Vec2f B, int borderId, Vec2f intersectionPoint)
+	private boolean borderIsCollidedWithSegment(Vec2f A, Vec2f B, int borderId)
 	{
 		// A et B : les deux points du premier segment
 		// C et D : les deux points d'un des segments du sprite
@@ -208,23 +238,23 @@ public class Sprite
 		
 		if (borderId == 0)
 		{
-			C = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), (angle - 90));
-			D = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), (angle - 90));
+			C = vertices[0];
+			D = vertices[1];
 		}
 		else if (borderId == 1)
 		{
-			C = getRotatedPosition(new Vec2f(size.x / 2, -size.y / 2), (angle - 90));
-			D = getRotatedPosition(new Vec2f(size.x / 2, +size.y / 2), (angle - 90));
+			C = vertices[1];
+			D = vertices[2];
 		}
 		else if (borderId == 2)
 		{
-			C = getRotatedPosition(new Vec2f(size.x / 2, +size.y / 2), (angle - 90));
-			D = getRotatedPosition(new Vec2f(-size.x / 2, +size.y / 2), (angle - 90));
+			C = vertices[2];
+			D = vertices[3];
 		}
 		else if (borderId == 3)
 		{
-			C = getRotatedPosition(new Vec2f(-size.x / 2, +size.y / 2), (angle - 90));
-			D = getRotatedPosition(new Vec2f(-size.x / 2, -size.y / 2), (angle - 90));
+			C = vertices[3];
+			D = vertices[0];
 		}
 		else
 			return false;
@@ -232,22 +262,21 @@ public class Sprite
 		
 		// Soit P le point d'intersection
 		// On a P = A + k*AB et P = C + m*CD, donc A + k*AB = C + m*CD
-		// Aprï¿½s dï¿½composition on a k et m
+		// Après décomposition on a k et m
 		
 		Vec2f AB = new Vec2f(B.x - A.x, B.y - A.y);
 		Vec2f CD = new Vec2f(D.x - C.x, D.y - C.y);
 		
 		float denominator = AB.x * CD.y - AB.y * CD.x;
 		if (denominator == 0)
-			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId, intersectionPoint);	// on recommence avec un petit dï¿½calage pour ne plus avoir de segments paralleles
+			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId);	// on recommence avec un petit dï¿½calage pour ne plus avoir de segments paralleles
 		
-		float k = -(A.x * CD.y - C.x * CD.y - CD.x * A.y + CD.x * C.y) / denominator;
-		float m = -(-AB.x * A.y + AB.x * C.y + AB.y * A.x - AB.y * C.x) / denominator;
+		float k = -(A.x * CD.y - C.x * CD.y - CD.x * A.y + CD.x * C.y);
+		float m = -(-AB.x * A.y + AB.x * C.y + AB.y * A.x - AB.y * C.x);
 
-		if (k <= 0 || k >= 1 || m <= 0 || m >= 1)
+		if (k <= 0 || k >= denominator || m <= 0 || m >= denominator)
 			return false;
 
-		intersectionPoint = new Vec2f(A.x + k * AB.x, A.y + k * AB.y);
 		return true;
 	}
 	

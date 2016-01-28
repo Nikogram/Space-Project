@@ -7,25 +7,26 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.*;
+import fr.spaceproject.vessels.station.Station;
+import fr.spaceproject.vessels.VesselAction;
 
 public class VesselModule
 {
-	private int type;
-	private int level;
-	private float energy;
-	private float subEnergy;
-	final private Sprite sprite;
-	private Orientation orientation;
-	private TextureManager textureManager;
-	private boolean isEngine;
-	private boolean isTouched;
+	protected VesselModuleType type;
+	protected int level;
+	protected float energy;
+	protected float subEnergy;
+	protected Sprite sprite;
+	protected Orientation orientation;
+	protected TextureManager textureManager;
+	protected boolean isEngine;
+	protected boolean isTouched;
 	
 	
-	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager)
+	public VesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager)
 	{
-		this.isEngine = type == 2;
+		this.isEngine = type.equals(VesselModuleType.Engine);
 		this.textureManager = textureManager;
 		this.type = type;
 		this.level = level;
@@ -37,9 +38,9 @@ public class VesselModule
 		isTouched = false;
 	}
 	
-	public VesselModule(int type, int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
+	public VesselModule(VesselModuleType type, int level, Orientation orientation, TextureManager textureManager, boolean isEngine)
 	{
-		this.isEngine = type == 2 || isEngine;
+		this.isEngine = type.equals(VesselModuleType.Engine) || isEngine;
 		this.textureManager = textureManager;
 		this.type = type;
 		this.level = level;
@@ -52,21 +53,23 @@ public class VesselModule
 	public Texture getTexture()
 	{
 		// -2 : inexistant
-		if (type == 1)	// Cockpit
+		if (type.equals(VesselModuleType.Cockpit))
 			return textureManager.getTexture("CockpitVesselModule");
-		else if (type == 2)	// Engine
+		else if (type.equals(VesselModuleType.Engine))
 			return textureManager.getTexture("EngineVesselModule");
-		else if (type == 3)	// Cannon
+		else if (type.equals(VesselModuleType.Cannon))
 			return textureManager.getTexture("CannonVesselModule");
-		else if (type == 4)	// Laser
+		else if (type.equals(VesselModuleType.Laser))
 			return textureManager.getTexture("CannonVesselModule");
-		else if (type == 5)	// Shield
+		else if (type.equals(VesselModuleType.Shield))
 			return textureManager.getTexture("ShieldVesselModule");
-		else if (type == -1 && !isEngine)	// Broken
+		else if (type.equals(VesselModuleType.Broken) && !isEngine)
 			return textureManager.getTexture("BrokenVesselModule");
-		else if (type == -1)	// Broken engine
+		else if (type.equals(VesselModuleType.Broken))
 			return textureManager.getTexture("BrokenEngineVesselModule");
-		else	// 0 : Simple
+		else if (type.equals(VesselModuleType.Reinforced))
+			return textureManager.getTexture("ReinforcedVesselModule");
+		else	// Simple
 			return textureManager.getTexture("SimpleVesselModule");
 	}
 	
@@ -75,12 +78,12 @@ public class VesselModule
 		return textureManager;
 	}
 	
-	public int getType()
+	public VesselModuleType getType()
 	{
 		return type;
 	}
 	
-	public void setType(int type)
+	public void setType(VesselModuleType type)
 	{
 		this.type = type;
 	}
@@ -231,7 +234,7 @@ public class VesselModule
 			for (int y = 0; y < station.getSize().y; ++y)
 			{
 				if (sprite.getPosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 140 && 
-						type >= 0 && station.getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+						type.ordinal() > VesselModuleType.Broken.ordinal() && station.getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false)))
 				{
 					energy -= sprite.getSpeed().getLength() * 0.1;
 					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);
@@ -248,7 +251,7 @@ public class VesselModule
 			{
 				for (int y = 0; y < vessels.get(i).getSize().y; ++y)
 				{
-					if (type >= 0 && vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false), new Vec2f()))
+					if (type.ordinal() > VesselModuleType.Broken.ordinal() && vessels.get(i).getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false)))
 					{
 						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - 30, true);
 						vessels.get(i).addAttackingVessel(moduleVessel);
@@ -266,11 +269,17 @@ public class VesselModule
 		sprite.setPosition(vesselSprite.getRotatedPosition(new Vec2f(20 * moduleRelativePosition.x, 20 * moduleRelativePosition.y), vesselSprite.getAngle()));
 		sprite.setSpeed(vesselSprite.getSpeed());
 		sprite.setAngle(vesselSprite.getAngle() + orientation.ordinal() * 90);
+		sprite.updateVertices();
+	}
+	
+	public void updateVertices()
+	{
+		sprite.updateVertices();
 	}
 	
 	public void draw(SpriteBatch display)
 	{
-		if (type >= -1)
+		if (type.ordinal() >= VesselModuleType.Broken.ordinal())
 			sprite.draw(display);
 	}
 	

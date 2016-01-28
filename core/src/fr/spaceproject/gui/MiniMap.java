@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;
 import fr.spaceproject.game.SectorMap;
-import fr.spaceproject.station.Station;
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Vessel;
+import fr.spaceproject.vessels.station.Station;
 
 public class MiniMap {
 	private Sprite[] image;

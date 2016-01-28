@@ -27,6 +27,7 @@ public class Game extends ApplicationAdapter
 	protected SpriteBatch display;
 	protected TextureManager textureManager;
 	protected OrthographicCamera camera;
+	//float cameraAngle = 0;
 	protected float lastFrameTime;
 	private Time time;
 	
@@ -59,6 +60,7 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("PlayerVesselState3", "PlayerVesselState3.png");
 		textureManager.addTexture("PlayerVesselState4", "PlayerVesselState4.png");
 		textureManager.addTexture("PlayerVesselState5", "PlayerVesselState5.png");
+		textureManager.addTexture("PlayerVesselState6", "PlayerVesselState6.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("BrokenVesselModule", "BrokenVesselModule.png");
 		textureManager.addTexture("CannonVesselModule", "CannonVesselModule.png");
@@ -75,6 +77,7 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("ProjectileLaserVesselModule", "ProjectileLaserVesselModule.png");
 		textureManager.addTexture("ShieldVesselModule", "ShieldVesselModule.png");
 		textureManager.addTexture("ShieldBallVesselModule", "ShieldBallVesselModule.png");
+		textureManager.addTexture("ReinforcedVesselModule", "ReinforcedVesselModule.png");
 		textureManager.addTexture("SimpleVesselModule", "SimpleVesselModule.png");
 		textureManager.addTexture("SimpleStationModule", "SimpleStationModule.png");
 		textureManager.addTexture("BackgroundStationModule", "BackgroundStationModule.png");
@@ -129,6 +132,10 @@ public class Game extends ApplicationAdapter
 			stateVessel=new VesselState(zone.getVector().get(0),textureManager);
 		
 		// Affichage
+		/*camera.direction.set(0, 0, -1);
+		camera.rotate(-zone.getVector().get(0).getAngle() - cameraAngle);
+		cameraAngle = -zone.getVector().get(0).getAngle();*/
+		
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);

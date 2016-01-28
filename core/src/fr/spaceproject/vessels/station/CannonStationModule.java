@@ -1,11 +1,11 @@
-package fr.spaceproject.station;
+package fr.spaceproject.vessels.station;
 
-import java.util.Map;
 import java.util.Vector;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.spaceproject.utils.Explosion;
 import fr.spaceproject.utils.Orientation;
 import fr.spaceproject.utils.Sprite;
 import fr.spaceproject.utils.TextureManager;
@@ -13,18 +13,21 @@ import fr.spaceproject.utils.Vec2f;
 import fr.spaceproject.utils.Vec2i;
 import fr.spaceproject.vessels.Projectile;
 import fr.spaceproject.vessels.Vessel;
+import fr.spaceproject.vessels.VesselAction;
+import fr.spaceproject.vessels.VesselModuleType;
 
 public class CannonStationModule extends StationModule
 {
 	private Sprite cannonSprite;
-	Vessel targetVessel;
-	boolean isShooting;
-	protected Vector<Projectile> projectiles;
-	protected float timeAfterShoot;
+	private Vessel targetVessel;
+	private boolean isShooting;
+	private Vector<Projectile> projectiles;
+	private float timeAfterShoot;
 	
-	public CannonStationModule(int level, Vec2f position, Orientation orientation, TextureManager textureManager)
+	public CannonStationModule(int level, Orientation orientation, TextureManager textureManager)
 	{
-		super(1, level, position, orientation, textureManager);
+		super(VesselModuleType.Cannon, level, orientation, textureManager);
+		
 		cannonSprite = new Sprite(new Vec2f(getSpritePosition()), new Vec2f(), textureManager.getTexture("CannonStationModule"));
 		cannonSprite.setAngle(getOrientation().ordinal() * 90);
 		targetVessel = null;
@@ -54,15 +57,16 @@ public class CannonStationModule extends StationModule
 	}
 	
 	@Override
-	public void update(float lastFrameTime, int faction, int[] factionsAgressivity, Vector<Vessel> vessels)
+	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions, Vector<Vessel> vessels, int faction, int[] factionsAgressivity)
 	{
-		super.update(lastFrameTime,faction, factionsAgressivity, vessels);
+		super.update(lastFrameTime, vesselSprite, moduleRelativePosition, actions, vessels, faction, factionsAgressivity);
+		
 		timeAfterShoot += lastFrameTime;
 		
 		if (isShooting)
 			isShooting = false;
 		
-		targetVessel =  getClosestVessel(vessels, faction, factionsAgressivity);
+		targetVessel = getClosestVessel(vessels, faction, factionsAgressivity);
 		if (targetVessel != null)
 		{
 			focusPoint(lastFrameTime, targetVessel.getPosition());
@@ -96,10 +100,12 @@ public class CannonStationModule extends StationModule
 			if (projectiles.get(i).getTimeBeforeDestruction() <= 0)
 				projectiles.remove(i);
 		}
+		
+		cannonSprite.setPosition(getSpritePosition());
 	}
 	
 	@Override
-	public void updateCollisions(Vector<Vessel> vessels)
+	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		for (int i = 0; i < vessels.size(); ++i)
 		{
@@ -114,14 +120,15 @@ public class CannonStationModule extends StationModule
 						boolean loopIsBroken = false;
 						boolean spriteIsResized = false;
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) == 5 && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
+						if (vessels.get(i).getModuleType(new Vec2i(x, y)).equals(VesselModuleType.Shield) && vessels.get(i).getModuleSubEnergy(new Vec2i(x, y)) > 0)
 						{
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x * 3,
 									vessels.get(i).getModuleSize(new Vec2i(x, y)).y * 3));
+							vessels.get(i).updateModuleVertices(new Vec2i(x, y));
 							spriteIsResized = true;
 						}
 						
-						if (vessels.get(i).getModuleType(new Vec2i(x, y)) >= 0 && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSprite(projectiles.get(p).getSprite(false), new Vec2f()))
+						if (vessels.get(i).getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && vessels.get(i).getModuleSprite(new Vec2i(x, y), false).isCollidedWithSprite(projectiles.get(p).getSprite(false)))
 						{
 							vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y)) - getPower());
 							vessels.get(i).setModuleIsTouched(new Vec2i(x, y));
@@ -130,8 +137,11 @@ public class CannonStationModule extends StationModule
 						}
 						
 						if (spriteIsResized)
+						{
 							vessels.get(i).setModuleSize(new Vec2i(x, y), new Vec2f(vessels.get(i).getModuleSize(new Vec2i(x, y)).x / 3,
 								vessels.get(i).getModuleSize(new Vec2i(x, y)).y / 3));
+							vessels.get(i).updateModuleVertices(new Vec2i(x, y));
+						}
 						
 						if (loopIsBroken)
 							break loop;
@@ -140,14 +150,14 @@ public class CannonStationModule extends StationModule
 			}
 		}
 		
-		super.updateCollisions(vessels);
+		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);
 	}
 	
 	@Override
 	public void draw(SpriteBatch display)
 	{
 		super.draw(display);
-		
+
 		cannonSprite.draw(display);
 		for (int i = 0; i < projectiles.size(); ++i)
 			projectiles.get(i).draw(display);

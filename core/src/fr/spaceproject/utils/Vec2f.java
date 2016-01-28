@@ -47,6 +47,12 @@ public class Vec2f
 		this.y = y;
 	}
 	
+	public void set(Vec2f vector)
+	{
+		this.x = vector.x;
+		this.y = vector.y;
+	}
+	
 	public void add(Vec2f vector, float angle)
 	{
 		if (angle == 0)
