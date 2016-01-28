@@ -2,6 +2,7 @@ package fr.spaceproject.gui;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;
@@ -25,11 +26,11 @@ public class MiniMap {
 	public MiniMap(Vec2f placePlayer,SectorMap zone,Station station,TextureManager textureManager){
 		this.textureManager = textureManager;
 		taille =zone.getTaille();
-		font=new Sprite(placePlayer.getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
+		font=new Sprite(placePlayer.getAdd(Gdx.graphics.getWidth()/2-100,-Gdx.graphics.getHeight()/2+100),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
 		stationImage = CompleteStation(placePlayer,station);
 		image=new Sprite[zone.nbEnnemyVessel()];
 		imageAppart= new int[zone.nbEnnemyVessel()];
-		image[0]=new Sprite(placePlayer.getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MyVesselMiniMap"));
+		image[0]=new Sprite(placePlayer.getAdd(Gdx.graphics.getWidth()/2-80,-Gdx.graphics.getHeight()/2+80),new Vec2f(0,0),textureManager.getTexture("MyVesselMiniMap"));
 	}
 	
 	private Sprite[][] CompleteStation(Vec2f playerPosition,Station station){
@@ -44,13 +45,13 @@ public class MiniMap {
 	
 	private Vec2f Conversion(Vec2f playerPosition,Vec2f entitiPosition){
 		Vec2i coordMiddle=new Vec2i((int)((float)150/(taille*2)*entitiPosition.x),(int)((float)150/(taille*2)*entitiPosition.y));
-		return playerPosition.getAdd(550,-300).getAdd(coordMiddle.x,coordMiddle.y);
+		return playerPosition.getAdd(Gdx.graphics.getWidth()/2-80,-Gdx.graphics.getHeight()/2+80).getAdd(coordMiddle.x,coordMiddle.y);
 	}
 	
 	
 	public void update(SectorMap zone,Vector<Vessel> vessels,Station station){
 		image=new Sprite[vessels.size()];
-		font=new Sprite(vessels.get(0).getPosition().getAdd(550,-300),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
+		font=new Sprite(vessels.get(0).getPosition().getAdd(Gdx.graphics.getWidth()/2-80,-Gdx.graphics.getHeight()/2+80),new Vec2f(0,0),textureManager.getTexture("MiniMap"));
 		stationImage =new Sprite[station.getSize().x][station.getSize().y];
 		stationImage = CompleteStation(vessels.get(0).getPosition(),station);
 		image[0]=new Sprite(Conversion(vessels.get(0).getPosition(),vessels.get(0).getPosition()),new Vec2f(0,0),textureManager.getTexture("MyVesselMiniMap"));

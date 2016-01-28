@@ -1,6 +1,7 @@
 package fr.spaceproject.gui;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.spaceproject.factions.WarMap;
@@ -21,7 +22,7 @@ public class FactionMap {
 		for (int j=4;j>-1;j--){
 			for (int i=0;i<5;i++){
 				appart[i][j] = map.appartCoor(coorPlayer.addXY(i-2,j-2));
-				carte[i][j]=new Sprite(placePlayer.getAdd((i+25)*21,(j+10)*21),new Vec2f(0,0),textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
+				carte[i][j]=new Sprite(placePlayer.getAdd(Gdx.graphics.getWidth()/2-100+21*i,Gdx.graphics.getHeight()/2-100+21*j),new Vec2f(0,0),textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
 			}
 		}
 		//positionPlayer=new Sprite(placePlayer.add(20,20),new Vec2f(0,0),AngryBar"player.png");
@@ -36,7 +37,7 @@ public class FactionMap {
 					appart[i][j] = map.appartCoor(coorPlayer.addXY(i-2,j-2));
 					this.carte[i][j].setTexture(textureManager.getTexture(translate(coorPlayer.addXY(i-2,j-2),map)));
 				}
-				this.carte[i][j].setPosition(placePlayer.getAdd((i+25)*21,(j+10)*21));
+				this.carte[i][j].setPosition(placePlayer.getAdd(Gdx.graphics.getWidth()/2-100+21*i,Gdx.graphics.getHeight()/2-100+21*j));
 			}
 		}
 		//positionPlayer =new Sprite(placePlayer.add(20,20),new Vec2f(0,0),"player.png");
