@@ -72,6 +72,13 @@ public class Sprite
 		return size.clone();
 	}
 	
+	public Vec2f getMaxSize()
+	{
+		float maxX = Math.max(vertices[0].x, Math.max(vertices[1].x, Math.max(vertices[2].x, vertices[3].x)));
+		float maxY = Math.max(vertices[0].y, Math.max(vertices[1].y, Math.max(vertices[2].y, vertices[3].y)));
+		return new Vec2f(Math.abs(maxX - position.x) * 2, Math.abs(maxY - position.y) * 2);
+	}
+	
 	public void setSize(Vec2f size)
 	{
 		this.size = size.clone();
@@ -176,9 +183,35 @@ public class Sprite
 	public boolean isCollidedWithSprite(Sprite sprite)
 	{
 		if (new Vec2f(position.x - sprite.position.x, position.y - sprite.position.y).getLength() <=
-				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifi�
+				new Vec2f(size.x + sprite.size.x, size.y + sprite.size.y).getLength())	// Test simplifie
 		{
-			Vec2f spriteVertices[] = {new Vec2f(-sprite.size.x / 2, -sprite.size.y / 2),
+			updateVertices();
+			sprite.updateVertices();
+			
+			for (int i = 0; i < 4; ++i)
+			{
+				if (pointIsWithIn(sprite.getVertex(i)) || sprite.pointIsWithIn(getVertex(i)))
+					return true;
+			}
+			
+			if (sprite.position.x != sprite.oldPosition.x || sprite.position.y != sprite.oldPosition.y)
+			{
+				boolean ok = false;
+				Vec2f spritePosition = new Vec2f(sprite.position);
+				sprite.position = new Vec2f(sprite.oldPosition);
+				
+				for (int i = 0; i < 4; ++i)
+				{
+					if (pointIsWithIn(sprite.getVertex(i)) || sprite.pointIsWithIn(getVertex(i)))
+						ok = true;
+				}
+				
+				sprite.position = new Vec2f(spritePosition);
+				
+				return ok;
+			}
+			
+			/*Vec2f spriteVertices[] = {new Vec2f(-sprite.size.x / 2, -sprite.size.y / 2),
 					new Vec2f(sprite.size.x / 2, -sprite.size.y / 2),
 					new Vec2f(sprite.size.x / 2, +sprite.size.y / 2),
 					new Vec2f(-sprite.size.x / 2, +sprite.size.y / 2)};
@@ -212,7 +245,7 @@ public class Sprite
 					if (isCollidedWithSegment(spriteVertices[i], spriteOldVertices[i]))
 						return true;
 				}
-			}
+			}*/
 		}
 		
 		return false;
@@ -229,35 +262,15 @@ public class Sprite
 		return false;
 	}
 	
-	private boolean borderIsCollidedWithSegment(Vec2f A, Vec2f B, int borderId)
+	public boolean borderIsCollidedWithSegment(Vec2f A, Vec2f B, int borderId)
 	{
+		if (borderId < 0 || borderId > 3)
+			return false;
+		
 		// A et B : les deux points du premier segment
 		// C et D : les deux points d'un des segments du sprite
-		Vec2f C;
-		Vec2f D;
-		
-		if (borderId == 0)
-		{
-			C = vertices[0];
-			D = vertices[1];
-		}
-		else if (borderId == 1)
-		{
-			C = vertices[1];
-			D = vertices[2];
-		}
-		else if (borderId == 2)
-		{
-			C = vertices[2];
-			D = vertices[3];
-		}
-		else if (borderId == 3)
-		{
-			C = vertices[3];
-			D = vertices[0];
-		}
-		else
-			return false;
+		Vec2f C = vertices[borderId];
+		Vec2f D = vertices[borderId == 3 ? 0 : borderId + 1];
 		
 		
 		// Soit P le point d'intersection
@@ -269,7 +282,7 @@ public class Sprite
 		
 		float denominator = AB.x * CD.y - AB.y * CD.x;
 		if (denominator == 0)
-			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId);	// on recommence avec un petit d�calage pour ne plus avoir de segments paralleles
+			return borderIsCollidedWithSegment(new Vec2f(A.x + 0.001f, A.y + 0.001f), B, borderId);	// on recommence avec un petit decalage pour ne plus avoir de segments paralleles
 		
 		float k = -(A.x * CD.y - C.x * CD.y - CD.x * A.y + CD.x * C.y);
 		float m = -(-AB.x * A.y + AB.x * C.y + AB.y * A.x - AB.y * C.x);
@@ -278,6 +291,36 @@ public class Sprite
 			return false;
 
 		return true;
+	}
+	
+	public boolean pointIsWithIn(Vec2f point)
+	{
+		// A, B, C : points du triangle
+
+		for (int i = 0; i < 2; ++i)
+		{
+			// Compute vectors 
+			Vec2f vectorAC = getVertex(2).getAdd(getVertex(0).getNegative());
+			Vec2f vectorAB = getVertex(i == 0 ? 1 : 3).getAdd(getVertex(0).getNegative());
+			Vec2f vectorAP = point.getAdd(getVertex(0).getNegative());
+	
+			// Compute dot products
+			float dotACAC = vectorAC.getDot(vectorAC);
+			float dotACAB = vectorAC.getDot(vectorAB);
+			float dotACAP = vectorAC.getDot(vectorAP);
+			float dotABAB = vectorAB.getDot(vectorAB);
+			float dotABAP = vectorAB.getDot(vectorAP);
+	
+			// Compute barycentric coordinates
+			float factor = 1 / (dotACAC * dotABAB - dotACAB * dotACAB);
+			float u = (dotABAB * dotACAP - dotACAB * dotABAP) * factor;	// Projection of AP on AB
+			float v = (dotACAC * dotABAP - dotACAB * dotACAP) * factor;	// Projection of AP on AC
+	
+			if (u >= 0 && v >= 0 && u + v < 1)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public void draw(SpriteBatch display)

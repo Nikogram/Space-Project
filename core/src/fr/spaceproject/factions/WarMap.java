@@ -84,7 +84,7 @@ public class WarMap {
 	private void battle(Coor notimp,int x,int y,Faction team,Geopolitics state,Time time,String posPlayer){
 		String verif =notimp.addXY(x,y);
 		if (!verif.equals(posPlayer) && World.containsKey(verif) && World.get(verif).getAlignement()!=team.getNumber() && !World.get(verif).isInWar() && Math.random()<Math.pow((1.0-((float)team.getTerritories()/this.discoverSector)),7)*0.80){
-			System.out.println(verif);
+			//System.out.println(verif);
 			World.get(verif).setWar(time,team.getNumber());
 		}
 	}

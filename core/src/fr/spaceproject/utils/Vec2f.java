@@ -34,11 +34,39 @@ public class Vec2f
 		return (float)Math.sqrt(x*x + y*y);
 	}
 	
+	public float getDot(Vec2f a)
+	{
+		return x * a.x + y * a.y;
+	}
+	
 	public Vec2f getRotatedVector(float angle)
 	{
 		Vec2f newVector = new Vec2f(this);
 		newVector.rotate(angle);
 		return newVector;
+	}
+	
+	public float getAnglesDifference(Vec2f vector)
+	{
+		if (getLength() * vector.getLength() != 0)
+		{		
+			float dot = x * vector.x + y * vector.y;
+			float cosa = dot / (getLength() * vector.getLength());
+		
+			return (float)Math.acos(cosa) - 90;
+		}
+		
+		return 0;
+	}
+	
+	public float getDistanceWithSegment(Vec2f A, Vec2f B)
+	{
+		// Droite d'équation de la forme ax+by+c=0;
+		float a = A.y - B.y;
+		float b = B.x - A.x;
+		float c = A.x * B.y - B.x * A.y;
+		
+		return Math.abs(a * x + b * y + c) / (float)Math.sqrt(a*a + b*b);
 	}
 	
 	public void set(float x, float y)
@@ -98,11 +126,18 @@ public class Vec2f
 		return newVector;
 	}
 	
-	public Vec2f normalize(float length)
+	public void normalize(float length)
 	{
 		if (getLength() != 0)
 			set(x / getLength() * length, y / getLength() * length);
-		return this;
+	}
+	
+	public Vec2f getNormalize(float length)
+	{
+		Vec2f vector = new Vec2f(this);
+		if (getLength() != 0)
+			vector.set(x / getLength() * length, y / getLength() * length);
+		return vector;
 	}
 	
 	public void rotate(float angle)

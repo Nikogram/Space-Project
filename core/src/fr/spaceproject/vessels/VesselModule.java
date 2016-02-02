@@ -150,6 +150,11 @@ public class VesselModule
 		return sprite.getPosition();
 	}
 	
+	public Vec2f getSpriteOldPosition()
+	{
+		return sprite.getOldPosition();
+	}
+	
 	public void setSpritePosition(Vec2f position)
 	{
 		sprite.setPosition(position);
@@ -225,9 +230,11 @@ public class VesselModule
 		isTouched = true;
 	}
 	
-	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(float lastFrameTime, Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		isTouched = false;
+		
+		float damagePerFrame = 5;
 		
 		for (int x = 0; x < station.getSize().x; ++x)
 		{
@@ -236,8 +243,8 @@ public class VesselModule
 				if (sprite.getPosition().getDistance(station.getModulePosition(new Vec2i(x, y))) < 140 && 
 						type.ordinal() > VesselModuleType.Broken.ordinal() && station.getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && sprite.isCollidedWithSprite(station.getModuleSprite(new Vec2i(x, y), false)))
 				{
-					energy -= sprite.getSpeed().getLength() * 0.1;
-					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - 30);
+					energy -= lastFrameTime * 60 * damagePerFrame;
+					station.setModuleEnergy(new Vec2i(x, y), station.getModuleEnergy(new Vec2i(x, y)) - lastFrameTime * 60 * damagePerFrame);
 					station.addAttackingVessel(moduleVessel);
 					return station.getModuleSprite(new Vec2i(x, y));
 				}
@@ -253,7 +260,7 @@ public class VesselModule
 				{
 					if (type.ordinal() > VesselModuleType.Broken.ordinal() && vessels.get(i).getModuleType(new Vec2i(x, y)).ordinal() > VesselModuleType.Broken.ordinal() && sprite.isCollidedWithSprite(vessels.get(i).getModuleSprite(new Vec2i(x, y), false)))
 					{
-						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - 30, true);
+						vessels.get(i).setModuleEnergy(new Vec2i(x, y), vessels.get(i).getModuleEnergy(new Vec2i(x, y), true) - lastFrameTime * 60 * damagePerFrame, true);
 						vessels.get(i).addAttackingVessel(moduleVessel);
 						return vessels.get(i).getModuleSprite(new Vec2i(x, y));
 					}

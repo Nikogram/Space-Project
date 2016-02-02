@@ -38,7 +38,7 @@ public class StationModule extends VesselModule
 	@Override
 	public float getMaxEnergy()
 	{
-		return 500 + 250 * (level - 1);
+		return 5000 + 2500 * (level - 1);
 	}
 	
 	public void update(float lastFrameTime, Sprite vesselSprite, Vec2i moduleRelativePosition, Vector<VesselAction> actions, Vector<Vessel> vessels, int faction, int[] factionsAgressivity)
@@ -50,7 +50,7 @@ public class StationModule extends VesselModule
 	}
 	
 	@Override
-	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(float lastFrameTime, Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		return new Sprite(new Vec2f(), new Vec2f(), getTexture());
 	}

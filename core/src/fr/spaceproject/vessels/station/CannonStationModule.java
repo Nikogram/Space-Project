@@ -105,7 +105,7 @@ public class CannonStationModule extends StationModule
 	}
 	
 	@Override
-	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(float lastFrameTime, Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		for (int i = 0; i < vessels.size(); ++i)
 		{
@@ -150,7 +150,7 @@ public class CannonStationModule extends StationModule
 			}
 		}
 		
-		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);
+		return super.updateCollisions(lastFrameTime, vessels, moduleVessel, station, shotVessels);
 	}
 	
 	@Override

@@ -52,7 +52,7 @@ public class LaserVesselModule extends VesselModule
 	}
 	
 	@Override
-	public Sprite updateCollisions(Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
+	public Sprite updateCollisions(float lastFrameTime, Vector<Vessel> vessels, Vessel moduleVessel, Station station, Vector<Vessel> shotVessels)
 	{
 		// Recuperation de la position module le plus proche
 		int vesselId = -1;
@@ -162,7 +162,7 @@ public class LaserVesselModule extends VesselModule
 			station.addAttackingVessel(moduleVessel);
 		}
 			
-		return super.updateCollisions(vessels, moduleVessel, station, shotVessels);
+		return super.updateCollisions(lastFrameTime, vessels, moduleVessel, station, shotVessels);
 	}
 	
 	@Override

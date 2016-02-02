@@ -370,7 +370,7 @@ public class Vessel
 			if (pushOrientation != null)
 			{
 				if (cockpit.getSpriteSpeed().getLength() > initialSpeed.getLength() && cockpit.getSpriteSpeed().getLength() > getMaxSpeed(pushOrientation))
-					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
+					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getNormalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
 			}
 			
 				
@@ -380,20 +380,30 @@ public class Vessel
 			
 			
 			// Application de la mise a jour pour tous les modules	
-			loop:
 			for (int x = 0; x < modules.length; ++x)
 			{
 				for (int y = 0; y < modules[x].length; ++y)
 				{
 					modules[x][y].update(lastFrameTime, modules[cockpitPosition.x][cockpitPosition.y].getSprite(), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions);
-					Sprite collidedObject = modules[x][y].updateCollisions(vessels, this, station, attackingVessels);
+					Sprite collidedObject = modules[x][y].updateCollisions(lastFrameTime, vessels, this, station, attackingVessels);
 					
 					if (collidedObject != null)
-					{
-						Vec2f forceVector = new Vec2f(collidedObject.getPosition().x - getPosition().x, collidedObject.getPosition().y - getPosition().y);
- 						forceVector.normalize(-Math.min(cockpit.getSpriteSpeed().getLength() + 50, 300));
- 						cockpit.setSpriteSpeed(forceVector);
- 						collisionSound.play(1f);
+					{						
+						Sprite touchedModule = modules[x][y].getSprite();
+						
+						Vec2f forceVector = getForceVector(touchedModule, collidedObject);		
+						if (forceVector.x == 0 && forceVector.y == 0)
+							forceVector = getForceVector(collidedObject, touchedModule).getNegative();
+						
+						if (forceVector.x != 0 || forceVector.y != 0)
+						{
+							Vec2f speedSupport = new Vec2f(cockpit.getSpriteSpeed().getNormalize(1).x + 2 * forceVector.x,
+								cockpit.getSpriteSpeed().getNormalize(1).y + 2 * forceVector.y);
+							speedSupport.normalize(1);
+							
+							cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getAdd(forceVector.x * lastFrameTime * 500, forceVector.y * lastFrameTime * 500));
+							cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getNormalize(Math.min(cockpit.getSpriteSpeed().getLength(), 300)));
+						}
 					}
 					
 					if (modules[x][y].getEnergy(true) < 0 && modules[x][y].getType().ordinal() > VesselModuleType.Broken.ordinal())
@@ -410,8 +420,6 @@ public class Vessel
 									modules[X][Y] = new VesselModule(VesselModuleType.Inexisting, 1, Orientation.Up, textureManager);
 								}
 							}
-							
-							break loop;
 						}
 						
 						modules[x][y] = new BrokenVesselModule(1, modules[x][y].getOrientation(), textureManager, modules[x][y].getType().equals(VesselModuleType.Engine));
@@ -450,7 +458,35 @@ public class Vessel
 		}
 	}
 	
-	
+	private Vec2f getForceVector(Sprite sprite1, Sprite sprite2)
+	{
+		// Recherche du module du cockpit en collision
+		int moduleVertexId = -1;
+		for (int i = 0; i < 4 && moduleVertexId == -1; ++i)
+			if (sprite2.pointIsWithIn(sprite1.getVertex(i)))
+				moduleVertexId = i;
+		
+		if (moduleVertexId != -1)	// un sommet a été trouvé
+		{
+			// Recherche du bord de l'autre objet en collision
+			Vec2f A = sprite1.getPosition();
+			Vec2f B = sprite1.getVertex(moduleVertexId);
+			int collidedBorderId = -1;
+			
+			for (int i = 0; i < 4 && collidedBorderId == -1; ++i)
+			{
+				if (sprite2.borderIsCollidedWithSegment(B, A, i))
+					collidedBorderId = i;
+			}
+			
+			// Recherche du bon vecteur directeur orthogonal au bord récuperé
+			Vec2f borderCenter = new Vec2f((sprite2.getVertex(collidedBorderId).x + sprite2.getVertex(collidedBorderId == 3 ? 0 : collidedBorderId + 1).x) / 2,
+					(sprite2.getVertex(collidedBorderId).y + sprite2.getVertex(collidedBorderId == 3 ? 0 : collidedBorderId + 1).y) / 2);
+			return borderCenter.getAdd(sprite2.getPosition().getNegative()).getNormalize(1);
+		}
+		
+		return new Vec2f(0, 0);
+	}
 	
 	public void draw(SpriteBatch display)
 	{

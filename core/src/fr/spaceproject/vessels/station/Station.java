@@ -161,7 +161,7 @@ public class Station extends Vessel
 			if (pushOrientation != null)
 			{
 				if (cockpit.getSpriteSpeed().getLength() > initialSpeed.getLength() && cockpit.getSpriteSpeed().getLength() > getMaxSpeed(pushOrientation))
-					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().normalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
+					cockpit.setSpriteSpeed(cockpit.getSpriteSpeed().getNormalize(Math.max(initialSpeed.getLength(), getMaxSpeed(pushOrientation))));
 			}
 			
 				
@@ -177,7 +177,7 @@ public class Station extends Vessel
 				for (int y = 0; y < modules[x].length; ++y)
 				{
 					((StationModule)modules[x][y]).update(lastFrameTime, new Sprite(cockpitPositionPixels, new Vec2f(140, 140), textureManager.getTexture("Blank")), new Vec2i(x - cockpitPosition.x, y - cockpitPosition.y), actions, vessels, faction, factionsAgressivity);
-					Sprite collidedObject = modules[x][y].updateCollisions(vessels, this, station, attackingVessels);
+					Sprite collidedObject = modules[x][y].updateCollisions(lastFrameTime, vessels, this, station, attackingVessels);
 					
 					if (collidedObject != null)
 					{
