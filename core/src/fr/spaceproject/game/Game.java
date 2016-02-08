@@ -27,7 +27,7 @@ public class Game extends ApplicationAdapter
 	protected SpriteBatch display;
 	protected TextureManager textureManager;
 	protected OrthographicCamera camera;
-	//float cameraAngle = 0;
+	float cameraAngle = 0;
 	protected float lastFrameTime;
 	private Time time;
 	
@@ -132,9 +132,9 @@ public class Game extends ApplicationAdapter
 			stateVessel=new VesselState(zone.getVector().get(0),textureManager);
 		
 		// Affichage
-		/*camera.direction.set(0, 0, -1);
-		camera.rotate(-zone.getVector().get(0).getAngle() - cameraAngle);
-		cameraAngle = -zone.getVector().get(0).getAngle();*/
+		camera.direction.set(0, 0, -1);
+		camera.rotate((-zone.getVector().get(0).getAngle() - cameraAngle) / 10);
+		cameraAngle += (-zone.getVector().get(0).getAngle() - cameraAngle) / 10;
 		
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
