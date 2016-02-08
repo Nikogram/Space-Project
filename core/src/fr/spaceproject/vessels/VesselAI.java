@@ -31,12 +31,12 @@ public class VesselAI
 	
 	public void update(Vector<Vessel> vessels, Vessel vessel, Map<VesselAction, Boolean> currentActions, int[] factionsAgressivity, float angleMovement)
 	{
-		if (targetVessel == null || targetVessel.isDestroyed())
+		if (targetVessel == null || targetVessel.isDestroyed() || targetVessel.getFaction() == vessel.getFaction() || (targetVessel.getFaction() == 0 && factionsAgressivity[vessel.getFaction()] < 50))
 			targetVessel = getClosestVessel(vessels, vessel, factionsAgressivity);
 		
-		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > Math.min(sectorSize.x, sectorSize.y) / 2)
+		if (vessel.getPosition().getDistance(new Vec2f(0, 0)) > Math.min(sectorSize.x/2, sectorSize.y/2) * 4 / 5 || vessel.getSpeed().getLength() < 100)
 			goToMapCenter = true;
-		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < 0.2 * Math.min(sectorSize.x, sectorSize.y) / 2)
+		else if (vessel.getPosition().getDistance(new Vec2f(0, 0)) < Math.min(sectorSize.x/2, sectorSize.y/2) * 3 / 4)
 			goToMapCenter = false;
 		
 		if (targetVessel != null || goToMapCenter)

@@ -54,21 +54,21 @@ public class SectorMap {
 		nbEnnemyVessel=i;
 		if (map.getZone(pos.toStrings()).isInWar()){
 			for (int l=1;l<i+1;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille*2,taille*2),textureManager));
 				vessels.get(l).generate(3);// allies
 			}
 			for (int l=i+1;l<i+j+2;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.getZone(pos.toStrings()).getEnnemiAlignement(),new Vec2f(taille/2,taille/2), textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.getZone(pos.toStrings()).getEnnemiAlignement(),new Vec2f(taille*2,taille*2), textureManager));
 				vessels.get(l).generate(2);
 			}
 		}
 		else{
 			for (int l=1;l<5;l++){
-				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille/2,taille/2),textureManager));
+				vessels.add(new Vessel(new Vec2f((float)(Math.random() * 2 * taille - taille), (float)(Math.random() * 2 * taille - taille)), true, map.appartCoor(pos.toStrings()),new Vec2f(taille*2,taille*2),textureManager));
 				vessels.get(l).generate(2);
 			}
 		}
-		station = new Station(new Vec2f(-1000, 0),map.appartCoor(pos.toStrings()),  new Vec2f(taille/2,taille/2), textureManager);
+		station = new Station(new Vec2f(-1000, 0),map.appartCoor(pos.toStrings()),  new Vec2f(taille*2,taille*2), textureManager);
 	}
 	
 	public void updateExit(Vessel playerPlayer,WarMap map,Geopolitics state){

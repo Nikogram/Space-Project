@@ -81,6 +81,11 @@ public class Vessel
 		modules[cockpitPosition.x][cockpitPosition.y].setSpritePosition(position);
 	}
 	
+	public Vec2f getSpeed()
+	{
+		return modules[cockpitPosition.x][cockpitPosition.y].getSpriteSpeed();
+	}
+	
 	public Vec2f getCenter()
 	{
 		return new Vec2f((modules[0][0].getSpritePosition().x + modules[modules.length - 1][modules[0].length - 1].getSpritePosition().x) / 2f,

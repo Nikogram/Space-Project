@@ -131,11 +131,7 @@ public class Game extends ApplicationAdapter
 		if(vesselCreation.update(lastFrameTime, new Vec2f(camera.position.x, camera.position.y), new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), zone.getPlayer()))
 			stateVessel=new VesselState(zone.getVector().get(0),textureManager);
 		
-		// Affichage
-		camera.direction.set(0, 0, -1);
-		camera.rotate((-zone.getVector().get(0).getAngle() - cameraAngle) / 10);
-		cameraAngle += (-zone.getVector().get(0).getAngle() - cameraAngle) / 10;
-		
+		// Affichage		
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
@@ -144,12 +140,27 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
+		
+		camera.rotate((-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime);
+		cameraAngle += (-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime;
+		camera.update();
+		display.setProjectionMatrix(camera.combined);
 		zone.draw(display);
+		
+		camera.rotate(-cameraAngle);
+		camera.update();
+		display.setProjectionMatrix(camera.combined);
+		
 		carte.draw(display);
 		miniMap.draw(display);
 		reput.draw(display);
 		stateVessel.draw(display);
 		vesselCreation.draw(display);
+		
+		camera.rotate(+cameraAngle);
+		camera.update();
+		display.setProjectionMatrix(camera.combined);
+		
 		display.end();
 		
 		
