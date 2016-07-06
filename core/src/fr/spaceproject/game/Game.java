@@ -96,7 +96,7 @@ public class Game extends ApplicationAdapter
 		camera.update();
 		time =new Time();
 		
-		map = new WarMap();
+		map = new WarMap(5,5);
 		state = new Geopolitics(5);
 
 		zone = new SectorMap(4000,new Coor(0,0),0, textureManager,state,map);	
@@ -140,9 +140,8 @@ public class Game extends ApplicationAdapter
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
-		
 		camera.rotate((-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime);
-		cameraAngle += (-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime;
+		cameraAngle +=(-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime;
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
 		zone.draw(display);

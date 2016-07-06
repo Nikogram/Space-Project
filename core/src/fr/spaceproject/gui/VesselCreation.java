@@ -102,7 +102,7 @@ public class VesselCreation
 						orientation = Orientation.Right;
 					
 					
-					playerVessel.setModule(new Vec2i(x, y), vesselButtonsModuleId[x][y], 1, orientation);
+					playerVessel.setModule(new Vec2i(x, y), vesselButtonsModuleId[x][y], 100, orientation);
 				}
 			}
 			

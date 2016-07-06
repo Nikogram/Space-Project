@@ -471,7 +471,7 @@ public class Vessel
 			if (sprite2.pointIsWithIn(sprite1.getVertex(i)))
 				moduleVertexId = i;
 		
-		if (moduleVertexId != -1)	// un sommet a été trouvé
+		if (moduleVertexId != -1)	// un sommet a ï¿½tï¿½ trouvï¿½
 		{
 			// Recherche du bord de l'autre objet en collision
 			Vec2f A = sprite1.getPosition();
@@ -484,7 +484,7 @@ public class Vessel
 					collidedBorderId = i;
 			}
 			
-			// Recherche du bon vecteur directeur orthogonal au bord récuperé
+			// Recherche du bon vecteur directeur orthogonal au bord rï¿½cuperï¿½
 			Vec2f borderCenter = new Vec2f((sprite2.getVertex(collidedBorderId).x + sprite2.getVertex(collidedBorderId == 3 ? 0 : collidedBorderId + 1).x) / 2,
 					(sprite2.getVertex(collidedBorderId).y + sprite2.getVertex(collidedBorderId == 3 ? 0 : collidedBorderId + 1).y) / 2);
 			return borderCenter.getAdd(sprite2.getPosition().getNegative()).getNormalize(1);

@@ -9,6 +9,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.samples = 4; 
 		new LwjglApplication(new Game(), config);
-		System.out.println((double)(3.000000 * 10e37 + 100000));
+		//System.out.println((double)(3.000000 * 10e37 + 100000));
 	}
 }

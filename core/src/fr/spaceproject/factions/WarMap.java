@@ -5,6 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
+
 import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.Time;
 
@@ -18,30 +22,53 @@ public class WarMap {
 		return World.get(Coor);
 	}
 	
-	public WarMap(){
+	public WarMap(int x,int y){
 		World =new LinkedHashMap<String,Sector>();
-		for (int j=2;j>-3;j--){
-			for (int i=-2;i<3;i++){
-					this.World.put((new Coor(i,j)).toStrings(),new Sector((int)(4*Math.random())+1));
+		int[][] disposition =dispo(x,y);
+		for (int j=-(int)y/2;(int)j<y/2;j++){
+			for (int i=-(int)x/2;i<(int)x/2;i++){
+					this.World.put((new Coor(i,j)).toStrings(),new Sector(disposition[i+(int)x/2][j+(int)y/2]));
 			}
 		}
-		World.get("-2 -2").setNewAlignement(1);
-		World.get("-2 2").setNewAlignement(2);
-		World.get("2 2").setNewAlignement(3);
-		World.get("2 -2").setNewAlignement(4);
-		this.discoverSector =25;
+		this.discoverSector =100;
 		timeSinceLastWar = 0;
 	}
 	
+	
+	private int[][] dispo(int x,int y){
+		int abs,ord;
+		int[][] disposition = new int[x][y];
+		//System.out.println(disposition[0][0]);
+		for (int i=1;i<5;i++){
+			do{
+				abs=(int)(Math.random()*x);
+				ord=(int)(Math.random()*y);
+			}while(disposition[abs][ord]!=0);
+			disposition[abs][ord]=i;
+		}
+		return disposition;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void update(Time time,Geopolitics state,String posPlayer){
-		if (time.getTime()-timeSinceLastWar>999 || time.getTime()<0.1){
+		if (time.getTime()-timeSinceLastWar>30 || time.getTime()<0.1){
 			timeSinceLastWar=time.getTime();
 			warBegin(state,time,posPlayer);
 		}
 		Iterator<Entry<String, Sector>> it = World.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, Sector> value = it.next();
-			if (!value.getKey().equals(posPlayer) && value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>888){
+			if (!value.getKey().equals(posPlayer) && value.getValue().isInWar() && (time.getTime()-value.getValue().TimeSinceInWar())>29){
 				value.getValue().setPeace();
 				if (Math.random()<0.2){//0.5-0.5*((float)(state.getFaction(World.get(verif).getAlignement()).getTerritories()-team.getTerritories()))/(state.getFaction(World.get(verif).getAlignement()).getTerritories()+team.getTerritories()))
 					state.getFaction(value.getValue().getEnnemiAlignement()).winTerritorie();
