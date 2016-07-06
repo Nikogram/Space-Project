@@ -2,26 +2,26 @@ package fr.spaceproject.game;
 
 public class personnage {
 
-	private int money;
+	private double money;
 	private int exp;
 
 
 	public personnage() {
-		int money = 0;
+		money = 10;
 		//int exp=0;
 	}
 
-	public void addMoney(int money) {
+	public void addMoney(double money) {
 		this.money += money;
 	}
 
-	public boolean delMoney(int price) {
-		if (money > price) {
+	public boolean delMoney(double price) {
+		if (money >= price) {
 			money -= price;
 			return true;
 		}
-		else
-			return false;
+		System.out.println("pas assez d'argent (possession : " + money + " )");
+		return false;
 	}
 	/*
 	public void transExp(int exp){

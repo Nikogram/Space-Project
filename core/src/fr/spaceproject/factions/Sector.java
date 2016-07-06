@@ -10,46 +10,50 @@ public class Sector {
 	private float timethisSectorinWar;
 	private int ennemieAlignement;
 	private float timethisSectorgoWar;
-	
+
+
 	public Sector() {
 		this.alignement = 0;
 		this.isInWar = false;
 	}
-	
+
 	public Sector(int Team) {
 		this.alignement = Team;
 	}
-	
-	public float TimeSinceInWar(){
+
+	public float TimeSinceInWar() {
 		return timethisSectorinWar;
 	}
-	
-	
+
+
 	public int getAlignement() {
 		return alignement;
 	}
-	
-	public void setWar(Time time,int ennemiTeam) {
+
+	public void setWar(Time time, int ennemiTeam) {
 		this.isInWar = true;
 		this.timethisSectorinWar = time.getTime();
 		this.ennemieAlignement = ennemiTeam;
 	}
-	
-	public void setPeace(){
+
+	public void setPeace() {
 		this.isInWar = false;
 	}
-	public void setWarState(){
-		this.isInWar =true;
+
+	public void setWarState() {
+		this.isInWar = true;
 	}
-	public int getEnnemiAlignement(){
+
+	public int getEnnemiAlignement() {
 		return ennemieAlignement;
 	}
-	
-	
+
+
 	public void setNewAlignement(int party) {
 		this.alignement = party;
 	}
-	public boolean isInWar(){
+
+	public boolean isInWar() {
 		return isInWar;
 	}
 }

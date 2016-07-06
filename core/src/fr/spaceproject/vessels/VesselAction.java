@@ -1,12 +1,5 @@
 package fr.spaceproject.vessels;
 
-public enum VesselAction
-{
-	MoveForward,
-	MoveBackward,
-	MoveLeft,
-	MoveRight,
-	TurnLeft, 
-	TurnRight,
-	Shoot
+public enum VesselAction {
+	MoveForward, MoveBackward, MoveLeft, MoveRight, TurnLeft, TurnRight, Shoot
 }

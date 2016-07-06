@@ -1,10 +1,8 @@
 package fr.spaceproject.game;
 
 
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,35 +18,35 @@ import fr.spaceproject.utils.Coor;
 import fr.spaceproject.utils.TextureManager;
 import fr.spaceproject.utils.Time;
 import fr.spaceproject.utils.Vec2f;
-import fr.spaceproject.vessels.Vessel;
 
-public class Game extends ApplicationAdapter
-{
+
+public class Game extends ApplicationAdapter {
 	protected SpriteBatch display;
 	protected TextureManager textureManager;
 	protected OrthographicCamera camera;
 	float cameraAngle = 0;
 	protected float lastFrameTime;
 	private Time time;
-	
+
 	protected FactionMap carte; //affichage de la minicarte
 	private MiniMap miniMap;
 	private AngryBar reput;
 	private VesselState stateVessel;
-	
-	protected WarMap map;	//map total de l'univers
+
+	protected WarMap map; //map total de l'univers
 	protected Geopolitics state; //array de faction pour les mettres a jour	
-	
+	public personnage player; //gere les attribut du personnage
+
+
 	private SectorMap zone; //gere la zone en elle meme
-	
+
 	protected VesselCreation vesselCreation; // interface de creation du vaisseau du joueur
-	
+
 
 	@Override
-	public void create()
-	{
+	public void create() {
 		display = new SpriteBatch();
-		
+
 		textureManager = new TextureManager();
 		textureManager.addTexture("MiniMap", "MiniMap.png");
 		textureManager.addTexture("StationUselessMiniMap", "StationUselessMiniMap.png");
@@ -90,93 +88,104 @@ public class Game extends ApplicationAdapter
 		textureManager.addTexture("StationExplosion5", "Explosion/Station/5.png");
 		textureManager.addTexture("Blank", "Blank.png");
 		textureManager.addTexture("Arrow", "Arrow.png");
-		
+
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
-		time =new Time();
-		
-		map = new WarMap(5,5);
+		time = new Time();
+		map = new WarMap();
 		state = new Geopolitics(5);
 
-		zone = new SectorMap(4000,new Coor(0,0),0, textureManager,state,map);	
+		zone = new SectorMap(4000, new Coor(0, 0), 0, textureManager, state, map);
 		vesselCreation = new VesselCreation(textureManager);
+		player = new personnage();
 
+		carte = new FactionMap(zone.getVector().get(0).getPosition(), zone.getCoor(), map, textureManager);
+		stateVessel = new VesselState(zone.getVector().get(0), textureManager);
+		miniMap = new MiniMap(zone.getVector().get(0).getPosition(), zone, zone.getStation(), textureManager);
+		reput = new AngryBar(zone.getVector().get(0).getPosition(), state, textureManager);
 
-		
-		carte =new FactionMap(zone.getVector().get(0).getPosition(),zone.getCoor(),map, textureManager);
-		stateVessel=new VesselState(zone.getVector().get(0),textureManager);
-		miniMap=new MiniMap(zone.getVector().get(0).getPosition(),zone,zone.getStation(),textureManager);
-		reput=new AngryBar(zone.getVector().get(0).getPosition(),state,textureManager);
-		
 	}
 
 	@Override
-	public void render()
-	{
+	public void render() {
 		// Mise a jour de l'etat des elements
 		lastFrameTime = Gdx.graphics.getDeltaTime();
-		zone.update(lastFrameTime,state,map);
+		zone.update(lastFrameTime, state, map, player);
 		time.update(lastFrameTime);
 		//Mise a jour de l'HUD
-		carte.update(zone.getPlayer().getPosition(),zone.getCoor(),map);
-		miniMap.update(zone,zone.getVector(),zone.getStation());
-		reput.update(zone.getVector().get(0).getPosition(),state,textureManager);
-		stateVessel.Update(zone.getVector().get(0),textureManager);
+		carte.update(zone.getPlayer().getPosition(), zone.getCoor(), map);
+		miniMap.update(zone, zone.getVector(), zone.getStation());
+		reput.update(zone.getVector().get(0).getPosition(), state, textureManager);
+		stateVessel.Update(zone.getVector().get(0), textureManager);
 		//Mise a jour des coordonnees
-		zone.updateExit(zone.getPlayer(),map,state);
+		zone.updateExit(zone.getPlayer(), map, state);
 		//Mise a jour de la map de l'univers 
-		map.update(time,state,zone.getCoor().toStrings());
-		
-		if(vesselCreation.update(lastFrameTime, new Vec2f(camera.position.x, camera.position.y), new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), zone.getPlayer()))
-			stateVessel=new VesselState(zone.getVector().get(0),textureManager);
-		
+		map.update(time, state, zone.getCoor().toStrings());
+
+		if (vesselCreation.update(lastFrameTime, new Vec2f(camera.position.x, camera.position.y), new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), zone.getPlayer(), player))
+			stateVessel = new VesselState(zone.getVector().get(0), textureManager);
+
 		// Affichage		
 		camera.position.set(zone.getPlayer().getPosition().x, zone.getPlayer().getPosition().y, 0);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
-		
+
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		display.begin();
 		camera.rotate((-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime);
-		cameraAngle +=(-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime;
+		cameraAngle += (-zone.getVector().get(0).getAngle() - cameraAngle) * lastFrameTime;
+
+		/*while (cameraAngle < 0 || cameraAngle > 360)
+		{
+			if (cameraAngle > 360)
+			{
+				camera.rotate(-360);
+				cameraAngle -= 360;
+			}
+			else if (cameraAngle < 0)
+			{
+				camera.rotate(360);
+				cameraAngle += 360;
+			}
+		}*/
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
 		zone.draw(display);
-		
+
 		camera.rotate(-cameraAngle);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
-		
+
 		carte.draw(display);
 		miniMap.draw(display);
 		reput.draw(display);
 		stateVessel.draw(display);
 		vesselCreation.draw(display);
-		
+
 		camera.rotate(+cameraAngle);
 		camera.update();
 		display.setProjectionMatrix(camera.combined);
-		
+
 		display.end();
-		
-		
+
+
 		//System.out.println(1 / lastFrameTime);
 	}
-	
+
 	@Override
-	public void pause()	// Quand le jeu est en pause sur Android, ou quand on quitte
+	public void pause() // Quand le jeu est en pause sur Android, ou quand on quitte
 	{
 		// Sauvegarde du jeu
 	}
-	
+
 	@Override
 	public void resume() // Quand le jeu reprend sur Android
 	{
 	}
-	
+
 	@Override
 	public void resize(int width, int height) // Quand la fenetre est redimensionne
 	{
